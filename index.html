@@ -1,523 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Surprise Granite Countertop Configurator</title>
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap"
-    />
-    <link rel="stylesheet" href="/styles.css" />
-  </head>
-  <body>
-    <div id="wrapper">
-      <header id="header" class="card">
-        <img
-          id="logo"
-          src="https://cdn.prod.website-files.com/6456ce4476abb25581fbad0c/673d648c63aa43897b141484_Surprise%20Granite%20Lockup%20Horizontal%20Small%20MIGA.svg"
-          class="logo"
-          alt="Surprise Granite Logo"
-        />
-        <h1 class="page-title">Countertop Configurator</h1>
-      </header>
-
-      <main id="app">
-        <aside class="sidebar">
-          <h2>Guides & Tips</h2>
-          <div class="guide-content">
-            <h3>Measurement Guide</h3>
-            <p>Measure length & width in inches. Divide by 144 for sq ft.</p>
-            <p>Add 1-1.5" overhangs for edges over cabinets.</p>
-            <p>Backsplash: Measure linear ft; 4" height = 0.33 sq ft per ln ft.</p>
-            <p>Waste Factor: Add 20% for cuts; 25% for islands.</p>
-            <h3>Fabrication Tips</h3>
-            <p>Choose slabs larger than your total sq ft.</p>
-            <p>Eased edges are cost-effective.</p>
-            <p>Minimize seams by planning layout carefully.</p>
-            <p>Contact Surprise Granite for assistance!</p>
-          </div>
-        </aside>
-
-        <div class="form-container">
-          <section class="card">
-            <h2>Your Details</h2>
-            <p>Get started for as little as $250 with our professional setup!</p>
-            <form id="lead-form">
-              <div class="input-group">
-                <label for="lead-name">Name <span class="required">*</span></label>
-                <input
-                  type="text"
-                  id="lead-name"
-                  placeholder="e.g., John Doe"
-                  aria-label="Name"
-                  required
-                />
-              </div>
-              <div class="input-group">
-                <label for="lead-email">Email <span class="required">*</span></label>
-                <input
-                  type="email"
-                  id="lead-email"
-                  placeholder="e.g., john@example.com"
-                  aria-label="Email"
-                  required
-                />
-              </div>
-              <div class="input-group">
-                <label for="lead-phone">Phone</label>
-                <input
-                  type="tel"
-                  id="lead-phone"
-                  placeholder="e.g., 555-123-4567"
-                  aria-label="Phone"
-                />
-              </div>
-              <div class="input-group">
-                <label for="lead-address">Address</label>
-                <input
-                  type="text"
-                  id="lead-address"
-                  placeholder="e.g., 123 Main St"
-                  aria-label="Address"
-                />
-              </div>
-            </form>
-          </section>
-
-          <section class="card">
-            <h2>Choose Your Configuration</h2>
-            <form id="config-form">
-              <div class="input-group">
-                <label for="room-type">Room Type</label>
-                <select id="room-type" aria-label="Room Type">
-                  <option value="kitchen">Kitchen</option>
-                  <option value="bathroom">Bathroom</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-              <div class="input-group">
-                <label for="config-type">Configuration Type</label>
-                <select id="config-type" aria-label="Configuration Type">
-                  <!-- Populated dynamically -->
-                </select>
-              </div>
-              <div class="input-group">
-                <label>Manual Configuration</label>
-                <button
-                  type="button"
-                  id="toggle-manual-config"
-                  class="btn-secondary"
-                >
-                  Configure Manually
-                </button>
-              </div>
-              <div id="manual-config-group" style="display: none">
-                <p class="running-total">
-                  Total Countertop Sq Ft: <span id="running-sqft">0.0</span>
-                </p>
-                <div id="countertop-sections"></div>
-                <div class="add-section-container">
-                  <button
-                    type="button"
-                    id="add-section"
-                    class="btn-secondary"
-                  >
-                    Add Countertop Section
-                  </button>
-                  <button
-                    type="button"
-                    id="total-sqft-btn"
-                    class="btn-primary"
-                  >
-                    Calculate Total Sq Ft
-                  </button>
-                </div>
-              </div>
-            </form>
-          </section>
-
-          <section class="card">
-            <h2>Slab Details</h2>
-            <form id="slab-form">
-              <div class="input-group">
-                <label for="slab-input-mode">Input Mode</label>
-                <select id="slab-input-mode" aria-label="Slab Input Mode">
-                  <option value="search">Search Price Sheet</option>
-                  <option value="manual">Manual Input</option>
-                </select>
-              </div>
-              <div class="input-group search-mode">
-                <label for="material-search">Search Material</label>
-                <input
-                  type="text"
-                  id="material-search"
-                  placeholder="e.g., Granite, Frost"
-                  list="material-options"
-                  aria-label="Material Search"
-                />
-                <datalist id="material-options"></datalist>
-              </div>
-              <div class="slab-grid">
-                <div class="input-group">
-                  <label for="material">Material</label>
-                  <select id="material" aria-label="Material" class="search-mode">
-                    <option value="">Select Material</option>
-                  </select>
-                  <input
-                    type="text"
-                    id="material-manual"
-                    placeholder="e.g., Granite"
-                    aria-label="Material Manual"
-                    class="manual-mode"
-                    style="display: none"
-                  />
-                </div>
-                <div class="input-group">
-                  <label for="slab-vendor">Vendor</label>
-                  <select id="slab-vendor" aria-label="Vendor" class="search-mode">
-                    <option value="">Select Vendor</option>
-                  </select>
-                  <input
-                    type="text"
-                    id="slab-vendor-manual"
-                    placeholder="e.g., MSI"
-                    aria-label="Vendor Manual"
-                    class="manual-mode"
-                    style="display: none"
-                  />
-                </div>
-                <div class="input-group">
-                  <label for="slab-thickness">Thickness</label>
-                  <select id="slab-thickness" aria-label="Thickness" class="search-mode">
-                    <option value="">Select Thickness</option>
-                  </select>
-                  <input
-                    type="text"
-                    id="slab-thickness-manual"
-                    placeholder="e.g., 2cm"
-                    aria-label="Thickness Manual"
-                    class="manual-mode"
-                    style="display: none"
-                  />
-                </div>
-                <div class="input-group">
-                  <label for="slab-name">Color Name</label>
-                  <input
-                    type="text"
-                    id="slab-name"
-                    placeholder="e.g., Frost-N"
-                    aria-label="Color Name"
-                    class="search-mode"
-                    readonly
-                  />
-                  <input
-                    type="text"
-                    id="slab-name-manual"
-                    placeholder="e.g., Frost-N"
-                    aria-label="Color Name Manual"
-                    class="manual-mode"
-                    style="display: none"
-                  />
-                </div>
-                <div class="input-group">
-                  <label for="slab-size">Size (LxW)</label>
-                  <input
-                    type="text"
-                    id="slab-size"
-                    placeholder="e.g., 126x63"
-                    aria-label="Slab Size"
-                    readonly
-                  />
-                </div>
-                <div class="input-group">
-                  <label for="slab-sqft">Slab Sq Ft</label>
-                  <input
-                    type="number"
-                    id="slab-sqft"
-                    min="0"
-                    step="0.1"
-                    value="60"
-                    aria-label="Slab Square Feet"
-                    readonly
-                  />
-                </div>
-                <div class="input-group">
-                  <label for="slab-cost-sqft">Cost/Sq Ft ($)</label>
-                  <input
-                    type="number"
-                    id="slab-cost-sqft"
-                    min="0"
-                    step="0.01"
-                    value="19"
-                    aria-label="Cost per Square Foot"
-                    readonly
-                  />
-                </div>
-                <div class="input-group">
-                  <label for="slab-price-group">Price Group</label>
-                  <input
-                    type="text"
-                    id="slab-price-group"
-                    placeholder="e.g., 2"
-                    aria-label="Price Group"
-                    readonly
-                  />
-                </div>
-                <div class="input-group">
-                  <label for="slab-tier">Tier</label>
-                  <input
-                    type="text"
-                    id="slab-tier"
-                    placeholder="e.g., Low Tier"
-                    aria-label="Tier"
-                    readonly
-                  />
-                </div>
-              </div>
-              <p class="calculated-field">
-                Slab Cost: <span id="slab-cost">$0.00</span>
-              </p>
-            </form>
-          </section>
-
-          <section class="card">
-            <h2>Countertop Options</h2>
-            <form id="countertop-form">
-              <div class="input-group">
-                <label for="waste-factor">Waste Factor (%)</label>
-                <input
-                  type="number"
-                  id="waste-factor"
-                  value="20"
-                  min="0"
-                  step="1"
-                  aria-label="Waste Factor"
-                  readonly
-                />
-              </div>
-              <div class="input-group">
-                <label for="backsplash">Backsplash Height</label>
-                <select id="backsplash" aria-label="Backsplash">
-                  <option value="None">None</option>
-                  <option value="4in">4 inches</option>
-                  <option value="6in">6 inches</option>
-                  <option value="Custom">Custom</option>
-                </select>
-              </div>
-              <div
-                class="input-group"
-                id="backsplash-linear-ft-group"
-                style="display: none"
-              >
-                <label for="backsplash-linear-ft">Backsplash Linear Ft</label>
-                <input
-                  type="number"
-                  id="backsplash-linear-ft"
-                  min="0"
-                  step="0.1"
-                  value="0"
-                  aria-label="Backsplash Linear Feet"
-                />
-              </div>
-              <div
-                class="input-group"
-                id="custom-backsplash-group"
-                style="display: none"
-              >
-                <label for="custom-backsplash">Custom Backsplash Height (in)</label>
-                <input
-                  type="number"
-                  id="custom-backsplash"
-                  min="0"
-                  step="0.1"
-                  value="0"
-                  aria-label="Custom Backsplash Height"
-                />
-              </div>
-              <div class="input-group">
-                <label for="edge-detail">Edge Detail</label>
-                <select id="edge-detail" aria-label="Edge Detail">
-                  <option value="None">None</option>
-                  <option value="Eased">Eased (Free)</option>
-                  <option value="Bullnose">Bullnose ($10/ln ft)</option>
-                  <option value="Ogee">Ogee ($20/ln ft)</option>
-                </select>
-              </div>
-              <div
-                class="input-group"
-                id="edge-linear-ft-group"
-                style="display: none"
-              >
-                <label for="edge-linear-ft">Edge Linear Ft</label>
-                <input
-                  type="number"
-                  id="edge-linear-ft"
-                  min="0"
-                  step="0.1"
-                  value="0"
-                  aria-label="Edge Linear Feet"
-                />
-              </div>
-              <div class="input-group">
-                <label for="demo-required">Demolition Required ($10/sq ft)</label>
-                <select id="demo-required" aria-label="Demolition Required">
-                  <option value="No">No</option>
-                  <option value="Yes">Yes</option>
-                </select>
-              </div>
-              <div class="input-group">
-                <label for="sink-cutouts">Sink Cutouts ($100/ea)</label>
-                <input
-                  type="number"
-                  id="sink-cutouts"
-                  value="0"
-                  min="0"
-                  step="1"
-                  aria-label="Sink Cutouts"
-                />
-              </div>
-              <div class="input-group">
-                <label for="cooktop-cutout">Cooktop Cutout ($150)</label>
-                <select id="cooktop-cutout" aria-label="Cooktop Cutout">
-                  <option value="No">No</option>
-                  <option value="Yes">Yes</option>
-                </select>
-              </div>
-              <div class="input-group">
-                <label for="plumbing-options">Plumbing Options</label>
-                <select id="plumbing-options" aria-label="Plumbing Options">
-                  <option value="None">None</option>
-                  <option value="KitchenStandard">Kitchen: Standard Install ($350)</option>
-                  <option value="KitchenBasket">Kitchen: Basket Strain/Garbage Disposal Flange ($50)</option>
-                  <option value="KitchenROReconnect">Kitchen: R/O Reconnect ($175)</option>
-                  <option value="KitchenRONew">Kitchen: R/O New Install ($375)</option>
-                  <option value="KitchenAngleStop">Kitchen: Angle Stop ($75/ea)</option>
-                  <option value="KitchenIcemaker">Kitchen: Icemaker Box ($350)</option>
-                  <option value="BathroomFaucet">Bathroom: Faucet Install ($200)</option>
-                  <option value="BathroomAngleStop">Bathroom: Angle Stop ($75/ea)</option>
-                  <option value="LaundrySink">Laundry: Sink ($150)</option>
-                  <option value="LaundryAngleStop">Laundry: Angle Stop ($75/ea)</option>
-                  <option value="ComboKitchenBath">Combo: Kitchen Standard + Bathroom Faucet ($550)</option>
-                </select>
-              </div>
-              <div class="input-group" id="angle-stops-group" style="display: none">
-                <label for="angle-stops-count">Number of Angle Stops</label>
-                <input
-                  type="number"
-                  id="angle-stops-count"
-                  min="0"
-                  step="1"
-                  value="0"
-                  aria-label="Number of Angle Stops"
-                />
-              </div>
-              <div class="input-group">
-                <label for="job-type">Job Type</label>
-                <select id="job-type" aria-label="Job Type">
-                  <option value="Fabrication and Install">Fabrication and Install</option>
-                  <option value="Material Only">Material Only</option>
-                  <option value="Fabrication Only">Fabrication Only</option>
-                  <option value="Install Only">Install Only</option>
-                </select>
-              </div>
-            </form>
-          </section>
-
-          <section class="card">
-            <h2>Estimate Summary</h2>
-            <div id="estimate-summary">
-              <p class="calculated-field">
-                Total Sq Ft: <span id="client-sqft-display">0.0</span>
-              </p>
-              <p class="calculated-field">
-                Total Slabs Needed: <span id="total-slabs">0</span>
-                (<span id="slabs-recommended">0</span>,
-                <span id="slabs-calculated">0.00</span>)
-              </p>
-              <p class="calculated-field">
-                Installed Price/Sq Ft: <span id="installed-price-sqft">$0.00</span>
-              </p>
-              <p class="calculated-field">
-                Material Cost: <span id="material-cost">$0.00</span> (<span
-                  id="material-rate"
-                  >$0.00</span
-                >/sq ft)
-              </p>
-              <p class="calculated-field">
-                Labor Cost: <span id="labor-cost">$0.00</span> (<span
-                  id="labor-rate"
-                  >$0.00</span
-                >/sq ft)
-              </p>
-              <p class="calculated-field">
-                Edge Detail Cost: <span id="edge-cost">$0.00</span> (<span
-                  id="edge-rate"
-                  >$0.00</span
-                >/ln ft)
-              </p>
-              <p class="calculated-field">
-                Backsplash Cost: <span id="backsplash-cost">$0.00</span>
-              </p>
-              <p class="calculated-field">
-                Additional Services Cost: <span id="services-cost">$0.00</span>
-              </p>
-              <p class="calculated-field">
-                Plumbing Cost: <span id="plumbing-cost">$0.00</span>
-              </p>
-              <p class="calculated-field">
-                Professional Setup Fee: <span id="setup-fee">$250.00</span>
-              </p>
-              <p class="calculated-field">
-                Subtotal: <span id="subtotal">$0.00</span>
-              </p>
-              <p class="calculated-field">
-                Profit Margin: <span id="profit-margin">35%</span>
-              </p>
-              <p class="calculated-field">
-                Profit Total: <span id="profit-total">$0.00</span>
-              </p>
-              <p class="calculated-field">
-                Estimate Total: <span id="estimate-total">$0.00</span>
-              </p>
-            </div>
-            <div class="action-buttons">
-              <button id="clear-btn" class="btn-secondary" aria-label="Clear form">
-                Clear
-              </button>
-              <button id="save-btn" class="btn-secondary" aria-label="Save estimate">
-                Save
-              </button>
-              <button id="update-btn" class="btn-primary" aria-label="Update estimate">
-                Update Estimate
-              </button>
-            </div>
-          </section>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatFlo - AI Chatbot Builder</title>
+    <meta http-equiv="refresh" content="0; url=./public/chatbot-builder-landing.html">
+    <link rel="canonical" href="./public/chatbot-builder-landing.html">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            padding: 2rem;
+        }
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        .redirect-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            padding: 12px 24px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        .redirect-btn:hover {
+            background: white;
+            color: #667eea;
+        }
+        .loading {
+            margin-top: 2rem;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🤖 ChatFlo</div>
+        <div class="subtitle">AI-Powered Chatbot Builder</div>
+        <p>Redirecting to the main site...</p>
+        <a href="./public/chatbot-builder-landing.html" class="redirect-btn">
+            Enter ChatFlo →
+        </a>
+        <div class="loading">
+            <p>If you're not redirected automatically, click the button above.</p>
         </div>
-      </main>
+    </div>
 
-      <div id="error-message" class="error" style="display: none">
-        <p id="error-text"></p>
-      </div>
-      <div id="success-message" class="success" style="display: none">
-        <p id="success-text"></p>
-      </div>
-
-      <div class="control-buttons">
-        <button id="light-mode-btn" class="control-btn" aria-label="Light mode">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-          </svg>
-        </button>
-        <button id="dark-mode-btn" class="control-btn" aria-label="Dark mode">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-          </svg>
-        </button>
-      </div>
-    </div>    <script src="/script.js"></script>
-      <!-- Include the chatbot widget -->
-    <div id="sg-chatbot-container"></div>
-    <script src="/include-chatbot.js"></script>
-  </body>
+    <script>
+        // Backup redirect in case meta refresh doesn't work
+        setTimeout(() => {
+            window.location.href = './public/chatbot-builder-landing.html';
+        }, 2000);
+    </script>
+</body>
 </html>
