@@ -4,10 +4,10 @@ A powerful, no-code chatbot builder with drag-and-drop functionality and real-ti
 
 ## 🚀 Live Demo
 
-- **🌐 Live Site**: [https://sgk112.github.io/chatflo.com/public/chatbot-builder-landing.html](https://sgk112.github.io/chatflo.com/public/chatbot-builder-landing.html)
-- **🎨 Enhanced Demo**: [https://sgk112.github.io/chatflo.com/public/enhanced-chatbot-designer.html](https://sgk112.github.io/chatflo.com/public/enhanced-chatbot-designer.html)
-- **🔧 Visual Builder**: [https://sgk112.github.io/chatflo.com/public/advanced-flow-builder.html](https://sgk112.github.io/chatflo.com/public/advanced-flow-builder.html)
-- **📋 Features**: [https://sgk112.github.io/chatflo.com/public/features.html](https://sgk112.github.io/chatflo.com/public/features.html)
+- **🌐 Live Site**: [https://lc4h.com/public/chatbot-builder-landing.html](https://lc4h.com/public/chatbot-builder-landing.html)
+- **🎨 Enhanced Demo**: [https://lc4h.com/public/enhanced-chatbot-designer.html](https://lc4h.com/public/enhanced-chatbot-designer.html)
+- **🔧 Visual Builder**: [https://lc4h.com/public/advanced-flow-builder.html](https://lc4h.com/public/advanced-flow-builder.html)
+- **📋 Features**: [https://lc4h.com/public/features.html](https://lc4h.com/public/features.html)
 
 ### Local Development
 - **Local Development**: `http://localhost:3000/public/chatbot-builder-landing.html`
@@ -221,15 +221,15 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🎉 Demo
 
-**🌐 Live Demo**: [https://sgk112.github.io/chatflo.com/public/chatbot-builder-landing.html](https://sgk112.github.io/chatflo.com/public/chatbot-builder-landing.html)
+**🌐 Live Demo**: [https://lc4h.com/public/chatbot-builder-landing.html](https://lc4h.com/public/chatbot-builder-landing.html)
 
 **📁 GitHub Repository**: [https://github.com/SGK112/chatflo.com](https://github.com/SGK112/chatflo.com)
 
 ### 🎯 Quick Links
-- **Main Landing**: [chatbot-builder-landing.html](https://sgk112.github.io/chatflo.com/public/chatbot-builder-landing.html)
-- **Enhanced Builder**: [enhanced-chatbot-designer.html](https://sgk112.github.io/chatflo.com/public/enhanced-chatbot-designer.html)
-- **Visual Flow Builder**: [advanced-flow-builder.html](https://sgk112.github.io/chatflo.com/public/advanced-flow-builder.html)
-- **Features Overview**: [features.html](https://sgk112.github.io/chatflo.com/public/features.html)
+- **Main Landing**: [chatbot-builder-landing.html](https://lc4h.com/public/chatbot-builder-landing.html)
+- **Enhanced Builder**: [enhanced-chatbot-designer.html](https://lc4h.com/public/enhanced-chatbot-designer.html)
+- **Visual Flow Builder**: [advanced-flow-builder.html](https://lc4h.com/public/advanced-flow-builder.html)
+- **Features Overview**: [features.html](https://lc4h.com/public/features.html)
 
 ---
 
