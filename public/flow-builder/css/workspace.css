@@ -1,0 +1,507 @@
+/* Workspace CSS - Canvas, flow nodes, and workspace-specific styles */
+
+/* Canvas Container */
+.canvas-container {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    background: var(--gray-50);
+}
+
+.canvas {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: 
+        radial-gradient(circle, var(--gray-300) 1px, transparent 1px);
+    background-size: 20px 20px;
+    overflow: auto;
+    cursor: grab;
+}
+
+.canvas:active {
+    cursor: grabbing;
+}
+
+.canvas-content {
+    position: relative;
+    width: 3000px;
+    height: 2000px;
+    min-height: 100%;
+    transform-origin: 0 0;
+    transition: transform var(--transition-normal);
+}
+
+/* Flow Nodes */
+.flow-node {
+    position: absolute;
+    background: white;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+    min-width: 200px;
+    max-width: 300px;
+    cursor: move;
+    transition: all var(--transition-normal);
+    user-select: none;
+    z-index: 10;
+}
+
+.flow-node:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+    transform: translateY(-2px);
+}
+
+.flow-node.selected {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.flow-node.dragging {
+    z-index: 1000;
+    transform: rotate(2deg) scale(1.02);
+    box-shadow: var(--shadow-xl);
+    cursor: grabbing;
+}
+
+.flow-node.error {
+    border-color: var(--danger-color);
+    background: #fef2f2;
+}
+
+.flow-node.warning {
+    border-color: var(--warning-color);
+    background: #fffbeb;
+}
+
+/* Node Header */
+.node-header {
+    padding: var(--spacing-md) var(--spacing-lg);
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--gray-100);
+    background: var(--gray-50);
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+}
+
+.node-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    flex-shrink: 0;
+}
+
+.node-title {
+    font-size: var(--font-size-base);
+    font-weight: 500;
+    color: var(--gray-800);
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.node-actions {
+    display: flex;
+    gap: var(--spacing-xs);
+    margin-left: var(--spacing-sm);
+}
+
+.node-action {
+    width: 20px;
+    height: 20px;
+    border: none;
+    background: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-xs);
+    color: var(--gray-500);
+    transition: all var(--transition-normal);
+}
+
+.node-action:hover {
+    background: var(--gray-200);
+    color: var(--gray-700);
+}
+
+.node-action.danger:hover {
+    background: var(--danger-color);
+    color: white;
+}
+
+/* Node Body */
+.node-body {
+    padding: var(--spacing-lg);
+}
+
+.node-description {
+    font-size: var(--font-size-sm);
+    color: var(--gray-500);
+    margin-bottom: var(--spacing-md);
+    line-height: 1.4;
+}
+
+.node-config {
+    font-size: var(--font-size-sm);
+}
+
+.config-item {
+    margin-bottom: var(--spacing-sm);
+}
+
+.config-item:last-child {
+    margin-bottom: 0;
+}
+
+.config-label {
+    font-weight: 500;
+    color: var(--gray-700);
+    margin-bottom: var(--spacing-xs);
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.config-value {
+    color: var(--gray-600);
+    background: var(--gray-50);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--gray-200);
+    font-family: 'SF Mono', Monaco, monospace;
+    font-size: var(--font-size-xs);
+    word-break: break-word;
+}
+
+/* Connection Points */
+.connection-point {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: white;
+    border: 2px solid var(--gray-400);
+    border-radius: 50%;
+    cursor: crosshair;
+    transition: all var(--transition-normal);
+    z-index: 20;
+}
+
+.connection-point:hover {
+    border-color: var(--primary-color);
+    background: var(--primary-color);
+    transform: scale(1.3);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.connection-point.active {
+    border-color: var(--primary-color);
+    background: var(--primary-color);
+    animation: pulse 2s infinite;
+}
+
+.connection-point.input {
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.connection-point.output {
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.connection-point.multiple-outputs {
+    right: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.connection-point.multiple-inputs {
+    left: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 0 6px rgba(59, 130, 246, 0);
+    }
+}
+
+/* Connections */
+.connection {
+    position: absolute;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.connection path {
+    stroke: var(--gray-400);
+    stroke-width: 2;
+    fill: none;
+    transition: stroke var(--transition-normal);
+}
+
+.connection:hover path,
+.connection.selected path {
+    stroke: var(--primary-color);
+    stroke-width: 3;
+}
+
+.connection.error path {
+    stroke: var(--danger-color);
+    stroke-dasharray: 5, 5;
+}
+
+/* Drop Zone */
+.drop-zone {
+    position: absolute;
+    border: 2px dashed var(--primary-color);
+    border-radius: var(--radius-xl);
+    background: rgba(59, 130, 246, 0.05);
+    pointer-events: none;
+    opacity: 0;
+    transition: all var(--transition-normal);
+    z-index: 1;
+}
+
+.drop-zone.active {
+    opacity: 1;
+    transform: scale(1.02);
+}
+
+/* Minimap */
+.minimap {
+    position: absolute;
+    bottom: var(--spacing-xl);
+    right: var(--spacing-xl);
+    width: 200px;
+    height: 120px;
+    background: white;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    z-index: 100;
+}
+
+.minimap-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: var(--gray-50);
+}
+
+.minimap-node {
+    position: absolute;
+    background: var(--primary-color);
+    border-radius: 2px;
+    opacity: 0.7;
+}
+
+.minimap-viewport {
+    position: absolute;
+    border: 2px solid var(--primary-color);
+    background: rgba(59, 130, 246, 0.1);
+    cursor: grab;
+}
+
+.minimap-viewport:active {
+    cursor: grabbing;
+}
+
+/* Canvas Tools */
+.canvas-tools {
+    position: absolute;
+    top: var(--spacing-xl);
+    left: var(--spacing-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    z-index: 100;
+}
+
+.canvas-tool {
+    width: 40px;
+    height: 40px;
+    background: white;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-normal);
+}
+
+.canvas-tool:hover {
+    background: var(--gray-50);
+    border-color: var(--gray-400);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.canvas-tool.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+/* Selection Box */
+.selection-box {
+    position: absolute;
+    border: 2px solid var(--primary-color);
+    background: rgba(59, 130, 246, 0.1);
+    pointer-events: none;
+    z-index: 50;
+}
+
+/* Zoom Controls */
+.zoom-controls {
+    position: absolute;
+    bottom: var(--spacing-xl);
+    left: var(--spacing-xl);
+    display: flex;
+    gap: var(--spacing-xs);
+    z-index: 100;
+}
+
+.zoom-control {
+    width: 36px;
+    height: 36px;
+    background: white;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: var(--font-size-sm);
+    transition: all var(--transition-normal);
+}
+
+.zoom-control:hover {
+    background: var(--gray-50);
+    border-color: var(--gray-400);
+}
+
+.zoom-level {
+    padding: 0 var(--spacing-md);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--gray-600);
+    background: white;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    min-width: 60px;
+    justify-content: center;
+}
+
+/* Context Menu */
+.context-menu {
+    position: absolute;
+    background: white;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    z-index: var(--z-dropdown);
+    min-width: 160px;
+    overflow: hidden;
+}
+
+.context-menu-item {
+    display: block;
+    width: 100%;
+    padding: var(--spacing-md) var(--spacing-lg);
+    text-align: left;
+    border: none;
+    background: none;
+    color: var(--gray-700);
+    cursor: pointer;
+    transition: background-color var(--transition-normal);
+    font-size: var(--font-size-sm);
+}
+
+.context-menu-item:hover {
+    background: var(--gray-50);
+}
+
+.context-menu-item.danger:hover {
+    background: var(--danger-color);
+    color: white;
+}
+
+.context-menu-divider {
+    height: 1px;
+    background: var(--gray-200);
+    margin: var(--spacing-xs) 0;
+}
+
+/* Grid Patterns */
+.canvas.grid-dots {
+    background: 
+        radial-gradient(circle, var(--gray-300) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+.canvas.grid-lines {
+    background: 
+        linear-gradient(var(--gray-200) 1px, transparent 1px),
+        linear-gradient(90deg, var(--gray-200) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+.canvas.no-grid {
+    background: var(--gray-50);
+}
+
+/* Performance optimizations */
+.flow-node,
+.connection {
+    will-change: transform;
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .flow-node {
+        border-width: 3px;
+    }
+    
+    .connection path {
+        stroke-width: 3;
+    }
+    
+    .connection-point {
+        border-width: 3px;
+    }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .flow-node,
+    .connection,
+    .connection-point,
+    .canvas-content {
+        transition: none;
+    }
+    
+    .connection-point.active {
+        animation: none;
+    }
+}

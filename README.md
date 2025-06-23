@@ -1,132 +1,220 @@
-# Surprise Granite AI Tools
+# ChatBot Builder Pro 🤖
 
-This project provides AI-powered tools for Surprise Granite, including a chatbot widget for customer interactions, countertop material explorer, quote generator, and more. The system combines a Node.js backend, Python Flask services, and MongoDB database.
+A powerful, no-code chatbot builder with drag-and-drop functionality and real-time customization.
 
-## Features
+## 🚀 Live Demo
 
-- **Wizard AI Chatbot**: Interactive widget that answers customer questions about countertops and remodeling
-- **Material Explorer**: Search and visualize countertop materials with pricing
-- **Quote Generation**: Simple form to request quotes for countertop projects
-- **OpenAI Integration**: Leverages GPT-4 for intelligent responses
-- **Offline Support**: Progressive Web App with offline caching
-- **Real-time Pricing**: Integration with inventory management systems
+Visit the live demo: `http://localhost:3000/demo`
 
-## Technology Stack
+## ✨ Features
 
-- **Frontend**: HTML, CSS, JavaScript (Vanilla)
-- **Backend**: Node.js with Express, Python Flask
-- **Database**: MongoDB
-- **AI**: OpenAI GPT-4
-- **Caching**: Node-Cache
-- **Deployment**: Docker, Render.com
+- **🎨 Enhanced Visual Designer** - Real-time chatbot customization with instant preview
+- **🔧 Advanced Flow Builder** - Modular drag-and-drop chatbot flow creation
+- **📱 Mobile Responsive** - Works perfectly on all devices
+- **🎯 Multiple Builder Types** - Choose from different builder interfaces
+- **⚡ Real-time Preview** - See changes instantly as you build
+- **🎨 Preset Themes** - Professional, Modern, Dark Mode, and more
+- **💾 Export Functionality** - Generate ready-to-use chatbot code
 
-## Setup
+## 🛠️ Tech Stack
 
-1. **Clone Repository**:   ```bash
-   git clone https://github.com/SGK112/Surprise-Granite-Ai-Tools.git
-   cd Surprise-Granite-Ai-Tools
+- **Frontend**: HTML5, CSS3, JavaScript (ES6 Modules)
+- **Backend**: Node.js, Express.js
+- **Architecture**: Modular component-based design
+- **Styling**: Modern CSS with animations and responsive design
+- **Icons**: Font Awesome, Bootstrap Icons, Material Icons
+
+## 📦 Installation
+
+### Prerequisites
+- Node.js 18+ 
+- npm 8+
+- MongoDB (optional - for user data)
+
+### Local Development
+
+1. **Clone the repository**
+   ```bash
+   git clone <your-repo-url>
+   cd chatbot-builder
    ```
 
-2. **Set Up Environment**:
-   - Create a `.env` file in the root directory with the following variables:
-     ```
-     OPENAI_API_KEY=your_openai_api_key
-     MONGO_URI=mongodb://localhost:27017
-     DB_NAME=countertops
-     COLLECTION_NAME=images
-     BASE_URL=http://localhost:5000
-     SHOPIFY_ACCESS_TOKEN=your_shopify_token
-     SHOPIFY_SHOP=your_shop.myshopify.com
-     EMAIL_USER=your_email
-     EMAIL_PASS=your_email_password
-     ```
-
-3. **PowerShell Setup Script**:
-   ```powershell
-   ./setup.ps1
-   ```
-   This script creates necessary directories, resolves merge conflicts, and installs dependencies.
-
-4. **Manual Setup**:
-   - Install Node.js dependencies:
-     ```
-     npm install
-     ```
-   - Install Python dependencies:
-     ```
-     pip install -r requirements.txt
-     ```
-
-5. **Development Mode**:
-   - Start the Node.js server:
-     ```
-     npm run dev
-     ```
-   - In a separate terminal, start the Flask server:
-     ```
-     python app.py
-     ```
-
-6. **Docker Setup** (Optional):
-   ```
-   docker-compose up
+2. **Install dependencies**
+   ```bash
+   npm install
    ```
 
-## Chatbot Widget Usage
-
-To add the chatbot widget to your website:
-
-1. Include the script tag in your HTML:
-   ```html
-   <script src="https://yourserver.com/js/app.js"></script>
+3. **Environment Setup**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your configuration
    ```
 
-2. The widget will automatically load and display as a chat icon in the bottom-right corner.
+4. **Start the development server**
+   ```bash
+   npm run dev
+   ```
 
-3. Customize the appearance by modifying the CSS variables in the widget's style section.
+5. **Open in browser**
+   ```
+   http://localhost:3000
+   ```
 
-## API Endpoints
+## 🌐 Deployment Options
 
-- `GET /api/materials` - Get all available countertop materials
-- `GET /api/shopify-products` - Get products from connected Shopify store
-- `POST /api/chat` - Send a message to the AI chatbot
-- `POST /api/close-chat` - Close a chat session
+### Option 1: Render (Recommended - Free Tier Available)
 
-## Contributing
+1. **Connect to GitHub**
+   - Push your code to GitHub
+   - Connect your repository to Render
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on how to contribute to this project.
+2. **Deploy Settings**
+   - Build Command: `npm install`
+   - Start Command: `npm start`
+   - Environment: Add your environment variables
 
-## Testing
+### Option 2: Railway
 
-A comprehensive test plan is available in [TEST-PLAN.md](TEST-PLAN.md). This covers:
+1. **Deploy to Railway**
+   ```bash
+   npm install -g @railway/cli
+   railway login
+   railway deploy
+   ```
 
-- API endpoint testing
-- Frontend component verification
-- Chatbot functionality testing
-- End-to-end integration tests
+### Option 3: Heroku
 
-## Troubleshooting
+1. **Deploy to Heroku**
+   ```bash
+   heroku create your-chatbot-builder
+   git push heroku main
+   ```
 
-### Common Issues
+### Option 4: DigitalOcean App Platform
 
-1. **Missing Environment Variables**
-   - Ensure all required variables in `.env` file are set
-   - For missing `GOOGLE_SHEET_CSV_URL`, the system falls back to local data
+1. **Connect GitHub repository**
+2. **Configure build settings**
+   - Build Command: `npm install`
+   - Run Command: `npm start`
 
-2. **Port Conflicts**
-   - If ports 3000 or 5000 are in use, change them in the configuration
-   - For Node.js: Edit `server.js` and change `const port = process.env.PORT || 3000;`
-   - For Flask: Edit `app.py` and change the port in `app.run(host='0.0.0.0', port=5000, debug=True)`
+### Option 5: Docker Deployment
 
-3. **MongoDB Connection Issues**
-   - Verify MongoDB is running (`mongod` service)
-   - Check connection string in `.env` file
-   - For local development, ensure MongoDB is installed
+```bash
+# Build the image
+docker build -t chatbot-builder .
 
-4. **API Return Errors**
-   - Check browser console for specific error messages
-   - Verify that both Node.js and Flask servers are running
+# Run the container
+docker run -p 3000:3000 chatbot-builder
+```
 
-## License
+## 🔧 Environment Variables
 
-MIT License
+Create a `.env` file in the root directory:
+
+```env
+# Server Configuration
+PORT=3000
+NODE_ENV=production
+
+# Database (Optional)
+MONGO_URI=mongodb://localhost:27017/chatbot-builder
+
+# OpenAI API (Optional - for AI features)
+OPENAI_API_KEY=your_openai_api_key_here
+
+# Authentication (Future implementation)
+JWT_SECRET=your_jwt_secret_here
+
+# Email Service (Future implementation)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your_email@gmail.com
+SMTP_PASS=your_app_password
+```
+
+## 📁 Project Structure
+
+```
+chatbot-builder/
+├── public/                 # Static frontend files
+│   ├── chatbot-builder-landing.html
+│   ├── features.html
+│   ├── templates.html
+│   ├── pricing.html
+│   ├── builders/
+│   └── ...
+├── server.js              # Express server
+├── package.json
+├── Dockerfile
+├── docker-compose.yml
+└── README.md
+```
+
+## 🎯 Available Pages
+
+### Core Pages
+- **Homepage**: `/` - Main landing page
+- **Features**: `/features` - Platform features overview
+- **Templates**: `/templates` - Chatbot templates gallery
+- **Pricing**: `/pricing` - Subscription plans
+- **About**: `/about` - Company information
+
+### Builder Tools
+- **Builders Overview**: `/builders` - Compare builder types
+- **Visual Builder**: `/builders/visual` - Drag & drop interface
+- **Enhanced Designer**: `/builders/enhanced` - Advanced builder
+- **Simple Builder**: `/builders/simple` - Quick setup tool
+
+### Resources
+- **Tutorials**: `/tutorials` - Step-by-step guides
+- **Documentation**: `/docs` - API and technical docs
+- **Blog**: `/blog` - Latest insights and updates
+- **Community**: `/community` - User community hub
+
+### User Account
+- **Login**: `/login` - User authentication
+- **Signup**: `/signup` - Account registration
+- **Dashboard**: `/dashboard` - User dashboard
+
+## 🔒 Security Features
+
+- Helmet.js for security headers
+- CORS protection
+- Rate limiting
+- Input validation
+- Environment variable protection
+
+## 📈 Performance
+
+- Gzip compression
+- Static file caching
+- Optimized images
+- Minified CSS/JS
+- CDN-ready assets
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🆘 Support
+
+- **Documentation**: [/docs](http://localhost:3000/docs)
+- **Community**: [/community](http://localhost:3000/community)
+- **Support**: [/support](http://localhost:3000/support)
+- **Email**: support@chatbotbuilder.com
+
+## 🎉 Demo
+
+Visit the live demo: [Your Deployed URL Here]
+
+---
+
+Built with ❤️ by SGK112

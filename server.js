@@ -11,7 +11,6 @@ const rateLimit = require('express-rate-limit');
 const winston = require('winston');
 const mongoose = require('mongoose');
 const path = require('path');
-const { getShopifyProducts, getMaterialPrices } = require('./your-data-utils');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -29,26 +28,39 @@ const logger = winston.createLogger({
 // Enable Trust Proxy
 app.set('trust proxy', 1);
 
-// Validate Environment Variables
-const REQUIRED_ENV_VARS = [
-  'MONGO_URI',
-  'SHOPIFY_ACCESS_TOKEN',
-  'SHOPIFY_SHOP',
-  'OPENAI_API_KEY',
-  'EMAIL_USER',
-  'EMAIL_PASS'
-];
-REQUIRED_ENV_VARS.forEach((key) => {
-  if (!process.env[key]) {
-    logger.error(`Missing required environment variable: ${key}`);
-  }
-});
-
 // Cache
 const cache = new NodeCache({ stdTTL: 3600 }); // 1-hour TTL
 
 // Middleware
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: [
+        "'self'", 
+        "'unsafe-inline'", 
+        "https://cdnjs.cloudflare.com",
+        "https://cdn.jsdelivr.net"
+      ],
+      scriptSrcAttr: ["'unsafe-inline'"],
+      styleSrc: [
+        "'self'", 
+        "'unsafe-inline'", 
+        "https://cdnjs.cloudflare.com",
+        "https://cdn.jsdelivr.net",
+        "https://fonts.googleapis.com"
+      ],
+      fontSrc: [
+        "'self'",
+        "https://fonts.gstatic.com",
+        "https://cdnjs.cloudflare.com",
+        "https://cdn.jsdelivr.net"
+      ],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", "https:"]
+    }
+  }
+}));
 app.use(compression());
 app.use(cors());
 app.use(express.json());
@@ -61,15 +73,135 @@ app.use(
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
-// MongoDB Connection
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => {
-  logger.info('MongoDB connected');
-}).catch(err => {
-  logger.error(`MongoDB connection error: ${err.message}`);
+// Routes for the chatbot builder website
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'chatbot-builder-landing.html'));
 });
+
+app.get('/home', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'chatbot-builder-landing.html'));
+});
+
+app.get('/about', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'about.html'));
+});
+
+app.get('/features', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'features.html'));
+});
+
+app.get('/templates', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'templates.html'));
+});
+
+app.get('/pricing', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'pricing.html'));
+});
+
+app.get('/contact', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'contact.html'));
+});
+
+// Builder overview and comparison page
+app.get('/builders', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'builders-overview.html'));
+});
+
+app.get('/builders/visual', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'advanced-flow-builder.html'));
+});
+
+app.get('/builders/enhanced', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'enhanced-chatbot-designer.html'));
+});
+
+app.get('/builders/simple', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'chatbot.html'));
+});
+
+// Demo route - this is what you want!
+app.get('/demo', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'enhanced-chatbot-designer.html'));
+});
+
+// Direct routes for backward compatibility
+app.get('/enhanced-chatbot-designer.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'enhanced-chatbot-designer.html'));
+});
+
+app.get('/chatbot-visual-builder.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'chatbot-visual-builder.html'));
+});
+
+app.get('/chatbot-test.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'chatbot-test.html'));
+});
+
+// Additional site pages
+app.get('/integrations', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'integrations.html'));
+});
+
+app.get('/docs', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'docs.html'));
+});
+
+app.get('/tutorials', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'tutorials.html'));
+});
+
+app.get('/blog', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'blog.html'));
+});
+
+app.get('/community', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'community.html'));
+});
+
+app.get('/support', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'support.html'));
+});
+
+// Legal pages
+app.get('/privacy', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'privacy.html'));
+});
+
+app.get('/terms', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'terms.html'));
+});
+
+// Authentication routes (for future implementation)
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+
+app.get('/signup', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'signup.html'));
+});
+
+app.get('/dashboard', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+});
+
+// Original Surprise Granite chatbot interface
+app.get('/surprise-granite', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// MongoDB Connection (only if needed for user data)
+if (process.env.MONGO_URI) {
+  mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }).then(() => {
+    logger.info('MongoDB connected');
+  }).catch(err => {
+    logger.error(`MongoDB connection error: ${err.message}`);
+  });
+} else {
+  logger.info('MongoDB not configured - running without database');
+}
 
 // Define MongoDB Schema
 const chatLogSchema = new mongoose.Schema({
@@ -212,9 +344,9 @@ app.post('/api/close-chat', (req, res) => {
   res.status(200).send({ status: 'ok' });
 });
 
-// Catch-all route for SPA
+// Catch-all route - serve 404 or redirect to homepage
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/index.html'));
+  res.redirect('/');
 });
 
 // Start server
