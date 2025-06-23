@@ -4,7 +4,9 @@ A powerful, no-code chatbot builder with drag-and-drop functionality and real-ti
 
 ## 🚀 Live Demo
 
-Visit the live demo: `http://localhost:3000/demo`
+- **Local Development**: `http://localhost:3000/public/chatbot-builder-landing.html`
+- **Enhanced Demo**: `http://localhost:3000/demo`
+- **Visual Builder**: `http://localhost:3000/builders/visual`
 
 ## ✨ Features
 
@@ -35,8 +37,8 @@ Visit the live demo: `http://localhost:3000/demo`
 
 1. **Clone the repository**
    ```bash
-   git clone <your-repo-url>
-   cd chatbot-builder
+   git clone https://github.com/YOUR_USERNAME/surprise-granite-chatbot-builder.git
+   cd surprise-granite-chatbot-builder
    ```
 
 2. **Install dependencies**
@@ -213,8 +215,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🎉 Demo
 
-Visit the live demo: [Your Deployed URL Here]
+**GitHub Repository**: [https://github.com/YOUR_USERNAME/surprise-granite-chatbot-builder](https://github.com/YOUR_USERNAME/surprise-granite-chatbot-builder)
+
+**Live Demo**: Will be available after GitHub Pages setup
 
 ---
 
-Built with ❤️ by SGK112
+Built with ❤️ for the AI chatbot community
