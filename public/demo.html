@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live ChatBot Demo - ChatBot Builder Pro</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .demo-container {
+            max-width: 1200px;
+            width: 100%;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            min-height: 600px;
+        }
+
+        .preview-section {
+            padding: 2rem;
+            background: #f8fafc;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .preview-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .demo-controls {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .demo-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .demo-btn.primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .demo-btn.secondary {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .demo-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .chatbot-preview {
+            flex: 1;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chatbot-header {
+            background: #2563eb;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            min-height: 300px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            word-wrap: break-word;
+        }
+
+        .message.bot {
+            background: #f3f4f6;
+            color: #374151;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.user {
+            background: #2563eb;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chatbot-input {
+            border-top: 1px solid #e5e7eb;
+            padding: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chatbot-input input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .chatbot-input input:focus {
+            border-color: #2563eb;
+        }
+
+        .send-btn {
+            padding: 0.75rem;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .send-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .chat-interface {
+            padding: 2rem;
+            background: white;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .interface-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .interface-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .interface-subtitle {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .features-list {
+            list-style: none;
+            margin: 2rem 0;
+        }
+
+        .features-list li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #374151;
+        }
+
+        .features-list i {
+            color: #10b981;
+            width: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .demo-container {
+                grid-template-columns: 1fr;
+                margin: 1rem;
+            }
+
+            .preview-section {
+                order: 2;
+            }
+
+            .chat-interface {
+                order: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="preview-section">
+            <div class="preview-header">
+                <h2 class="preview-title">Live ChatBot Demo</h2>
+                <div class="demo-controls">
+                    <a href="./chatbot-builder-pro.html" class="demo-btn primary">
+                        <i class="fas fa-plus"></i>
+                        Build Your Own
+                    </a>
+                    <a href="./chatbot-builder-landing.html" class="demo-btn secondary">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Home
+                    </a>
+                </div>
+            </div>
+
+            <div class="chatbot-preview">
+                <div class="chatbot-header">
+                    <i class="fas fa-robot"></i>
+                    <span>Support Assistant</span>
+                </div>
+                <div class="chatbot-messages" id="chatMessages">
+                    <div class="message bot">
+                        👋 Hi there! I'm your support assistant. How can I help you today?
+                    </div>
+                </div>
+                <div class="chatbot-input">
+                    <input type="text" id="messageInput" placeholder="Type your message here..." />
+                    <button class="send-btn" onclick="sendMessage()">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-interface">
+            <div class="interface-header">
+                <h3 class="interface-title">Experience Our AI ChatBot</h3>
+                <p class="interface-subtitle">Try chatting with our intelligent assistant</p>
+            </div>
+
+            <ul class="features-list">
+                <li><i class="fas fa-check"></i> Natural language understanding</li>
+                <li><i class="fas fa-check"></i> Instant responses 24/7</li>
+                <li><i class="fas fa-check"></i> Multiple conversation flows</li>
+                <li><i class="fas fa-check"></i> Custom integrations</li>
+                <li><i class="fas fa-check"></i> Analytics and insights</li>
+                <li><i class="fas fa-check"></i> Easy deployment</li>
+            </ul>
+
+            <div style="margin-top: auto;">
+                <h4 style="color: #1f2937; margin-bottom: 1rem;">Quick Start Options:</h4>
+                <a href="./chatbot.html" class="demo-btn secondary" style="width: 100%; justify-content: center; margin-bottom: 0.5rem;">
+                    <i class="fas fa-edit"></i>
+                    Simple Builder
+                </a>
+                <a href="./chatbot-builder-pro.html" class="demo-btn primary" style="width: 100%; justify-content: center;">
+                    <i class="fas fa-rocket"></i>
+                    Pro Builder
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Demo chatbot responses
+        const responses = [
+            "Great question! Our platform makes it easy to build professional chatbots without any coding required.",
+            "I'd be happy to help you with that! You can start building your chatbot right away using our drag-and-drop interface.",
+            "That's a popular feature! Our visual flow builder lets you create complex conversation paths with just a few clicks.",
+            "Absolutely! We support integrations with popular platforms like Slack, Discord, and custom webhooks.",
+            "Our platform offers both free and paid plans. You can start building for free and upgrade when you're ready to deploy.",
+            "Yes! You can customize the look and feel of your chatbot to match your brand perfectly.",
+            "Our chatbots work across multiple platforms including websites, mobile apps, and messaging platforms.",
+            "We provide detailed analytics so you can see how your chatbot is performing and optimize conversations.",
+            "Security is our top priority. All data is encrypted and we comply with major privacy regulations.",
+            "You can deploy your chatbot instantly with just one click once you're satisfied with your design!"
+        ];
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const messagesContainer = document.getElementById('chatMessages');
+            
+            if (input.value.trim() === '') return;
+
+            // Add user message
+            const userMessage = document.createElement('div');
+            userMessage.className = 'message user';
+            userMessage.textContent = input.value;
+            messagesContainer.appendChild(userMessage);
+
+            // Clear input
+            const userText = input.value;
+            input.value = '';
+
+            // Add bot response after a delay
+            setTimeout(() => {
+                const botMessage = document.createElement('div');
+                botMessage.className = 'message bot';
+                
+                // Select response based on keywords or random
+                let response = responses[Math.floor(Math.random() * responses.length)];
+                
+                if (userText.toLowerCase().includes('price') || userText.toLowerCase().includes('cost')) {
+                    response = "Our pricing is flexible! Start free with basic features, then upgrade to Pro for $29/month for unlimited chatbots and advanced features.";
+                } else if (userText.toLowerCase().includes('help') || userText.toLowerCase().includes('how')) {
+                    response = "I'm here to help! Our platform is designed to be intuitive. You can start with templates or build from scratch using our visual editor.";
+                } else if (userText.toLowerCase().includes('integrate')) {
+                    response = "Yes! We support integrations with 50+ platforms including websites, Slack, Teams, WhatsApp, and custom APIs.";
+                }
+                
+                botMessage.textContent = response;
+                messagesContainer.appendChild(botMessage);
+                
+                // Scroll to bottom
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }, 1000);
+
+            // Scroll to bottom
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Allow Enter key to send message
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Add some initial demo messages after page load
+        setTimeout(() => {
+            const messagesContainer = document.getElementById('chatMessages');
+            const suggestions = document.createElement('div');
+            suggestions.className = 'message bot';
+            suggestions.innerHTML = `Try asking me about:<br/>
+            • "How much does it cost?"<br/>
+            • "What integrations do you support?"<br/>
+            • "How do I get started?"`;
+            messagesContainer.appendChild(suggestions);
+        }, 2000);
+    </script>
+</body>
+</html>
