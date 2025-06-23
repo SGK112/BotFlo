@@ -37,8 +37,8 @@ A powerful, no-code chatbot builder with drag-and-drop functionality and real-ti
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/YOUR_USERNAME/surprise-granite-chatbot-builder.git
-   cd surprise-granite-chatbot-builder
+   git clone https://github.com/SGK112/chatflo.com.git
+   cd chatflo.com
    ```
 
 2. **Install dependencies**
@@ -215,7 +215,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🎉 Demo
 
-**GitHub Repository**: [https://github.com/YOUR_USERNAME/surprise-granite-chatbot-builder](https://github.com/YOUR_USERNAME/surprise-granite-chatbot-builder)
+**GitHub Repository**: [https://github.com/SGK112/chatflo.com](https://github.com/SGK112/chatflo.com)
 
 **Live Demo**: Will be available after GitHub Pages setup
 
