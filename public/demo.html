@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Live ChatBot Demo - ChatBot Builder Pro</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="./css/shared.css" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -230,21 +232,43 @@
     </style>
 </head>
 <body>
-    <div class="demo-container">
-        <div class="preview-section">
-            <div class="preview-header">
-                <h2 class="preview-title">Live ChatBot Demo</h2>
-                <div class="demo-controls">
-                    <a href="./chatbot-builder-pro.html" class="demo-btn primary">
-                        <i class="fas fa-plus"></i>
-                        Build Your Own
-                    </a>
-                    <a href="./chatbot-builder-landing.html" class="demo-btn secondary">
-                        <i class="fas fa-arrow-left"></i>
-                        Back to Home
-                    </a>
-                </div>
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <a href="./" class="nav-logo">
+                <i class="fas fa-robot"></i>
+                ChatBot Builder Pro
+            </a>
+            
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="./easy-chatbot-builder.html">Build Now</a></li>
+                <li class="nav-item"><a href="./demo.html" class="active">Demo</a></li>
+                <li class="nav-item"><a href="./tutorial.html">Tutorial</a></li>
+                <li class="nav-item"><a href="./chatbot-builder-landing.html#features">Features</a></li>
+            </ul>
+
+            <div class="nav-cta">
+                <a href="./easy-chatbot-builder.html" class="btn btn-primary btn-sm">Start Building</a>
             </div>
+        </div>
+    </nav>
+
+    <div class="page-content">
+        <div class="demo-container">
+            <div class="preview-section">
+                <div class="preview-header">
+                    <h2 class="preview-title">🤖 Live ChatBot Demo</h2>
+                    <div class="demo-controls">
+                        <a href="./easy-chatbot-builder.html" class="demo-btn primary">
+                            <i class="fas fa-magic"></i>
+                            Build Your Own
+                        </a>
+                        <a href="./tutorial.html" class="demo-btn secondary">
+                            <i class="fas fa-book"></i>
+                            Learn How
+                        </a>
+                    </div>
+                </div>
 
             <div class="chatbot-preview">
                 <div class="chatbot-header">
@@ -371,5 +395,6 @@
             messagesContainer.appendChild(suggestions);
         }, 2000);
     </script>
+    </div> <!-- End page-content -->
 </body>
 </html>

@@ -1,0 +1,1598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easy Chatbot Builder - Build Your Bot in Minutes!</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="./css/shared.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8fafc;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Override specific styles for builder page */
+        .page-content {
+            margin-top: 70px;
+        }
+        
+        /* Keep existing mobile-first design but improve colors */
+        .header {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-purple) 100%);
+            color: white;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            position: relative;
+            z-index: 999;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .header h1 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+
+        .header-controls {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .header-btn {
+            padding: 0.4rem 0.8rem;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .header-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .header-btn.primary {
+            background: #ff4757;
+            border-color: #ff4757;
+        }
+
+        /* Mobile-first container - stacked vertically */
+        .container {
+            max-width: 100%;
+            margin: 0;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        /* Step Panel - Mobile First */
+        .step-panel {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 1rem;
+            order: 1;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 1rem;
+            font-size: 1rem;
+        }
+
+        .step-info h2 {
+            font-size: 1.2rem;
+            color: #2d3748;
+            margin-bottom: 0.25rem;
+        }
+
+        .step-info p {
+            font-size: 0.9rem;
+            color: #718096;
+        }
+
+        /* Form Elements - Touch-friendly */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            background: #fff;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+
+        /* Template Grid - Enhanced & Fun */
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .template-card {
+            padding: 1.5rem;
+            border: 2px solid var(--border-light);
+            border-radius: var(--radius-xl);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            text-align: center;
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .template-card:hover, .template-card:active {
+            border-color: var(--primary-blue);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .template-card.selected {
+            border-color: var(--primary-blue);
+            background: var(--primary-light);
+            transform: scale(1.02);
+        }
+
+        .template-card.popular {
+            border-color: var(--accent-green);
+            background: linear-gradient(135deg, #f0fff4 0%, #ffffff 100%);
+        }
+
+        .template-card.trending {
+            border-color: var(--accent-orange);
+            background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%);
+        }
+
+        .template-card.new {
+            border-color: var(--accent-pink);
+            background: linear-gradient(135deg, #fdf2f8 0%, #ffffff 100%);
+        }
+
+        .template-badge {
+            position: absolute;
+            top: -1px;
+            right: -1px;
+            background: var(--accent-green);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 0 var(--radius-xl) 0 var(--radius-lg);
+            z-index: 10;
+        }
+
+        .template-card.trending .template-badge {
+            background: var(--accent-orange);
+        }
+
+        .template-card.new .template-badge {
+            background: var(--accent-pink);
+        }
+
+        .template-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+            animation: bounce 2s infinite;
+        }
+
+        .template-card:hover .template-icon {
+            animation: bounce 0.5s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-4px); }
+            60% { transform: translateY(-2px); }
+        }
+
+        .template-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .template-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        .template-features {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .template-suggestion {
+            background: linear-gradient(135deg, var(--primary-light), #f0f9ff);
+            border: 1px solid var(--primary-blue);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .template-card.selected::after {
+            content: "✓";
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: #667eea;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .template-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+            color: #667eea;
+        }
+
+        .template-name {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .template-desc {
+            font-size: 0.9rem;
+            color: #718096;
+            line-height: 1.4;
+        }
+
+        /* Action Buttons - Mobile Optimized */
+        .action-btn {
+            width: 100%;
+            padding: 1.25rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .action-btn:hover, .action-btn:active {
+            background: #5a67d8;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .action-btn:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .action-btn.success {
+            background: #10b981;
+        }
+
+        .action-btn.success:hover {
+            background: #059669;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin: 1.5rem 0;
+        }
+
+        .progress-label {
+            font-size: 0.9rem;
+            color: #4a5568;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .progress-bar {
+            background: #e2e8f0;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        /* Preview Panel - Mobile Optimized */
+        .preview-panel {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+            order: 2;
+            margin-bottom: 1rem;
+        }
+
+        .preview-header {
+            background: #667eea;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .preview-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .preview-status {
+            background: rgba(255,255,255,0.2);
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+
+        /* Chatbot Preview - Mobile Optimized */
+        .chatbot-preview {
+            display: flex;
+            flex-direction: column;
+            height: 400px;
+        }
+
+        .chatbot-header {
+            background: #f8fafc;
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .bot-avatar {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .bot-info {
+            flex: 1;
+        }
+
+        .bot-name {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.25rem;
+        }
+
+        .bot-status {
+            font-size: 0.8rem;
+            color: #10b981;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 0.75rem 1rem;
+            border-radius: 18px;
+            word-wrap: break-word;
+            line-height: 1.4;
+        }
+
+        .message.bot {
+            background: white;
+            color: #2d3748;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .message.user {
+            background: #667eea;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-input-area {
+            padding: 1rem;
+            border-top: 1px solid #e2e8f0;
+            background: white;
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 25px;
+            outline: none;
+            font-size: 1rem;
+        }
+
+        .chat-input:focus {
+            border-color: #667eea;
+        }
+
+        .send-btn {
+            width: 45px;
+            height: 45px;
+            background: #667eea;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            touch-action: manipulation;
+        }
+
+        .send-btn:hover, .send-btn:active {
+            background: #5a67d8;
+            transform: scale(1.05);
+        }
+
+        /* Right Panel - Instructions */
+        .help-panel {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            height: fit-content;
+            position: sticky;
+            top: 120px;
+        }
+
+        .help-section {
+            margin-bottom: 2rem;
+        }
+
+        .help-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .help-content {
+            font-size: 0.9rem;
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        .help-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .help-list li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .help-list li::before {
+            content: "✓";
+            color: #10b981;
+            font-weight: bold;
+            margin-top: 0.1rem;
+        }
+
+        .progress-bar {
+            background: #e2e8f0;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .voice-tutorial {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .voice-controls {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .voice-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .voice-btn:hover, .voice-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .tutorial-text {
+            text-align: center;
+            color: #4a5568;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 1200px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .guide-panel, .help-panel {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 1rem auto;
+                padding: 0 0.5rem;
+            }
+            
+            .template-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tutorial-controls {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <a href="./" class="nav-logo">
+                <i class="fas fa-robot"></i>
+                ChatBot Builder Pro
+            </a>
+            
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="./easy-chatbot-builder.html" class="active">Build Now</a></li>
+                <li class="nav-item"><a href="./demo.html">Demo</a></li>
+                <li class="nav-item"><a href="./tutorial.html">Tutorial</a></li>
+                <li class="nav-item"><a href="./chatbot-builder-landing.html#features">Features</a></li>
+            </ul>
+
+            <div class="nav-cta">
+                <a href="./demo.html" class="btn btn-secondary btn-sm">Try Demo</a>
+                <a href="./tutorial.html" class="btn btn-ghost btn-sm">Help</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-content">
+        <!-- Builder Header -->
+        <div class="header">
+            <h1><i class="fas fa-magic"></i> Easy Chatbot Builder</h1>
+            <p>Build your smart chatbot in minutes - no coding required!</p>
+            <div class="header-controls">
+                <button class="header-btn" onclick="startVoiceTutorial()">
+                    <i class="fas fa-play"></i> Voice Guide
+                </button>
+                <button class="header-btn" onclick="pauseVoiceTutorial()">
+                    <i class="fas fa-pause"></i> Pause
+                </button>
+                <button class="header-btn" onclick="resetTutorial()">
+                    <i class="fas fa-redo"></i> Start Over
+                </button>
+                <a href="./tutorial.html" class="header-btn">
+                    <i class="fas fa-book"></i> Written Guide
+                </a>
+                <a href="./demo.html" class="header-btn primary">
+                    <i class="fas fa-eye"></i> See Demo
+                </a>
+            </div>
+        </div>
+
+    <div class="container">
+        <!-- Left Panel - Step by Step Guide -->
+        <div class="guide-panel">
+            <div class="step-indicator">
+                <div class="step-number">1</div>
+                <div>
+                    <div class="step-title">Choose Your Template</div>
+                    <div class="step-description">Pick a pre-made chatbot style</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">🎨 Choose Your Chatbot Style:</label>
+                <div class="template-grid">
+                    <div class="template-card popular" onclick="selectTemplate('customer-service')">
+                        <div class="template-badge">Most Popular</div>
+                        <div class="template-icon">🎧</div>
+                        <div class="template-name">Customer Service Pro</div>
+                        <div class="template-desc">24/7 customer support with smart responses</div>
+                        <div class="template-features">✓ FAQ ✓ Live chat ✓ Escalation</div>
+                    </div>
+                    <div class="template-card trending" onclick="selectTemplate('lead-capture')">
+                        <div class="template-badge">Trending</div>
+                        <div class="template-icon">📧</div>
+                        <div class="template-name">Lead Magnet</div>
+                        <div class="template-desc">Convert visitors into customers</div>
+                        <div class="template-features">✓ Forms ✓ Analytics ✓ Integrations</div>
+                    </div>
+                    <div class="template-card" onclick="selectTemplate('appointment')">
+                        <div class="template-icon">📅</div>
+                        <div class="template-name">Smart Scheduler</div>
+                        <div class="template-desc">Automated appointment booking</div>
+                        <div class="template-features">✓ Calendar ✓ Reminders ✓ Payments</div>
+                    </div>
+                    <div class="template-card" onclick="selectTemplate('ecommerce')">
+                        <div class="template-icon">🛒</div>
+                        <div class="template-name">Shopping Assistant</div>
+                        <div class="template-desc">Product recommendations & sales</div>
+                        <div class="template-features">✓ Catalog ✓ Cart ✓ Checkout</div>
+                    </div>
+                    <div class="template-card new" onclick="selectTemplate('ai-tutor')">
+                        <div class="template-badge">New</div>
+                        <div class="template-icon">🎓</div>
+                        <div class="template-name">AI Tutor</div>
+                        <div class="template-desc">Interactive learning assistant</div>
+                        <div class="template-features">✓ Quizzes ✓ Progress ✓ Certificates</div>
+                    </div>
+                    <div class="template-card" onclick="selectTemplate('entertainment')">
+                        <div class="template-icon">🎮</div>
+                        <div class="template-name">Fun & Games</div>
+                        <div class="template-desc">Jokes, trivia, and mini-games</div>
+                        <div class="template-features">✓ Trivia ✓ Jokes ✓ Daily tips</div>
+                    </div>
+                </div>
+                
+                <div class="template-suggestion">
+                    💡 <strong>Pro Tip:</strong> Start with Customer Service Pro - it's perfect for beginners and includes everything you need!
+                </div>
+            </div>
+
+            <div class="step-indicator">
+                <div class="step-number">2</div>
+                <div>
+                    <div class="step-title">Name Your Bot</div>
+                    <div class="step-description">Give your chatbot a friendly name</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Bot Name:</label>
+                <input type="text" class="form-input" id="botName" placeholder="e.g., Sarah, Customer Helper, AI Assistant" onkeyup="updateBotName()">
+            </div>
+
+            <div class="step-indicator">
+                <div class="step-number">3</div>
+                <div>
+                    <div class="step-title">Set Welcome Message</div>
+                    <div class="step-description">What should your bot say first?</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Welcome Message:</label>
+                <textarea class="form-input form-textarea" id="welcomeMessage" placeholder="Hi! I'm here to help you. How can I assist you today?" onkeyup="updateWelcomeMessage()"></textarea>
+            </div>
+
+            <div class="step-indicator">
+                <div class="step-number">4</div>
+                <div>
+                    <div class="step-title">Add Quick Responses</div>
+                    <div class="step-description">Common questions and answers</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Quick Response 1:</label>
+                <input type="text" class="form-input" id="response1" placeholder="What are your hours?" onkeyup="updateResponses()">
+                <textarea class="form-input form-textarea" id="answer1" placeholder="We're open Monday-Friday, 9AM-5PM" onkeyup="updateResponses()" style="margin-top: 0.5rem;"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Quick Response 2:</label>
+                <input type="text" class="form-input" id="response2" placeholder="How can I contact you?" onkeyup="updateResponses()">
+                <textarea class="form-input form-textarea" id="answer2" placeholder="You can call us at (555) 123-4567 or email info@example.com" onkeyup="updateResponses()" style="margin-top: 0.5rem;"></textarea>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+
+            <button class="action-btn" onclick="generateChatbot()" id="generateBtn" disabled>
+                <i class="fas fa-magic"></i> Create My Chatbot
+            </button>
+
+            <button class="action-btn" onclick="downloadChatbot()" id="downloadBtn" style="background: #10b981; display: none;">
+                <i class="fas fa-download"></i> Download Chatbot Code
+            </button>
+
+            <!-- New Share & Deploy Section -->
+            <div class="share-section" id="shareSection" style="display: none; margin-top: 2rem; padding: 1.5rem; background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border-radius: var(--radius-xl); border: 2px solid var(--primary-blue);">
+                <h3 style="text-align: center; margin-bottom: 1rem; color: var(--primary-blue);">
+                    🎉 Your Chatbot is Ready! 
+                </h3>
+                <p style="text-align: center; margin-bottom: 1.5rem; color: var(--text-secondary);">
+                    Choose how you want to use your awesome new chatbot:
+                </p>
+                
+                <div class="share-options" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                    <button class="share-btn" onclick="downloadToPhone()" style="background: var(--accent-green); color: white; padding: 1rem; border-radius: var(--radius-md); border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; transition: all 0.3s ease;">
+                        <i class="fas fa-mobile-alt" style="font-size: 1.5rem;"></i>
+                        <span style="font-weight: 600;">Download to Phone</span>
+                        <small style="opacity: 0.9;">Test it anywhere</small>
+                    </button>
+                    
+                    <button class="share-btn" onclick="shareWithFriends()" style="background: var(--accent-pink); color: white; padding: 1rem; border-radius: var(--radius-md); border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; transition: all 0.3s ease;">
+                        <i class="fas fa-share-alt" style="font-size: 1.5rem;"></i>
+                        <span style="font-weight: 600;">Share with Friends</span>
+                        <small style="opacity: 0.9;">Get feedback</small>
+                    </button>
+                </div>
+                
+                <div class="share-options" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <button class="share-btn" onclick="embedOnWebsite()" style="background: var(--accent-orange); color: white; padding: 1rem; border-radius: var(--radius-md); border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; transition: all 0.3s ease;">
+                        <i class="fas fa-code" style="font-size: 1.5rem;"></i>
+                        <span style="font-weight: 600;">Embed on Website</span>
+                        <small style="opacity: 0.9;">Go live instantly</small>
+                    </button>
+                    
+                    <button class="share-btn" onclick="upgradeToPro()" style="background: linear-gradient(135deg, var(--primary-blue), var(--secondary-purple)); color: white; padding: 1rem; border-radius: var(--radius-md); border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; transition: all 0.3s ease;">
+                        <i class="fas fa-star" style="font-size: 1.5rem;"></i>
+                        <span style="font-weight: 600;">Upgrade to Pro</span>
+                        <small style="opacity: 0.9;">Unlock all features</small>
+                    </button>
+                </div>
+                
+                <div style="text-align: center; margin-top: 1.5rem;">
+                    <button onclick="createAnother()" style="background: transparent; border: 2px solid var(--primary-blue); color: var(--primary-blue); padding: 0.75rem 1.5rem; border-radius: var(--radius-md); cursor: pointer; font-weight: 600;">
+                        <i class="fas fa-plus"></i> Create Another Bot
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Center Panel - Live Preview -->
+        <div class="preview-panel">
+            <div class="preview-header">
+                <div class="preview-title">
+                    <i class="fas fa-eye"></i> Live Preview
+                </div>
+                <div class="preview-status" id="previewStatus">Setting up...</div>
+            </div>
+
+            <div class="chatbot-preview">
+                <div class="chatbot-header">
+                    <div class="bot-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="bot-info">
+                        <div class="bot-name" id="displayBotName">AI Assistant</div>
+                        <div class="bot-status">Online now</div>
+                    </div>
+                </div>
+
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message bot" id="welcomeDisplay">
+                        👋 Hi! I'm here to help you. How can I assist you today?
+                    </div>
+                </div>
+
+                <div class="chat-input-area">
+                    <div class="chat-input-container">
+                        <input type="text" class="chat-input" id="testInput" placeholder="Type a message to test your bot...">
+                        <button class="send-btn" onclick="sendTestMessage()">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel - Help & Instructions -->
+        <div class="help-panel">
+            <div class="help-section">
+                <div class="help-title">
+                    <i class="fas fa-lightbulb"></i> How This Works
+                </div>
+                <div class="help-content">
+                    <ul class="help-list">
+                        <li>Choose a template that fits your needs</li>
+                        <li>Give your bot a friendly name</li>
+                        <li>Write a welcoming first message</li>
+                        <li>Add common questions and answers</li>
+                        <li>Watch your bot come alive in real-time!</li>
+                        <li>Download the code when you're happy</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="voice-tutorial">
+                <div class="help-title">
+                    <i class="fas fa-volume-up"></i> Voice Guide
+                </div>
+                <div class="voice-controls">
+                    <button class="voice-btn" onclick="playStep(1)">Step 1</button>
+                    <button class="voice-btn" onclick="playStep(2)">Step 2</button>
+                    <button class="voice-btn" onclick="playStep(3)">Step 3</button>
+                    <button class="voice-btn" onclick="playStep(4)">Step 4</button>
+                </div>
+                <div class="tutorial-text" id="tutorialText">
+                    Click "Start Voice Tutorial" above to hear step-by-step instructions!
+                </div>
+            </div>
+
+            <div class="help-section">
+                <div class="help-title">
+                    <i class="fas fa-question-circle"></i> Need Help?
+                </div>
+                <div class="help-content">
+                    If you get stuck, don't worry! The voice tutorial will guide you through each step. You can also:
+                    <ul class="help-list">
+                        <li>Try the live demo first</li>
+                        <li>Start with a simple FAQ bot</li>
+                        <li>Use the suggested text examples</li>
+                        <li>Test your bot as you build it</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedTemplate = null;
+        let responses = {};
+        let currentStep = 0;
+        let voiceTutorial = null;
+        let speechSynthesis = window.speechSynthesis;
+
+        // Template configurations
+        const templates = {
+            'customer-service': {
+                name: 'Customer Helper Pro',
+                welcome: '👋 Hi! I\'m here to help you with any questions. How can I assist you today?',
+                responses: {
+                    'hours': '🕒 We\'re open Monday-Friday 9AM-6PM, and Saturday 10AM-4PM. Need help outside these hours? I\'m here 24/7!',
+                    'contact': '📞 You can reach us at (555) 123-4567 or email support@company.com. I can also help answer questions right now!',
+                    'returns': '🔄 Returns are easy! You have 30 days to return any item. Would you like me to start a return for you?',
+                    'shipping': '📦 Free shipping on orders over $50! Standard delivery is 3-5 business days. Need expedited shipping?'
+                }
+            },
+            'lead-capture': {
+                name: 'Lead Magnet Bot',
+                welcome: '🚀 Hey there! Ready to supercharge your business? I can show you how our solution saves companies 40% on costs!',
+                responses: {
+                    'pricing': '💰 Our plans start at just $29/month and pay for themselves in weeks. Want to see a custom quote?',
+                    'demo': '📊 I\'d love to show you a personalized demo! What\'s your biggest business challenge right now?',
+                    'benefits': '✨ Our clients see 40% cost savings, 60% time savings, and 3x ROI on average. Sound interesting?',
+                    'contact': '📞 Let\'s chat! Leave your email and I\'ll have our specialist contact you within 24 hours.'
+                }
+            },
+            'appointment': {
+                name: 'Smart Scheduler',
+                welcome: '📅 Perfect timing! I can help you book an appointment that fits your schedule. What service do you need?',
+                responses: {
+                    'booking': '🗓️ Great! I have availability this week. What day works best for you - weekday or weekend?',
+                    'services': '✨ We offer consultations (30 min), full sessions (60 min), and premium packages (90 min). Which interests you?',
+                    'availability': '⏰ I have openings Monday-Friday 9AM-6PM and Saturdays 10AM-4PM. Any preference?',
+                    'reschedule': '🔄 No problem! I can reschedule your appointment. What\'s your current booking reference?'
+                }
+            },
+            'ecommerce': {
+                name: 'Shopping Buddy',
+                welcome: '🛍️ Welcome to our store! I\'m your personal shopping assistant. Looking for anything specific today?',
+                responses: {
+                    'products': '🎯 Based on what you\'re looking for, I have some perfect recommendations! What\'s your budget range?',
+                    'deals': '🔥 Today only: 30% off bestsellers + free shipping! Plus I can give you an exclusive 10% discount code.',
+                    'size': '📏 I can help you find the perfect size! What\'s your usual size in this category?',
+                    'shipping': '📦 Free shipping on orders $50+! Express delivery available. Need it by a specific date?'
+                }
+            },
+            'ai-tutor': {
+                name: 'Study Buddy',
+                welcome: '🎓 Hi there, scholar! I\'m your AI tutor. What subject shall we dive into today? I make learning fun and easy!',
+                responses: {
+                    'math': '🧮 Math made simple! Whether it\'s algebra, calculus, or statistics, I break it down step-by-step. What problem?',
+                    'science': '🔬 Science is amazing! I can help with biology, chemistry, physics, and more. What concept are you exploring?',
+                    'exam': '📚 Exam prep time! I\'ll create a personalized study plan and practice questions. When\'s your test?',
+                    'homework': '✏️ Homework help is here! I won\'t do it for you, but I\'ll guide you to the right answer.'
+                }
+            },
+            'entertainment': {
+                name: 'Fun Bot',
+                welcome: '🎮 Hey there! Ready for some fun? I\'ve got jokes, trivia, games, and daily inspiration. What sounds good?',
+                responses: {
+                    'joke': '😂 Why don\'t scientists trust atoms? Because they make up everything! Want another one?',
+                    'trivia': '🧠 Fun fact: Honey never spoils! Archaeologists have found 3000-year-old honey that\'s still edible!',
+                    'game': '🎯 Let\'s play 20 questions! Think of something and I\'ll try to guess it. Ready?',
+                    'quote': '✨ "The only way to do great work is to love what you do." - Steve Jobs. Need more inspiration?'
+                }
+            }
+        };
+
+        // Voice tutorial content
+        const tutorialSteps = {
+            1: "Welcome! Let's build your chatbot together. First, choose a template that matches what you want your bot to do. If you're helping customers, pick Customer Service. If you want to collect emails, choose Lead Capture. Click on any template to select it.",
+            2: "Great! Now give your bot a friendly name. This could be your name, your business name, or something fun like 'Helper Bot'. Type it in the Bot Name field and watch it appear in the preview on the right.",
+            3: "Perfect! Now write what your bot should say when someone first talks to it. Make it welcoming and helpful. This is the first impression visitors get, so make it count! Type your message and see it update in real-time.",
+            4: "Finally, add some common questions and answers. Think about what people usually ask you. Add the question in the first box and the answer in the second box. You can test these by typing the questions in the chat preview!"
+        };
+
+        function selectTemplate(templateId) {
+            selectedTemplate = templateId;
+            
+            // Add visual feedback with animation
+            document.querySelectorAll('.template-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            const selectedCard = event.target.closest('.template-card');
+            selectedCard.classList.add('selected');
+            
+            // Add celebration effect
+            selectedCard.style.transform = 'scale(1.05)';
+            setTimeout(() => {
+                selectedCard.style.transform = 'scale(1.02)';
+            }, 200);
+            
+            // Auto-fill with template data
+            const template = templates[templateId];
+            document.getElementById('botName').value = template.name;
+            document.getElementById('welcomeMessage').value = template.welcome;
+            
+            // Fill responses with more variety
+            const responseKeys = Object.keys(template.responses);
+            responseKeys.forEach((key, index) => {
+                if (index < 4) { // Support up to 4 responses
+                    const responseInput = document.getElementById(`response${index + 1}`);
+                    const answerInput = document.getElementById(`answer${index + 1}`);
+                    if (responseInput && answerInput) {
+                        responseInput.value = key;
+                        answerInput.value = template.responses[key];
+                    }
+                }
+            });
+            
+            // Update preview with animation
+            updateBotName();
+            updateWelcomeMessage();
+            updateResponses();
+            updateProgress();
+            
+            // Show success message
+            const suggestion = document.querySelector('.template-suggestion');
+            if (suggestion) {
+                suggestion.innerHTML = `🎉 <strong>Awesome choice!</strong> I've pre-filled everything with ${template.name} examples. Customize them to match your style!`;
+                suggestion.style.background = 'linear-gradient(135deg, #d1fae5, #a7f3d0)';
+                suggestion.style.borderColor = 'var(--accent-green)';
+            }
+            
+            // Encouraging voice feedback
+            const encouragements = [
+                `Perfect! ${template.name} is an excellent choice. I've filled in some smart examples for you.`,
+                `Great selection! ${template.name} will work wonderfully for your needs. Feel free to customize the responses.`,
+                `Fantastic! You picked ${template.name} - that's going to be amazing. The examples are ready for you to personalize.`,
+                `Excellent choice! ${template.name} is one of our most popular templates. I've pre-loaded some engaging responses.`
+            ];
+            const randomEncouragement = encouragements[Math.floor(Math.random() * encouragements.length)];
+            speak(randomEncouragement);
+            
+            // Add progress celebration
+            const progressBar = document.getElementById('progressBar');
+            if (progressBar) {
+                progressBar.style.background = 'linear-gradient(90deg, var(--accent-green), var(--primary-blue))';
+                setTimeout(() => {
+                    progressBar.style.background = 'linear-gradient(90deg, var(--primary-blue), var(--secondary-purple))';
+                }, 1000);
+            }
+        }
+
+        function updateBotName() {
+            const name = document.getElementById('botName').value || 'AI Assistant';
+            document.getElementById('displayBotName').textContent = name;
+            updateProgress();
+        }
+
+        function updateWelcomeMessage() {
+            const message = document.getElementById('welcomeMessage').value || 'Hi! I\'m here to help you. How can I assist you today?';
+            document.getElementById('welcomeDisplay').innerHTML = '👋 ' + message;
+            updateProgress();
+        }
+
+        function updateResponses() {
+            responses = {};
+            
+            const q1 = document.getElementById('response1').value;
+            const a1 = document.getElementById('answer1').value;
+            const q2 = document.getElementById('response2').value;
+            const a2 = document.getElementById('answer2').value;
+            
+            if (q1 && a1) responses[q1.toLowerCase()] = a1;
+            if (q2 && a2) responses[q2.toLowerCase()] = a2;
+            
+            updateProgress();
+        }
+
+        function updateProgress() {
+            let progress = 0;
+            
+            if (selectedTemplate) progress += 25;
+            if (document.getElementById('botName').value) progress += 25;
+            if (document.getElementById('welcomeMessage').value) progress += 25;
+            if (Object.keys(responses).length > 0) progress += 25;
+            
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('generateBtn').disabled = progress < 75;
+            
+            if (progress >= 75) {
+                document.getElementById('previewStatus').textContent = 'Ready to deploy!';
+            } else {
+                document.getElementById('previewStatus').textContent = 'Setting up...';
+            }
+        }
+
+        function sendTestMessage() {
+            const input = document.getElementById('testInput');
+            const message = input.value.trim();
+            if (!message) return;
+            
+            // Add user message
+            const chatMessages = document.getElementById('chatMessages');
+            const userMsg = document.createElement('div');
+            userMsg.className = 'message user';
+            userMsg.textContent = message;
+            chatMessages.appendChild(userMsg);
+            
+            // Clear input
+            input.value = '';
+            
+            // Find response
+            setTimeout(() => {
+                const botMsg = document.createElement('div');
+                botMsg.className = 'message bot';
+                
+                let response = "I'm still learning! Add more responses in the Quick Responses section.";
+                
+                for (let question in responses) {
+                    if (message.toLowerCase().includes(question)) {
+                        response = responses[question];
+                        break;
+                    }
+                }
+                
+                botMsg.textContent = response;
+                chatMessages.appendChild(botMsg);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 1000);
+            
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function generateChatbot() {
+            document.getElementById('generateBtn').style.display = 'none';
+            document.getElementById('downloadBtn').style.display = 'block';
+            document.getElementById('previewStatus').textContent = 'Chatbot ready!';
+            
+            speak("Congratulations! Your chatbot is ready. You can now download the code and add it to your website. The download includes simple instructions for installation.");
+        }
+
+        function downloadChatbot() {
+            const botName = document.getElementById('botName').value || 'AI Assistant';
+            const welcomeMsg = document.getElementById('welcomeMessage').value || 'Hi! How can I help you?';
+            
+            const chatbotCode = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${botName} - Chatbot</title>
+    <style>
+        /* Simple chatbot styles */
+        .chatbot-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            height: 400px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+        }
+        .chatbot-header {
+            background: #667eea;
+            color: white;
+            padding: 1rem;
+            border-radius: 10px 10px 0 0;
+            font-weight: bold;
+        }
+        .chatbot-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+        .message {
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            border-radius: 8px;
+            max-width: 80%;
+        }
+        .message.bot {
+            background: #f0f0f0;
+            align-self: flex-start;
+        }
+        .message.user {
+            background: #667eea;
+            color: white;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+        .chatbot-input {
+            padding: 1rem;
+            border-top: 1px solid #eee;
+        }
+        .chatbot-input input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="chatbot-widget">
+        <div class="chatbot-header">${botName}</div>
+        <div class="chatbot-messages" id="messages">
+            <div class="message bot">${welcomeMsg}</div>
+        </div>
+        <div class="chatbot-input">
+            <input type="text" placeholder="Type your message..." onkeypress="if(event.key==='Enter') sendMessage()">
+        </div>
+    </div>
+
+    <script>
+        const responses = ${JSON.stringify(responses)};
+        
+        function sendMessage() {
+            const input = event.target;
+            const message = input.value.trim();
+            if (!message) return;
+            
+            // Add user message
+            const messages = document.getElementById('messages');
+            const userDiv = document.createElement('div');
+            userDiv.className = 'message user';
+            userDiv.textContent = message;
+            messages.appendChild(userDiv);
+            
+            // Find bot response
+            let response = "I'm here to help! Can you rephrase your question?";
+            for (let question in responses) {
+                if (message.toLowerCase().includes(question)) {
+                    response = responses[question];
+                    break;
+                }
+            }
+            
+            // Add bot response
+            setTimeout(() => {
+                const botDiv = document.createElement('div');
+                botDiv.className = 'message bot';
+                botDiv.textContent = response;
+                messages.appendChild(botDiv);
+                messages.scrollTop = messages.scrollHeight;
+            }, 1000);
+            
+            input.value = '';
+            messages.scrollTop = messages.scrollHeight;
+        }
+    <\/script>
+</body>
+</html>
+
+<!-- INSTALLATION INSTRUCTIONS:
+1. Save this file as "chatbot.html"
+2. Upload it to your website
+3. Add this code to your main website pages where you want the chatbot:
+   <script src="chatbot.html"></script>
+4. That's it! Your chatbot is now live.
+
+Need help? Email us at support@yoursite.com
+-->`;
+
+            const blob = new Blob([chatbotCode], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${botName.replace(/\s+/g, '-').toLowerCase()}-chatbot.html`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            speak("Perfect! Your chatbot code has been downloaded. Check your downloads folder for the HTML file with installation instructions.");
+        }
+
+        // Voice tutorial functions
+        function speak(text) {
+            if (speechSynthesis) {
+                speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 0.9;
+                utterance.pitch = 1;
+                utterance.volume = 0.8;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        function startVoiceTutorial() {
+            currentStep = 1;
+            playStep(1);
+        }
+
+        function pauseVoiceTutorial() {
+            if (speechSynthesis) {
+                speechSynthesis.cancel();
+            }
+        }
+
+        function resetTutorial() {
+            // Reset all fields
+            selectedTemplate = null;
+            document.querySelectorAll('.template-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.getElementById('botName').value = '';
+            document.getElementById('welcomeMessage').value = '';
+            document.getElementById('response1').value = '';
+            document.getElementById('answer1').value = '';
+            document.getElementById('response2').value = '';
+            document.getElementById('answer2').value = '';
+            
+            // Reset preview
+            document.getElementById('displayBotName').textContent = 'AI Assistant';
+            document.getElementById('welcomeDisplay').innerHTML = '👋 Hi! I\'m here to help you. How can I assist you today?';
+            document.getElementById('chatMessages').innerHTML = '<div class="message bot" id="welcomeDisplay">👋 Hi! I\'m here to help you. How can I assist you today?</div>';
+            
+            // Reset progress
+            responses = {};
+            updateProgress();
+            
+            // Reset buttons
+            document.getElementById('generateBtn').style.display = 'block';
+            document.getElementById('downloadBtn').style.display = 'none';
+            document.getElementById('generateBtn').disabled = true;
+            
+            speak("Let's start over! I'll guide you through building your chatbot step by step.");
+        }
+
+        function playStep(step) {
+            currentStep = step;
+            const text = tutorialSteps[step];
+            if (text) {
+                document.getElementById('tutorialText').textContent = text;
+                speak(text);
+                
+                // Update active button
+                document.querySelectorAll('.voice-btn').forEach(btn => btn.classList.remove('active'));
+                event.target.classList.add('active');
+            }
+        }
+
+        // New sharing and deployment functions
+        function downloadToPhone() {
+            // Create a mobile-friendly HTML file
+            const botName = document.getElementById('botName').value || 'AI Assistant';
+            const welcomeMsg = document.getElementById('welcomeMessage').value || 'Hi! How can I help you today?';
+            
+            const mobileHTML = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${botName} - Mobile Chat</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
+        .chat-container { max-width: 400px; margin: 0 auto; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .chat-header { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 20px; text-align: center; }
+        .chat-messages { padding: 20px; max-height: 400px; overflow-y: auto; }
+        .message { margin: 10px 0; padding: 12px; border-radius: 12px; max-width: 80%; }
+        .bot { background: #f0f0f0; margin-right: 20%; }
+        .user { background: #667eea; color: white; margin-left: 20%; }
+        .chat-input { width: 100%; padding: 15px; border: none; border-top: 1px solid #eee; }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2>${botName}</h2>
+            <p>Your AI Assistant</p>
+        </div>
+        <div class="chat-messages" id="messages">
+            <div class="message bot">${welcomeMsg}</div>
+        </div>
+        <input type="text" class="chat-input" placeholder="Type a message..." onkeypress="if(event.key==='Enter') sendMessage()">
+    </div>
+    <script>
+        const responses = ${JSON.stringify(responses)};
+        function sendMessage() {
+            const input = document.querySelector('.chat-input');
+            const message = input.value.trim();
+            if (!message) return;
+            
+            const messages = document.getElementById('messages');
+            messages.innerHTML += '<div class="message user">' + message + '</div>';
+            
+            let response = "I'm here to help! Can you rephrase your question?";
+            for (let question in responses) {
+                if (message.toLowerCase().includes(question)) {
+                    response = responses[question];
+                    break;
+                }
+            }
+            
+            setTimeout(() => {
+                messages.innerHTML += '<div class="message bot">' + response + '</div>';
+                messages.scrollTop = messages.scrollHeight;
+            }, 1000);
+            
+            input.value = '';
+            messages.scrollTop = messages.scrollHeight;
+        }
+    </script>
+</body>
+</html>`;
+            
+            const blob = new Blob([mobileHTML], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${botName.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_mobile.html`;
+            a.click();
+            
+            speak("Great! I've created a mobile version of your chatbot. Open the downloaded file on your phone to test it anywhere!");
+        }
+
+        function shareWithFriends() {
+            const botName = document.getElementById('botName').value || 'AI Assistant';
+            const shareText = `Check out the ${botName} I just built with ChatBot Builder Pro! 🤖✨`;
+            const shareUrl = window.location.href;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: `${botName} - AI Chatbot`,
+                    text: shareText,
+                    url: shareUrl
+                });
+            } else {
+                // Fallback: copy to clipboard
+                navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
+                alert(`📋 Share link copied to clipboard! 
+                
+"${shareText}"
+                
+Send this to your friends to show off your chatbot!`);
+            }
+            
+            speak("Perfect! Share your chatbot with friends and get their feedback. Word of mouth is the best marketing!");
+        }
+
+        function embedOnWebsite() {
+            const botName = document.getElementById('botName').value || 'AI Assistant';
+            const embedCode = `<!-- ${botName} Chatbot Widget -->
+<div id="chatbot-widget" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+    <div id="chatbot-bubble" onclick="toggleChatbot()" style="width: 60px; height: 60px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+        <i class="fas fa-robot" style="color: white; font-size: 24px;"></i>
+    </div>
+    <!-- Add your chatbot HTML here -->
+</div>
+
+<script>
+function toggleChatbot() {
+    // Your chatbot toggle logic here
+    alert('${botName} says: Hello! I\\'m ready to help your website visitors!');
+}
+</script>`;
+
+            navigator.clipboard.writeText(embedCode);
+            alert(`🎉 Embed code copied to clipboard!
+
+Paste this code into your website's HTML to add your chatbot. 
+
+Your ${botName} will appear as a floating bubble in the bottom-right corner of your site!`);
+            
+            speak("Excellent! I've copied the embed code to your clipboard. Just paste it into your website and your chatbot will go live!");
+        }
+
+        function upgradeToPro() {
+            alert(`🌟 Upgrade to ChatBot Builder Pro!
+
+🚀 Unlimited chatbots
+🎨 Custom branding & themes  
+📊 Advanced analytics
+🔗 API integrations
+💬 Live chat handoff
+📱 Mobile app
+🎯 A/B testing
+🛡️ Priority support
+
+Ready to take your chatbots to the next level?`);
+            
+            speak("Upgrading to Pro unlocks amazing features like custom branding, analytics, and unlimited chatbots. You'll love the advanced capabilities!");
+        }
+
+        function createAnother() {
+            if (confirm("🤖 Ready to build another chatbot? This will reset the current builder. Make sure you've saved your current bot!")) {
+                resetTutorial();
+                document.getElementById('shareSection').style.display = 'none';
+                speak("Let's create another amazing chatbot! What type of bot do you want to build this time?");
+            }
+        }
+
+        // Update the generateChatbot function to show the share section
+        const originalGenerateChatbot = generateChatbot;
+        generateChatbot = function() {
+            originalGenerateChatbot();
+            
+            // Show the share section after generation
+            setTimeout(() => {
+                document.getElementById('shareSection').style.display = 'block';
+                document.getElementById('shareSection').scrollIntoView({ behavior: 'smooth' });
+                
+                // Add celebration confetti effect
+                if (typeof confetti !== 'undefined') {
+                    confetti({
+                        particleCount: 100,
+                        spread: 70,
+                        origin: { y: 0.6 }
+                    });
+                }
+            }, 1000);
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProgress();
+            speak("Welcome to the Easy Chatbot Builder! I'll help you create a chatbot for your website in just a few minutes. Let's get started!");
+        });
+
+        // Enter key handling for test input
+        document.getElementById('testInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendTestMessage();
+            }
+        });
+    </script>
+</body>
+</html>
