@@ -1472,9 +1472,9 @@ Need help? Email us at support@yoursite.com
             input.value = '';
             messages.scrollTop = messages.scrollHeight;
         }
-    </script>
-</body>
-</html>`;
+    <\/script>
+<\/body>
+<\/html>`;
             
             const blob = new Blob([mobileHTML], { type: 'text/html' });
             const url = URL.createObjectURL(blob);
@@ -1525,7 +1525,7 @@ function toggleChatbot() {
     // Your chatbot toggle logic here
     alert('${botName} says: Hello! I\\'m ready to help your website visitors!');
 }
-</script>`;
+<\/script>`;
 
             navigator.clipboard.writeText(embedCode);
             alert(`🎉 Embed code copied to clipboard!
