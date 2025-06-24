@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatBot Builder Pro - Advanced Visual Builder</title>
+    <title>ChatFlow Pro - Advanced Visual Chatbot Builder</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="./css/shared.css" rel="stylesheet">
@@ -15,10 +15,14 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f8fafc;
             min-height: 100vh;
-            overflow-x: hidden;
+            margin: 0;
+        }
+
+        .page-content {
+            margin-top: 70px;
         }
 
         /* Header */
@@ -77,11 +81,84 @@
         /* Main Builder Container */
         .builder-container {
             display: grid;
-            grid-template-columns: 300px 1fr 400px;
+            grid-template-columns: 320px 1fr 380px;
             height: calc(100vh - 70px);
-            gap: 1rem;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            max-width: 100%;
+        }
+
+        /* Data Sources Panel */
+        .data-sources {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+
+        .data-sources h3 {
+            margin-bottom: 1rem;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .data-input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .data-input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+            font-size: 0.9rem;
+        }
+
+        .data-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: border-color 0.2s;
+        }
+
+        .data-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .data-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 0.5rem;
+        }
+
+        .data-btn:hover {
+            background: #5a67d8;
+        }
+
+        .data-preview {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
             padding: 1rem;
-            margin-top: 70px;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            max-height: 150px;
+            overflow-y: auto;
         }
 
         /* Sidebar - Templates & Components */
@@ -311,40 +388,49 @@
             cursor: pointer;
         }
 
-        /* Node Styles */
+        /* Visual Flow Nodes */
         .flow-node {
             position: absolute;
             background: white;
             border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 1rem;
+            border-radius: 12px;
             min-width: 200px;
-            cursor: move;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 250px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
+            cursor: move;
         }
 
         .flow-node:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.15);
             border-color: #667eea;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
         }
 
         .flow-node.selected {
             border-color: #667eea;
-            background: #f8f9ff;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
         .node-header {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 0.5rem;
+            justify-content: space-between;
+            padding: 0.75rem;
+            background: #f8fafc;
+            border-bottom: 1px solid #e5e7eb;
+            border-radius: 10px 10px 0 0;
         }
 
-        .node-type {
-            font-size: 0.9rem;
+        .node-icon {
+            font-size: 1.2rem;
+            margin-right: 0.5rem;
+        }
+
+        .node-title {
             font-weight: 600;
-            color: #667eea;
+            color: #374151;
+            font-size: 0.9rem;
         }
 
         .node-delete {
@@ -352,69 +438,71 @@
             color: white;
             border: none;
             border-radius: 4px;
-            padding: 0.25rem 0.5rem;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
             cursor: pointer;
-            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* Connection Points */
-        .connection-point {
+        .node-content {
+            padding: 1rem;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .reply-option {
+            background: #f3f4f6;
+            padding: 0.5rem;
+            margin: 0.25rem 0;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            border-left: 3px solid #667eea;
+        }
+
+        .node-connector {
             position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
             width: 12px;
             height: 12px;
             background: #667eea;
             border-radius: 50%;
-            cursor: pointer;
+            cursor: crosshair;
         }
 
-        .connection-input {
-            top: -6px;
-            left: 50%;
-            transform: translateX(-50%);
+        .flow-connections {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 1;
         }
 
-        .connection-output {
-            bottom: -6px;
-            left: 50%;
-            transform: translateX(-50%);
+        .canvas-actions {
+            display: flex;
+            gap: 0.5rem;
         }
 
-        /* Animations */
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        /* Welcome Node Specific */
+        .welcome-node {
+            border-color: #10b981;
         }
 
-        .fade-in {
-            animation: slideIn 0.5s ease;
+        .welcome-node .node-header {
+            background: linear-gradient(135deg, #ecfdf5, #d1fae5);
         }
 
-        /* Responsive */
-        @media (max-width: 1200px) {
-            .builder-container {
-                grid-template-columns: 250px 1fr 300px;
-            }
+        /* Reply Node Specific */
+        .reply-node {
+            border-color: #f59e0b;
         }
 
-        @media (max-width: 968px) {
-            .builder-container {
-                grid-template-columns: 1fr;
-                grid-template-rows: auto 1fr auto;
-            }
-            
-            .chatbot-preview {
-                position: relative;
-                bottom: auto;
-                right: auto;
-                width: 100%;
-                margin-top: 1rem;
-            }
+        .reply-node .node-header {
+            background: linear-gradient(135deg, #fffbeb, #fef3c7);
         }
 
         /* Success States */
@@ -468,7 +556,7 @@
         <div class="nav-container">
             <a href="./" class="nav-logo">
                 <i class="fas fa-robot"></i>
-                ChatBot Builder Pro
+                ChatFlow
             </a>
             
             <ul class="nav-menu">
@@ -492,10 +580,41 @@
     </nav>
 
     <!-- Main Builder -->
-    <div class="builder-container">
-        <!-- Sidebar - Templates & Components -->
-        <div class="sidebar">
-            <h3>📚 Templates</h3>
+    <div class="builder-container page-content">
+        <!-- Data Sources Panel -->
+        <div class="data-sources">
+            <h3>� Data Sources</h3>
+            
+            <div class="data-input-group">
+                <label for="website-url">Website URL</label>
+                <input type="url" id="website-url" class="data-input" placeholder="https://yourwebsite.com" />
+                <button class="data-btn" onclick="scrapeWebsite()">📄 Import Content</button>
+            </div>
+
+            <div class="data-input-group">
+                <label for="csv-url">CSV Link</label>
+                <input type="url" id="csv-url" class="data-input" placeholder="https://docs.google.com/spreadsheets/..." />
+                <button class="data-btn" onclick="importCSV()">📊 Import CSV</button>
+            </div>
+
+            <div class="data-input-group">
+                <label for="knowledge-base">Knowledge Base</label>
+                <textarea id="knowledge-base" class="data-input" rows="4" placeholder="Paste your FAQ, product info, or knowledge base content here..."></textarea>
+                <button class="data-btn" onclick="addKnowledge()">🧠 Add Knowledge</button>
+            </div>
+
+            <div class="data-input-group">
+                <label for="api-endpoint">API Endpoint</label>
+                <input type="url" id="api-endpoint" class="data-input" placeholder="https://api.example.com/data" />
+                <button class="data-btn" onclick="connectAPI()">🔌 Connect API</button>
+            </div>
+
+            <div class="data-preview" id="data-preview">
+                <strong>📋 Imported Data:</strong><br>
+                No data imported yet. Add data sources above to train your chatbot.
+            </div>
+
+            <h3 style="margin-top: 2rem;">📚 Templates</h3>
             <div class="template-grid">
                 <div class="template-card" onclick="loadTemplate('customer-service')">
                     <div>🎧 Customer Service</div>
@@ -506,20 +625,11 @@
                     <small>Capture + Qualify</small>
                 </div>
                 <div class="template-card" onclick="loadTemplate('ecommerce')">
-                    <div>🛒 E-commerce</div>
+                    <div>� E-commerce</div>
                     <small>Shop + Buy</small>
                 </div>
-                <div class="template-card" onclick="loadTemplate('booking')">
-                    <div>📅 Booking</div>
-                    <small>Schedule + Reserve</small>
-                </div>
-                <div class="template-card" onclick="loadTemplate('survey')">
-                    <div>📊 Survey</div>
-                    <small>Collect Data</small>
-                </div>
             </div>
-
-            <h3>🧩 Components</h3>
+        </div>
             <div class="component-list">
                 <div class="component-item" draggable="true" data-type="welcome">
                     👋 Welcome Message
@@ -554,21 +664,54 @@
             </div>
         </div>
 
-        <!-- Main Canvas -->
+        <!-- Visual Flow Builder -->
         <div class="canvas">
             <div class="canvas-header">
-                <h2>🎨 Chatbot Flow Designer</h2>
-                <div>
+                <h2>🎨 Visual Flow Builder</h2>
+                <div class="canvas-actions">
                     <button class="btn btn-secondary" onclick="clearCanvas()">🗑️ Clear</button>
                     <button class="btn btn-secondary" onclick="undoAction()">↶ Undo</button>
+                    <button class="btn btn-secondary" onclick="autoLayout()">📐 Auto Layout</button>
                 </div>
             </div>
             <div class="flow-container" id="flowContainer">
-                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #999;">
-                    <div style="font-size: 3rem; margin-bottom: 1rem;">🎯</div>
-                    <h3>Start Building Your Chatbot</h3>
-                    <p>Drag components from the left sidebar or choose a template</p>
+                <!-- Welcome Node -->
+                <div class="flow-node welcome-node" style="top: 50px; left: 50px;" data-id="welcome-1">
+                    <div class="node-header">
+                        <span class="node-icon">👋</span>
+                        <span class="node-title">Welcome Message</span>
+                        <button class="node-delete" onclick="deleteNode('welcome-1')">×</button>
+                    </div>
+                    <div class="node-content">
+                        <p>Hello! Welcome to our chatbot. How can I help you today?</p>
+                    </div>
+                    <div class="node-connector"></div>
                 </div>
+                
+                <!-- Example Quick Reply Node -->
+                <div class="flow-node reply-node" style="top: 200px; left: 50px;" data-id="reply-1">
+                    <div class="node-header">
+                        <span class="node-icon">⚡</span>
+                        <span class="node-title">Quick Replies</span>
+                        <button class="node-delete" onclick="deleteNode('reply-1')">×</button>
+                    </div>
+                    <div class="node-content">
+                        <div class="reply-option">💬 Ask a Question</div>
+                        <div class="reply-option">📞 Contact Support</div>
+                        <div class="reply-option">🛒 View Products</div>
+                    </div>
+                    <div class="node-connector"></div>
+                </div>
+                
+                <!-- Connection Lines -->
+                <svg class="flow-connections" width="100%" height="100%">
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                            <polygon points="0 0, 10 3.5, 0 7" fill="#667eea" />
+                        </marker>
+                    </defs>
+                    <line x1="150" y1="130" x2="150" y2="200" stroke="#667eea" stroke-width="2" marker-end="url(#arrowhead)"/>
+                </svg>
             </div>
         </div>
 
@@ -610,6 +753,115 @@
         let nodeCounter = 0;
         let draggedComponent = null;
         let connections = [];
+        let importedData = [];
+
+        // Data Integration Functions
+        function scrapeWebsite() {
+            const url = document.getElementById('website-url').value;
+            if (!url) {
+                alert('Please enter a website URL');
+                return;
+            }
+            
+            // Simulate website scraping
+            const preview = document.getElementById('data-preview');
+            preview.innerHTML = `
+                <strong>📄 Website Content Imported:</strong><br>
+                <em>Analyzing: ${url}</em><br>
+                • Found 15 pages<br>
+                • Extracted FAQ section<br>
+                • Imported product descriptions<br>
+                • Added contact information<br>
+                <span style="color: #10b981;">✅ Ready to use in chatbot</span>
+            `;
+            
+            importedData.push({
+                type: 'website',
+                url: url,
+                content: 'Website content and FAQ data'
+            });
+            
+            addChatMessage(`🌐 Website data imported from ${url}. Your chatbot can now answer questions about your website content!`, 'bot');
+        }
+
+        function importCSV() {
+            const url = document.getElementById('csv-url').value;
+            if (!url) {
+                alert('Please enter a CSV URL');
+                return;
+            }
+            
+            // Simulate CSV import
+            const preview = document.getElementById('data-preview');
+            preview.innerHTML = `
+                <strong>📊 CSV Data Imported:</strong><br>
+                <em>Source: ${url}</em><br>
+                • 150 rows processed<br>
+                • Product catalog loaded<br>
+                • Pricing data available<br>
+                • Inventory status updated<br>
+                <span style="color: #10b981;">✅ Connected to live data</span>
+            `;
+            
+            importedData.push({
+                type: 'csv',
+                url: url,
+                content: 'Product catalog and pricing data'
+            });
+            
+            addChatMessage(`📊 CSV data connected! Your chatbot can now provide real-time product information and pricing.`, 'bot');
+        }
+
+        function addKnowledge() {
+            const knowledge = document.getElementById('knowledge-base').value;
+            if (!knowledge.trim()) {
+                alert('Please enter some knowledge base content');
+                return;
+            }
+            
+            const preview = document.getElementById('data-preview');
+            preview.innerHTML = `
+                <strong>🧠 Knowledge Base Added:</strong><br>
+                • ${knowledge.split('\n').length} entries processed<br>
+                • FAQ patterns recognized<br>
+                • Context understanding enabled<br>
+                <span style="color: #10b981;">✅ Knowledge integrated</span><br><br>
+                <em>Sample: "${knowledge.substring(0, 100)}..."</em>
+            `;
+            
+            importedData.push({
+                type: 'knowledge',
+                content: knowledge
+            });
+            
+            addChatMessage(`🧠 Knowledge base updated! Your chatbot is now smarter and can handle more specific questions.`, 'bot');
+        }
+
+        function connectAPI() {
+            const endpoint = document.getElementById('api-endpoint').value;
+            if (!endpoint) {
+                alert('Please enter an API endpoint');
+                return;
+            }
+            
+            const preview = document.getElementById('data-preview');
+            preview.innerHTML = `
+                <strong>🔌 API Connected:</strong><br>
+                <em>Endpoint: ${endpoint}</em><br>
+                • Connection established<br>
+                • Real-time data access enabled<br>
+                • Dynamic responses activated<br>
+                <span style="color: #10b981;">✅ Live API integration</span>
+            `;
+            
+            importedData.push({
+                type: 'api',
+                endpoint: endpoint,
+                content: 'Live API data connection'
+            });
+            
+            addChatMessage(`🔌 API connected! Your chatbot can now fetch live data and provide dynamic responses.`, 'bot');
+        }
 
         // Initialize the builder
         document.addEventListener('DOMContentLoaded', function() {

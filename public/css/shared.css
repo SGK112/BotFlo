@@ -93,18 +93,16 @@ body {
     align-items: center;
     justify-content: space-between;
     height: 70px;
-}
-
-.nav-logo {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--primary-blue);
-    text-decoration: none;
-    transition: all var(--transition-normal);
-}
+}    .nav-logo {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary-blue);
+        text-decoration: none;
+        transition: all var(--transition-normal);
+    }
 
 .nav-logo i {
     font-size: 1.75rem;

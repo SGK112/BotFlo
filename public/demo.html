@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live ChatBot Demo - ChatBot Builder Pro</title>
+    <title>ChatFlow Demo - Try Our AI Chatbot Builder</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="./css/shared.css" rel="stylesheet">
@@ -48,21 +48,24 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 2rem;
+            padding: 1.5rem 0;
         }
 
         .preview-title {
             font-size: 1.5rem;
             font-weight: 600;
             color: #1f2937;
+            margin-right: 2rem;
         }
 
         .demo-controls {
             display: flex;
             gap: 1rem;
+            flex-shrink: 0;
         }
 
         .demo-btn {
-            padding: 0.5rem 1rem;
+            padding: 0.75rem 1.5rem;
             border: none;
             border-radius: 8px;
             cursor: pointer;
@@ -72,6 +75,7 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
+            white-space: nowrap;
         }
 
         .demo-btn.primary {
@@ -92,11 +96,19 @@
         .chatbot-preview {
             flex: 1;
             background: white;
-            border-radius: 12px;
+            border-radius: 16px;
             border: 1px solid #e5e7eb;
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(0);
+            transition: all 0.3s ease;
+        }
+
+        .chatbot-preview:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
         }
 
         .chatbot-header {
@@ -228,6 +240,27 @@
             .chat-interface {
                 order: 1;
             }
+
+            /* Mobile Responsive Improvements */
+            .preview-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+            
+            .preview-title {
+                margin-right: 0;
+                text-align: center;
+            }
+            
+            .demo-controls {
+                justify-content: center;
+            }
+            
+            .demo-btn {
+                flex: 1;
+                justify-content: center;
+            }
         }
     </style>
 </head>
@@ -237,7 +270,7 @@
         <div class="nav-container">
             <a href="./" class="nav-logo">
                 <i class="fas fa-robot"></i>
-                ChatBot Builder Pro
+                ChatFlow
             </a>
             
             <ul class="nav-menu">
