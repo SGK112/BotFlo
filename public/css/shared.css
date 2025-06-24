@@ -161,6 +161,55 @@ body {
     align-items: center;
 }
 
+/* Mobile Navigation */
+.mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: var(--spacing-sm);
+}
+
+.mobile-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border-bottom: 1px solid var(--border-light);
+    box-shadow: var(--shadow-lg);
+}
+
+.mobile-menu.open {
+    display: block;
+}
+
+.mobile-nav-menu {
+    display: flex;
+    flex-direction: column;
+    padding: var(--spacing-md);
+    gap: var(--spacing-md);
+}
+
+.mobile-nav-item a {
+    display: block;
+    padding: var(--spacing-md);
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-weight: 500;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-normal);
+}
+
+.mobile-nav-item a:hover,
+.mobile-nav-item a.active {
+    background: var(--primary-light);
+    color: var(--primary-blue);
+}
+
 /* Button System */
 .btn {
     display: inline-flex;
@@ -367,16 +416,63 @@ body {
     }
     
     .nav-menu {
-        display: none; /* Hide menu on mobile - you can add a hamburger menu later */
+        display: none;
+    }
+    
+    .mobile-menu-toggle {
+        display: block;
     }
     
     .nav-logo {
         font-size: 1.25rem;
     }
     
+    .nav-cta {
+        gap: var(--spacing-sm);
+    }
+    
     .btn {
         padding: var(--spacing-sm) var(--spacing-md);
         font-size: 0.875rem;
+    }
+    
+    .nav-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        flex-direction: column;
+        gap: 0;
+        box-shadow: var(--shadow-lg);
+        border-top: 1px solid var(--border-light);
+        transform: translateY(-100%);
+        opacity: 0;
+        visibility: hidden;
+        transition: all var(--transition-normal);
+    }
+    
+    .nav-menu.mobile-open {
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    .nav-item {
+        width: 100%;
+        border-bottom: 1px solid var(--border-light);
+    }
+    
+    .nav-item a {
+        display: block;
+        padding: var(--spacing-lg);
+        text-align: center;
+    }
+    
+    .nav-cta {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+        margin-top: var(--spacing-md);
     }
 }
 
@@ -427,3 +523,20 @@ body {
     outline: 2px solid var(--primary-blue);
     outline-offset: 2px;
 }
+
+/* Mobile Navigation JavaScript (at end of file) */
+/*
+// Add this JavaScript to pages that need mobile navigation:
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileToggle = document.querySelector('.mobile-menu-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    
+    if (mobileToggle && navMenu) {
+        mobileToggle.addEventListener('click', function() {
+            navMenu.classList.toggle('mobile-open');
+            mobileToggle.querySelector('i').classList.toggle('fa-bars');
+            mobileToggle.querySelector('i').classList.toggle('fa-times');
+        });
+    }
+});
+*/

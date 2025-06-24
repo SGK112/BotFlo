@@ -241,10 +241,12 @@
             </a>
             
             <ul class="nav-menu">
-                <li class="nav-item"><a href="./easy-chatbot-builder.html">Build Now</a></li>
+                <li class="nav-item"><a href="./easy-chatbot-builder.html">Easy Builder</a></li>
+                <li class="nav-item"><a href="./chatbot-builder-pro.html">Pro Builder</a></li>
                 <li class="nav-item"><a href="./demo.html" class="active">Demo</a></li>
                 <li class="nav-item"><a href="./tutorial.html">Tutorial</a></li>
-                <li class="nav-item"><a href="./chatbot-builder-landing.html#features">Features</a></li>
+                <li class="nav-item"><a href="./pricing.html">Pricing</a></li>
+                <li class="nav-item"><a href="./about.html">About</a></li>
             </ul>
 
             <div class="nav-cta">
@@ -394,6 +396,33 @@
             • "How do I get started?"`;
             messagesContainer.appendChild(suggestions);
         }, 2000);
+    </script>
+
+    <!-- Mobile Navigation JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileToggle = document.querySelector('.mobile-menu-toggle');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            if (mobileToggle && navMenu) {
+                mobileToggle.addEventListener('click', function() {
+                    navMenu.classList.toggle('mobile-open');
+                    const icon = mobileToggle.querySelector('i');
+                    icon.classList.toggle('fa-bars');
+                    icon.classList.toggle('fa-times');
+                });
+                
+                // Close mobile menu when clicking on a link
+                navMenu.addEventListener('click', function(e) {
+                    if (e.target.tagName === 'A') {
+                        navMenu.classList.remove('mobile-open');
+                        const icon = mobileToggle.querySelector('i');
+                        icon.classList.add('fa-bars');
+                        icon.classList.remove('fa-times');
+                    }
+                });
+            }
+        });
     </script>
     </div> <!-- End page-content -->
 </body>

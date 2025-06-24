@@ -226,5 +226,32 @@
             </div>
         </section>
     </div>
+
+    <!-- Mobile Navigation JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileToggle = document.querySelector('.mobile-menu-toggle');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            if (mobileToggle && navMenu) {
+                mobileToggle.addEventListener('click', function() {
+                    navMenu.classList.toggle('mobile-open');
+                    const icon = mobileToggle.querySelector('i');
+                    icon.classList.toggle('fa-bars');
+                    icon.classList.toggle('fa-times');
+                });
+                
+                // Close mobile menu when clicking on a link
+                navMenu.addEventListener('click', function(e) {
+                    if (e.target.tagName === 'A') {
+                        navMenu.classList.remove('mobile-open');
+                        const icon = mobileToggle.querySelector('i');
+                        icon.classList.add('fa-bars');
+                        icon.classList.remove('fa-times');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>

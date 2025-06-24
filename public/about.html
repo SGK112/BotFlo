@@ -492,31 +492,86 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* Mobile Menu */
+        .nav-menu.mobile-open {
+            max-height: 500px;
+            opacity: 1;
+            transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            background: var(--primary-blue);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .mobile-menu-toggle:hover {
+            background: var(--primary-dark);
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+                flex-direction: column;
+                gap: 1rem;
+                position: absolute;
+                top: 70px;
+                right: 0;
+                background: white;
+                width: 100%;
+                max-height: 0;
+                overflow: hidden;
+                border-top: 1px solid var(--border-gray);
+            }
+
+            .nav-item {
+                width: 100%;
+                text-align: center;
+            }
+
+            .mobile-menu-toggle {
+                display: flex;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <nav class="nav-container">
-            <a href="chatbot-builder-landing.html" class="logo">
+    <!-- Navigation -->
+    <nav class="header">
+        <div class="nav-container">
+            <a href="./" class="logo">
                 <i class="fas fa-robot"></i>
                 ChatBot Builder Pro
             </a>
             
             <ul class="nav-menu">
-                <li class="nav-item"><a href="chatbot-builder-landing.html#features">Features</a></li>
-                <li class="nav-item"><a href="chatbot-builder-landing.html#builders">Builders</a></li>
-                <li class="nav-item"><a href="templates.html">Templates</a></li>
-                <li class="nav-item"><a href="integrations.html">Integrations</a></li>
-                <li class="nav-item"><a href="pricing.html">Pricing</a></li>
-                <li class="nav-item"><a href="docs.html">Docs</a></li>
+                <li class="nav-item"><a href="./easy-chatbot-builder.html">Easy Builder</a></li>
+                <li class="nav-item"><a href="./chatbot-builder-pro.html">Pro Builder</a></li>
+                <li class="nav-item"><a href="./demo.html">Demo</a></li>
+                <li class="nav-item"><a href="./tutorial.html">Tutorial</a></li>
+                <li class="nav-item"><a href="./pricing.html">Pricing</a></li>
+                <li class="nav-item"><a href="./about.html" class="active">About</a></li>
             </ul>
 
             <div class="nav-cta">
-                <a href="chatbot-builder-landing.html" class="btn btn-primary">Back to Home</a>
+                <a href="./demo.html" class="btn btn-secondary btn-sm">Try Demo</a>
+                <a href="./easy-chatbot-builder.html" class="btn btn-primary btn-sm">Start Building</a>
             </div>
-        </nav>
-    </header>
+
+            <button class="mobile-menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
 
     <!-- Hero Section -->
     <section class="hero">
@@ -799,6 +854,31 @@
             } else {
                 header.style.background = 'rgba(255, 255, 255, 0.95)';
                 header.style.boxShadow = 'none';
+            }
+        });
+
+        // Mobile Navigation JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileToggle = document.querySelector('.mobile-menu-toggle');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            if (mobileToggle && navMenu) {
+                mobileToggle.addEventListener('click', function() {
+                    navMenu.classList.toggle('mobile-open');
+                    const icon = mobileToggle.querySelector('i');
+                    icon.classList.toggle('fa-bars');
+                    icon.classList.toggle('fa-times');
+                });
+                
+                // Close mobile menu when clicking on a link
+                navMenu.addEventListener('click', function(e) {
+                    if (e.target.tagName === 'A') {
+                        navMenu.classList.remove('mobile-open');
+                        const icon = mobileToggle.querySelector('i');
+                        icon.classList.add('fa-bars');
+                        icon.classList.remove('fa-times');
+                    }
+                });
             }
         });
     </script>

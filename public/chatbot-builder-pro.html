@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatFlo Pro - Advanced Chatbot Builder</title>
+    <title>ChatBot Builder Pro - Advanced Visual Builder</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="./css/shared.css" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -75,9 +78,10 @@
         .builder-container {
             display: grid;
             grid-template-columns: 300px 1fr 400px;
-            height: calc(100vh - 80px);
+            height: calc(100vh - 70px);
             gap: 1rem;
             padding: 1rem;
+            margin-top: 70px;
         }
 
         /* Sidebar - Templates & Components */
@@ -459,15 +463,33 @@
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <div class="header">
-        <div class="logo">🤖 ChatFlo Pro</div>
-        <div class="header-actions">
-            <button class="btn btn-secondary" onclick="saveProject()">💾 Save</button>
-            <button class="btn btn-secondary" onclick="previewChatbot()">👁️ Preview</button>
-            <button class="btn btn-primary" onclick="exportChatbot()">📤 Export Code</button>
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <a href="./" class="nav-logo">
+                <i class="fas fa-robot"></i>
+                ChatBot Builder Pro
+            </a>
+            
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="./easy-chatbot-builder.html">Easy Builder</a></li>
+                <li class="nav-item"><a href="./chatbot-builder-pro.html" class="active">Pro Builder</a></li>
+                <li class="nav-item"><a href="./demo.html">Demo</a></li>
+                <li class="nav-item"><a href="./tutorial.html">Tutorial</a></li>
+                <li class="nav-item"><a href="./pricing.html">Pricing</a></li>
+                <li class="nav-item"><a href="./about.html">About</a></li>
+            </ul>
+
+            <div class="nav-cta">
+                <button class="btn btn-secondary btn-sm" onclick="saveProject()">� Save</button>
+                <button class="btn btn-primary btn-sm" onclick="exportChatbot()">📤 Export</button>
+            </div>
+
+            <button class="mobile-menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
-    </div>
+    </nav>
 
     <!-- Main Builder -->
     <div class="builder-container">
