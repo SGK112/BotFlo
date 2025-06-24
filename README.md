@@ -6,14 +6,15 @@ A powerful, no-code chatbot builder with drag-and-drop functionality and real-ti
 
 ## 🚀 Live Demo
 
-- **🌐 Main Platform**: [https://sgk112.github.io/chatflo.com/](https://sgk112.github.io/chatflo.com/)
-- **📋 Professional Landing**: [https://sgk112.github.io/chatflo.com/public/chatbot-builder-landing.html](https://sgk112.github.io/chatflo.com/public/chatbot-builder-landing.html)
+- **🌐 Main Platform**: [https://sgk112.github.io/chatflo/](https://sgk112.github.io/chatflo/)
+- **📋 Professional Landing**: [https://sgk112.github.io/chatflo/public/chatbot-builder-landing.html](https://sgk112.github.io/chatflo/public/chatbot-builder-landing.html)
+- **🎯 Live Demo**: [https://sgk112.github.io/chatflo/public/demo.html](https://sgk112.github.io/chatflo/public/demo.html)
 
 ### 🛠️ Builder Options
-- **🚀 Pro Builder**: [https://sgk112.github.io/chatflo.com/public/chatbot-builder-pro.html](https://sgk112.github.io/chatflo.com/public/chatbot-builder-pro.html)
-- **🔧 Advanced Flow Builder**: [https://sgk112.github.io/chatflo.com/public/advanced-flow-builder.html](https://sgk112.github.io/chatflo.com/public/advanced-flow-builder.html)
-- **🎯 Simple Builder**: [https://sgk112.github.io/chatflo.com/public/chatbot.html](https://sgk112.github.io/chatflo.com/public/chatbot.html)
-- **📋 Features Overview**: [https://sgk112.github.io/chatflo.com/public/features-comprehensive.html](https://sgk112.github.io/chatflo.com/public/features-comprehensive.html)
+- **🚀 Pro Builder**: [https://sgk112.github.io/chatflo/public/chatbot-builder-pro.html](https://sgk112.github.io/chatflo/public/chatbot-builder-pro.html)
+- **🔧 Advanced Flow Builder**: [https://sgk112.github.io/chatflo/public/advanced-flow-builder.html](https://sgk112.github.io/chatflo/public/advanced-flow-builder.html)
+- **🎯 Simple Builder**: [https://sgk112.github.io/chatflo/public/chatbot.html](https://sgk112.github.io/chatflo/public/chatbot.html)
+- **📋 Features Overview**: [https://sgk112.github.io/chatflo/public/features-comprehensive.html](https://sgk112.github.io/chatflo/public/features-comprehensive.html)
 
 ### Local Development
 - **Local Development**: `http://localhost:3000/public/chatbot-builder-landing.html`
