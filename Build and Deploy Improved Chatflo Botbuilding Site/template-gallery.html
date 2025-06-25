@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatFlo - Template Gallery & Customization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: linear-gradient(45deg, #fff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            font-size: 20px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 30px;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+
+        /* Template Gallery */
+        .template-gallery {
+            padding: 30px;
+        }
+
+        .gallery-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .gallery-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .template-filters {
+            display: flex;
+            gap: 10px;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid #e5e7eb;
+            background: white;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #6b7280;
+        }
+
+        .filter-btn.active {
+            background: #4f46e5;
+            border-color: #4f46e5;
+            color: white;
+        }
+
+        .filter-btn:hover {
+            border-color: #4f46e5;
+            color: #4f46e5;
+        }
+
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .template-card {
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: white;
+        }
+
+        .template-card:hover {
+            border-color: #4f46e5;
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(79, 70, 229, 0.2);
+        }
+
+        .template-card.selected {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .template-preview {
+            height: 200px;
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .template-preview::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--template-gradient);
+            opacity: 0.8;
+        }
+
+        .template-icon {
+            font-size: 48px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .template-info {
+            padding: 20px;
+        }
+
+        .template-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+
+        .template-description {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .template-tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .template-tag {
+            padding: 4px 8px;
+            background: #f3f4f6;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #374151;
+            font-weight: 500;
+        }
+
+        .template-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex: 1;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: #4f46e5;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #4338ca;
+        }
+
+        .btn-secondary {
+            background: #f8fafc;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+
+        .btn-secondary:hover {
+            background: #f1f5f9;
+        }
+
+        /* Customization Panel */
+        .customization-panel {
+            background: #f8fafc;
+            padding: 30px;
+            border-left: 1px solid #e5e7eb;
+        }
+
+        .panel-header {
+            margin-bottom: 30px;
+        }
+
+        .panel-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+
+        .panel-subtitle {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .customization-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .color-picker-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .color-picker {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .color-picker label {
+            font-size: 12px;
+            font-weight: 500;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .color-input {
+            width: 100%;
+            height: 40px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .color-input:hover {
+            border-color: #4f46e5;
+        }
+
+        .theme-presets {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .theme-preset {
+            height: 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .theme-preset:hover {
+            border-color: #4f46e5;
+            transform: scale(1.05);
+        }
+
+        .theme-preset.active {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+        }
+
+        .style-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .style-option {
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .style-option:hover {
+            border-color: #4f46e5;
+        }
+
+        .style-option.active {
+            border-color: #4f46e5;
+            background: #f0f9ff;
+        }
+
+        .style-option-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .style-option-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        /* Live Preview */
+        .live-preview {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .preview-chatbot {
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .preview-header {
+            background: var(--primary-color, #4f46e5);
+            color: white;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .preview-avatar {
+            width: 28px;
+            height: 28px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .preview-info h4 {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .preview-info p {
+            font-size: 11px;
+            opacity: 0.8;
+        }
+
+        .preview-messages {
+            flex: 1;
+            padding: 16px;
+            background: #f8fafc;
+            overflow-y: auto;
+        }
+
+        .preview-message {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .preview-message.bot {
+            flex-direction: row;
+        }
+
+        .preview-message.user {
+            flex-direction: row-reverse;
+        }
+
+        .preview-bubble {
+            max-width: 80%;
+            padding: 8px 12px;
+            border-radius: 16px;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .preview-message.bot .preview-bubble {
+            background: white;
+            border: 1px solid #e5e7eb;
+            color: #374151;
+        }
+
+        .preview-message.user .preview-bubble {
+            background: var(--primary-color, #4f46e5);
+            color: white;
+        }
+
+        .preview-input {
+            padding: 12px 16px;
+            border-top: 1px solid #e5e7eb;
+            background: white;
+            display: flex;
+            gap: 8px;
+        }
+
+        .preview-input input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 16px;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .preview-send {
+            width: 32px;
+            height: 32px;
+            background: var(--primary-color, #4f46e5);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-full {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-download {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-download:hover {
+            background: #059669;
+        }
+
+        .btn-deploy {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-deploy:hover {
+            background: #d97706;
+        }
+
+        .btn-share {
+            background: #8b5cf6;
+            color: white;
+        }
+
+        .btn-share:hover {
+            background: #7c3aed;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .customization-panel {
+                border-left: none;
+                border-top: 1px solid #e5e7eb;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 36px;
+            }
+            
+            .templates-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .template-filters {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎨 Template Gallery</h1>
+            <p>Choose from our collection of professionally designed chatbot templates and customize them to match your brand</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Template Gallery -->
+            <div class="template-gallery">
+                <div class="gallery-header">
+                    <h2 class="gallery-title">Choose Your Template</h2>
+                    <div class="template-filters">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="business">Business</button>
+                        <button class="filter-btn" data-filter="ecommerce">E-commerce</button>
+                        <button class="filter-btn" data-filter="support">Support</button>
+                        <button class="filter-btn" data-filter="lead">Lead Gen</button>
+                    </div>
+                </div>
+
+                <div class="templates-grid" id="templatesGrid">
+                    <!-- Templates will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Customization Panel -->
+            <div class="customization-panel">
+                <div class="panel-header">
+                    <h3 class="panel-title">🎨 Customize</h3>
+                    <p class="panel-subtitle">Make it yours with colors, themes, and styles</p>
+                </div>
+
+                <div class="customization-section">
+                    <h4 class="section-title">🎨 Colors</h4>
+                    <div class="color-picker-group">
+                        <div class="color-picker">
+                            <label>Primary Color</label>
+                            <input type="color" class="color-input" id="primaryColor" value="#4f46e5">
+                        </div>
+                        <div class="color-picker">
+                            <label>Secondary Color</label>
+                            <input type="color" class="color-input" id="secondaryColor" value="#10b981">
+                        </div>
+                    </div>
+                    
+                    <div class="theme-presets">
+                        <div class="theme-preset active" style="background: linear-gradient(45deg, #4f46e5, #7c3aed);" data-theme="purple"></div>
+                        <div class="theme-preset" style="background: linear-gradient(45deg, #10b981, #059669);" data-theme="green"></div>
+                        <div class="theme-preset" style="background: linear-gradient(45deg, #f59e0b, #d97706);" data-theme="orange"></div>
+                        <div class="theme-preset" style="background: linear-gradient(45deg, #ef4444, #dc2626);" data-theme="red"></div>
+                        <div class="theme-preset" style="background: linear-gradient(45deg, #3b82f6, #2563eb);" data-theme="blue"></div>
+                        <div class="theme-preset" style="background: linear-gradient(45deg, #8b5cf6, #7c3aed);" data-theme="violet"></div>
+                    </div>
+                </div>
+
+                <div class="customization-section">
+                    <h4 class="section-title">💬 Chat Style</h4>
+                    <div class="style-options">
+                        <div class="style-option active" data-style="modern">
+                            <div class="style-option-icon">🔮</div>
+                            <div class="style-option-label">Modern</div>
+                        </div>
+                        <div class="style-option" data-style="classic">
+                            <div class="style-option-icon">📱</div>
+                            <div class="style-option-label">Classic</div>
+                        </div>
+                        <div class="style-option" data-style="minimal">
+                            <div class="style-option-icon">⚪</div>
+                            <div class="style-option-label">Minimal</div>
+                        </div>
+                        <div class="style-option" data-style="playful">
+                            <div class="style-option-icon">🎈</div>
+                            <div class="style-option-label">Playful</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="customization-section">
+                    <h4 class="section-title">👁️ Live Preview</h4>
+                    <div class="live-preview">
+                        <div class="preview-chatbot">
+                            <div class="preview-header">
+                                <div class="preview-avatar">🤖</div>
+                                <div class="preview-info">
+                                    <h4>Your Chatbot</h4>
+                                    <p>Online • Ready to help</p>
+                                </div>
+                            </div>
+                            <div class="preview-messages">
+                                <div class="preview-message bot">
+                                    <div class="preview-bubble">
+                                        👋 Welcome! How can I help you today?
+                                    </div>
+                                </div>
+                                <div class="preview-message user">
+                                    <div class="preview-bubble">
+                                        I need help with my order
+                                    </div>
+                                </div>
+                                <div class="preview-message bot">
+                                    <div class="preview-bubble">
+                                        I'd be happy to help! Can you provide your order number?
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="preview-input">
+                                <input type="text" placeholder="Type a message...">
+                                <button class="preview-send">➤</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn-full btn-download">📥 Download Chatbot</button>
+                    <button class="btn-full btn-deploy">🚀 Deploy to Website</button>
+                    <button class="btn-full btn-share">📱 Create Mobile App</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Template data
+        const templates = [
+            {
+                id: 'customer-support',
+                title: 'Customer Support',
+                description: 'Handle customer inquiries, FAQs, and support tickets automatically',
+                icon: '🎧',
+                category: 'support',
+                gradient: 'linear-gradient(135deg, #4f46e5, #7c3aed)',
+                tags: ['Support', 'FAQ', 'Tickets']
+            },
+            {
+                id: 'lead-generation',
+                title: 'Lead Generation',
+                description: 'Capture leads, qualify prospects, and schedule meetings',
+                icon: '🎯',
+                category: 'lead',
+                gradient: 'linear-gradient(135deg, #10b981, #059669)',
+                tags: ['Leads', 'Qualification', 'Sales']
+            },
+            {
+                id: 'ecommerce-assistant',
+                title: 'E-commerce Assistant',
+                description: 'Product recommendations, order tracking, and shopping help',
+                icon: '🛒',
+                category: 'ecommerce',
+                gradient: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                tags: ['Shopping', 'Orders', 'Products']
+            },
+            {
+                id: 'appointment-booking',
+                title: 'Appointment Booking',
+                description: 'Schedule appointments, manage calendars, and send reminders',
+                icon: '📅',
+                category: 'business',
+                gradient: 'linear-gradient(135deg, #8b5cf6, #7c3aed)',
+                tags: ['Booking', 'Calendar', 'Reminders']
+            },
+            {
+                id: 'restaurant-ordering',
+                title: 'Restaurant Ordering',
+                description: 'Take orders, show menus, and handle reservations',
+                icon: '🍕',
+                category: 'business',
+                gradient: 'linear-gradient(135deg, #ef4444, #dc2626)',
+                tags: ['Food', 'Orders', 'Menu']
+            },
+            {
+                id: 'real-estate',
+                title: 'Real Estate Agent',
+                description: 'Property search, virtual tours, and agent connections',
+                icon: '🏠',
+                category: 'business',
+                gradient: 'linear-gradient(135deg, #3b82f6, #2563eb)',
+                tags: ['Properties', 'Tours', 'Agents']
+            },
+            {
+                id: 'healthcare',
+                title: 'Healthcare Assistant',
+                description: 'Symptom checker, appointment booking, and health tips',
+                icon: '🏥',
+                category: 'support',
+                gradient: 'linear-gradient(135deg, #06b6d4, #0891b2)',
+                tags: ['Health', 'Symptoms', 'Appointments']
+            },
+            {
+                id: 'education',
+                title: 'Education Tutor',
+                description: 'Learning assistance, quiz creation, and progress tracking',
+                icon: '📚',
+                category: 'support',
+                gradient: 'linear-gradient(135deg, #84cc16, #65a30d)',
+                tags: ['Learning', 'Quizzes', 'Education']
+            },
+            {
+                id: 'travel-agent',
+                title: 'Travel Agent',
+                description: 'Trip planning, booking assistance, and travel recommendations',
+                icon: '✈️',
+                category: 'business',
+                gradient: 'linear-gradient(135deg, #f97316, #ea580c)',
+                tags: ['Travel', 'Booking', 'Planning']
+            }
+        ];
+
+        // Render templates
+        function renderTemplates(filter = 'all') {
+            const grid = document.getElementById('templatesGrid');
+            const filteredTemplates = filter === 'all' ? templates : templates.filter(t => t.category === filter);
+            
+            grid.innerHTML = filteredTemplates.map(template => `
+                <div class="template-card" data-template="${template.id}">
+                    <div class="template-preview" style="--template-gradient: ${template.gradient}">
+                        <div class="template-icon">${template.icon}</div>
+                    </div>
+                    <div class="template-info">
+                        <h3 class="template-title">${template.title}</h3>
+                        <p class="template-description">${template.description}</p>
+                        <div class="template-tags">
+                            ${template.tags.map(tag => `<span class="template-tag">${tag}</span>`).join('')}
+                        </div>
+                        <div class="template-actions">
+                            <button class="btn btn-secondary">👁️ Preview</button>
+                            <button class="btn btn-primary">✨ Use Template</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Filter functionality
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderTemplates(btn.dataset.filter);
+            });
+        });
+
+        // Template selection
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.template-card')) {
+                document.querySelectorAll('.template-card').forEach(card => card.classList.remove('selected'));
+                e.target.closest('.template-card').classList.add('selected');
+            }
+        });
+
+        // Color customization
+        document.getElementById('primaryColor').addEventListener('input', (e) => {
+            document.documentElement.style.setProperty('--primary-color', e.target.value);
+        });
+
+        document.getElementById('secondaryColor').addEventListener('input', (e) => {
+            document.documentElement.style.setProperty('--secondary-color', e.target.value);
+        });
+
+        // Theme presets
+        document.querySelectorAll('.theme-preset').forEach(preset => {
+            preset.addEventListener('click', () => {
+                document.querySelectorAll('.theme-preset').forEach(p => p.classList.remove('active'));
+                preset.classList.add('active');
+                
+                const themes = {
+                    purple: { primary: '#4f46e5', secondary: '#7c3aed' },
+                    green: { primary: '#10b981', secondary: '#059669' },
+                    orange: { primary: '#f59e0b', secondary: '#d97706' },
+                    red: { primary: '#ef4444', secondary: '#dc2626' },
+                    blue: { primary: '#3b82f6', secondary: '#2563eb' },
+                    violet: { primary: '#8b5cf6', secondary: '#7c3aed' }
+                };
+                
+                const theme = themes[preset.dataset.theme];
+                if (theme) {
+                    document.documentElement.style.setProperty('--primary-color', theme.primary);
+                    document.getElementById('primaryColor').value = theme.primary;
+                    document.getElementById('secondaryColor').value = theme.secondary;
+                }
+            });
+        });
+
+        // Style options
+        document.querySelectorAll('.style-option').forEach(option => {
+            option.addEventListener('click', () => {
+                document.querySelectorAll('.style-option').forEach(o => o.classList.remove('active'));
+                option.classList.add('active');
+            });
+        });
+
+        // Action buttons
+        document.querySelector('.btn-download').addEventListener('click', () => {
+            alert('🎉 Chatbot downloaded! You can now integrate it into your website or app.');
+        });
+
+        document.querySelector('.btn-deploy').addEventListener('click', () => {
+            alert('🚀 Deploying to your website... You\'ll receive a shareable link shortly!');
+        });
+
+        document.querySelector('.btn-share').addEventListener('click', () => {
+            alert('📱 Creating mobile app... Your users will be able to add this to their home screen!');
+        });
+
+        // Initialize
+        renderTemplates();
+    </script>
+</body>
+</html>
+

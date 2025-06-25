@@ -1,0 +1,39 @@
+# GitHub Pages Configuration
+# This file tells GitHub Pages how to handle your site
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+
+# Site settings
+title: ChatFlo - Professional AI Chatbot Builder
+description: Build intelligent chatbots with our advanced visual builder. No coding required.
+baseurl: "" # Leave empty for user/organization pages
+url: "https://sgk112.github.io/chatflo" # Replace with your actual GitHub Pages URL
+
+# GitHub Pages specific settings
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+
+# Exclude files from processing
+exclude:
+  - node_modules/
+  - npm-debug.log
+  - .gitignore
+  - README.md
+  - package.json
+  - package-lock.json
+  - server.js
+  - deploy.sh
+
+# Include directories/files
+include:
+  - public/
+
+# Default layout
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default

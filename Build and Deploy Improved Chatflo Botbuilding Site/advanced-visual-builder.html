@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatFlo - Advanced Visual Builder</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .builder-container {
+            display: flex;
+            height: 100vh;
+            background: #f8fafc;
+        }
+
+        /* Left Sidebar - Tools */
+        .tools-sidebar {
+            width: 280px;
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+        }
+
+        .sidebar-header h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .tools-section {
+            padding: 20px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .tool-category {
+            margin-bottom: 25px;
+        }
+
+        .tool-category h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tool-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin-bottom: 8px;
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
+            border-radius: 8px;
+            cursor: grab;
+            transition: all 0.2s ease;
+        }
+
+        .tool-item:hover {
+            background: #e0e7ff;
+            border-color: #4f46e5;
+            transform: translateY(-1px);
+        }
+
+        .tool-item:active {
+            cursor: grabbing;
+        }
+
+        .tool-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 12px;
+            background: #4f46e5;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+
+        .tool-info h4 {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1f2937;
+            margin-bottom: 2px;
+        }
+
+        .tool-info p {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        /* Main Canvas Area */
+        .canvas-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #f1f5f9;
+        }
+
+        .canvas-header {
+            background: white;
+            padding: 15px 25px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+
+        .canvas-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .canvas-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: #4f46e5;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #4338ca;
+        }
+
+        .btn-secondary {
+            background: #f8fafc;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+
+        .btn-secondary:hover {
+            background: #f1f5f9;
+        }
+
+        .canvas-workspace {
+            flex: 1;
+            padding: 25px;
+            overflow: auto;
+        }
+
+        .flow-canvas {
+            background: white;
+            border-radius: 12px;
+            min-height: 600px;
+            position: relative;
+            border: 2px dashed #cbd5e1;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .canvas-placeholder {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #9ca3af;
+        }
+
+        .canvas-placeholder h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .canvas-placeholder p {
+            font-size: 14px;
+        }
+
+        /* Right Sidebar - Live Preview */
+        .preview-sidebar {
+            width: 350px;
+            background: white;
+            border-left: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .preview-header {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .preview-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .preview-header p {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .preview-content {
+            flex: 1;
+            padding: 20px;
+            background: #f8fafc;
+        }
+
+        .chatbot-preview {
+            background: white;
+            border-radius: 12px;
+            height: 400px;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .chatbot-header {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chatbot-avatar {
+            width: 32px;
+            height: 32px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .chatbot-info h4 {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .chatbot-info p {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background: #f8fafc;
+        }
+
+        .message {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .message.bot {
+            flex-direction: row;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-bubble {
+            max-width: 80%;
+            padding: 10px 14px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .message.bot .message-bubble {
+            background: white;
+            border: 1px solid #e2e8f0;
+            color: #374151;
+        }
+
+        .message.user .message-bubble {
+            background: #4f46e5;
+            color: white;
+        }
+
+        .chatbot-input {
+            padding: 15px;
+            border-top: 1px solid #e2e8f0;
+            background: white;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .input-group input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 20px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .input-group input:focus {
+            border-color: #4f46e5;
+        }
+
+        .send-btn {
+            width: 40px;
+            height: 40px;
+            background: #4f46e5;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .send-btn:hover {
+            background: #4338ca;
+        }
+
+        /* Floating Copilot */
+        .floating-copilot {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            border-radius: 50%;
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            animation: pulse 2s infinite;
+        }
+
+        .floating-copilot:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 35px rgba(245, 158, 11, 0.6);
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4); }
+            50% { box-shadow: 0 8px 25px rgba(245, 158, 11, 0.8); }
+            100% { box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4); }
+        }
+
+        .copilot-panel {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 320px;
+            height: 450px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            display: none;
+            flex-direction: column;
+            z-index: 999;
+            overflow: hidden;
+        }
+
+        .copilot-panel.active {
+            display: flex;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .copilot-header {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .copilot-avatar {
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .copilot-title h4 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .copilot-title p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .copilot-messages {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            background: #f8fafc;
+        }
+
+        .copilot-input {
+            padding: 16px;
+            border-top: 1px solid #e2e8f0;
+            background: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .tools-sidebar {
+                width: 250px;
+            }
+            .preview-sidebar {
+                width: 300px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .builder-container {
+                flex-direction: column;
+            }
+            .tools-sidebar, .preview-sidebar {
+                width: 100%;
+                height: auto;
+            }
+            .canvas-area {
+                order: 2;
+            }
+            .preview-sidebar {
+                order: 3;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="builder-container">
+        <!-- Left Sidebar - Tools -->
+        <div class="tools-sidebar">
+            <div class="sidebar-header">
+                <h2>🛠️ Builder Tools</h2>
+                <p>Drag and drop to build your chatbot</p>
+            </div>
+            <div class="tools-section">
+                <div class="tool-category">
+                    <h3>Message Types</h3>
+                    <div class="tool-item" draggable="true" data-type="welcome">
+                        <div class="tool-icon">👋</div>
+                        <div class="tool-info">
+                            <h4>Welcome Message</h4>
+                            <p>Greet your users</p>
+                        </div>
+                    </div>
+                    <div class="tool-item" draggable="true" data-type="question">
+                        <div class="tool-icon">❓</div>
+                        <div class="tool-info">
+                            <h4>Question</h4>
+                            <p>Ask for user input</p>
+                        </div>
+                    </div>
+                    <div class="tool-item" draggable="true" data-type="response">
+                        <div class="tool-icon">💬</div>
+                        <div class="tool-info">
+                            <h4>Response</h4>
+                            <p>Bot reply message</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-category">
+                    <h3>Interactive Elements</h3>
+                    <div class="tool-item" draggable="true" data-type="buttons">
+                        <div class="tool-icon">🔘</div>
+                        <div class="tool-info">
+                            <h4>Quick Replies</h4>
+                            <p>Button options</p>
+                        </div>
+                    </div>
+                    <div class="tool-item" draggable="true" data-type="carousel">
+                        <div class="tool-icon">🎠</div>
+                        <div class="tool-info">
+                            <h4>Carousel</h4>
+                            <p>Multiple cards</p>
+                        </div>
+                    </div>
+                    <div class="tool-item" draggable="true" data-type="form">
+                        <div class="tool-icon">📝</div>
+                        <div class="tool-info">
+                            <h4>Form</h4>
+                            <p>Collect user data</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-category">
+                    <h3>Logic & Flow</h3>
+                    <div class="tool-item" draggable="true" data-type="condition">
+                        <div class="tool-icon">🔀</div>
+                        <div class="tool-info">
+                            <h4>Condition</h4>
+                            <p>If/then logic</p>
+                        </div>
+                    </div>
+                    <div class="tool-item" draggable="true" data-type="delay">
+                        <div class="tool-icon">⏱️</div>
+                        <div class="tool-info">
+                            <h4>Delay</h4>
+                            <p>Wait before next</p>
+                        </div>
+                    </div>
+                    <div class="tool-item" draggable="true" data-type="webhook">
+                        <div class="tool-icon">🔗</div>
+                        <div class="tool-info">
+                            <h4>Webhook</h4>
+                            <p>External API call</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Canvas Area -->
+        <div class="canvas-area">
+            <div class="canvas-header">
+                <div class="canvas-title">Visual Flow Builder</div>
+                <div class="canvas-actions">
+                    <button class="btn btn-secondary">💾 Save</button>
+                    <button class="btn btn-secondary">👁️ Preview</button>
+                    <button class="btn btn-primary">🚀 Deploy</button>
+                </div>
+            </div>
+            <div class="canvas-workspace">
+                <div class="flow-canvas" id="flowCanvas">
+                    <div class="canvas-placeholder">
+                        <h3>🎨 Start Building Your Chatbot</h3>
+                        <p>Drag tools from the left sidebar to begin creating your conversation flow</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Sidebar - Live Preview -->
+        <div class="preview-sidebar">
+            <div class="preview-header">
+                <h3>📱 Live Preview</h3>
+                <p>See your chatbot in action</p>
+            </div>
+            <div class="preview-content">
+                <div class="chatbot-preview">
+                    <div class="chatbot-header">
+                        <div class="chatbot-avatar">🤖</div>
+                        <div class="chatbot-info">
+                            <h4>ChatFlo Assistant</h4>
+                            <p>Online • Typically replies instantly</p>
+                        </div>
+                    </div>
+                    <div class="chatbot-messages" id="previewMessages">
+                        <div class="message bot">
+                            <div class="message-bubble">
+                                👋 Welcome! I'm your ChatFlo assistant. How can I help you today?
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chatbot-input">
+                        <div class="input-group">
+                            <input type="text" placeholder="Type your message..." id="previewInput">
+                            <button class="send-btn" onclick="sendPreviewMessage()">➤</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Copilot -->
+    <div class="floating-copilot" onclick="toggleCopilot()">
+        🧠
+    </div>
+
+    <!-- Copilot Panel -->
+    <div class="copilot-panel" id="copilotPanel">
+        <div class="copilot-header">
+            <div class="copilot-avatar">🧠</div>
+            <div class="copilot-title">
+                <h4>ChatFlo Copilot</h4>
+                <p>Your AI building assistant</p>
+            </div>
+        </div>
+        <div class="copilot-messages" id="copilotMessages">
+            <div class="message bot">
+                <div class="message-bubble">
+                    🚀 Hi! I'm your ChatFlo Copilot. I can help you build amazing chatbots! Try asking me:
+                    <br><br>
+                    • "Create a customer support bot"
+                    <br>
+                    • "Add a welcome message"
+                    <br>
+                    • "How do I collect user emails?"
+                </div>
+            </div>
+        </div>
+        <div class="copilot-input">
+            <div class="input-group">
+                <input type="text" placeholder="Ask me anything..." id="copilotInput">
+                <button class="send-btn" onclick="sendCopilotMessage()">➤</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Drag and Drop Functionality
+        let draggedElement = null;
+
+        document.querySelectorAll('.tool-item').forEach(item => {
+            item.addEventListener('dragstart', (e) => {
+                draggedElement = e.target;
+                e.dataTransfer.effectAllowed = 'copy';
+            });
+        });
+
+        const flowCanvas = document.getElementById('flowCanvas');
+        
+        flowCanvas.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'copy';
+        });
+
+        flowCanvas.addEventListener('drop', (e) => {
+            e.preventDefault();
+            if (draggedElement) {
+                const rect = flowCanvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                createFlowNode(draggedElement.dataset.type, x, y);
+                
+                // Remove placeholder if it exists
+                const placeholder = flowCanvas.querySelector('.canvas-placeholder');
+                if (placeholder) {
+                    placeholder.style.display = 'none';
+                }
+            }
+        });
+
+        function createFlowNode(type, x, y) {
+            const node = document.createElement('div');
+            node.className = 'flow-node';
+            node.style.cssText = `
+                position: absolute;
+                left: ${x - 75}px;
+                top: ${y - 40}px;
+                width: 150px;
+                height: 80px;
+                background: white;
+                border: 2px solid #4f46e5;
+                border-radius: 12px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                cursor: move;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                transition: all 0.2s ease;
+            `;
+            
+            const icon = draggedElement.querySelector('.tool-icon').textContent;
+            const title = draggedElement.querySelector('h4').textContent;
+            
+            node.innerHTML = `
+                <div style="font-size: 20px; margin-bottom: 4px;">${icon}</div>
+                <div style="font-size: 12px; font-weight: 500; text-align: center; color: #374151;">${title}</div>
+            `;
+            
+            // Make node draggable within canvas
+            let isDragging = false;
+            let startX, startY, initialX, initialY;
+            
+            node.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                startX = e.clientX;
+                startY = e.clientY;
+                initialX = node.offsetLeft;
+                initialY = node.offsetTop;
+                node.style.zIndex = '1000';
+            });
+            
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    const deltaX = e.clientX - startX;
+                    const deltaY = e.clientY - startY;
+                    node.style.left = (initialX + deltaX) + 'px';
+                    node.style.top = (initialY + deltaY) + 'px';
+                }
+            });
+            
+            document.addEventListener('mouseup', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    node.style.zIndex = 'auto';
+                }
+            });
+            
+            node.addEventListener('click', () => {
+                // Show node properties panel
+                showNodeProperties(type, node);
+            });
+            
+            flowCanvas.appendChild(node);
+        }
+
+        function showNodeProperties(type, node) {
+            // This would open a properties panel for editing the node
+            console.log('Editing node:', type);
+        }
+
+        // Preview Chat Functionality
+        function sendPreviewMessage() {
+            const input = document.getElementById('previewInput');
+            const messages = document.getElementById('previewMessages');
+            
+            if (input.value.trim()) {
+                // Add user message
+                const userMsg = document.createElement('div');
+                userMsg.className = 'message user';
+                userMsg.innerHTML = `<div class="message-bubble">${input.value}</div>`;
+                messages.appendChild(userMsg);
+                
+                // Add bot response
+                setTimeout(() => {
+                    const botMsg = document.createElement('div');
+                    botMsg.className = 'message bot';
+                    botMsg.innerHTML = `<div class="message-bubble">Thanks for your message! This is a preview of how your chatbot will respond.</div>`;
+                    messages.appendChild(botMsg);
+                    messages.scrollTop = messages.scrollHeight;
+                }, 1000);
+                
+                input.value = '';
+                messages.scrollTop = messages.scrollHeight;
+            }
+        }
+
+        // Copilot Functionality
+        function toggleCopilot() {
+            const panel = document.getElementById('copilotPanel');
+            panel.classList.toggle('active');
+        }
+
+        function sendCopilotMessage() {
+            const input = document.getElementById('copilotInput');
+            const messages = document.getElementById('copilotMessages');
+            
+            if (input.value.trim()) {
+                // Add user message
+                const userMsg = document.createElement('div');
+                userMsg.className = 'message user';
+                userMsg.innerHTML = `<div class="message-bubble">${input.value}</div>`;
+                messages.appendChild(userMsg);
+                
+                // Add copilot response
+                setTimeout(() => {
+                    const responses = [
+                        "🎯 Great idea! I can help you create that. Let me add some nodes to your canvas.",
+                        "✨ Perfect! Here's what I recommend for your chatbot flow...",
+                        "🚀 Excellent question! Let me guide you through the best practices.",
+                        "💡 I see what you're trying to build. Here are some suggestions..."
+                    ];
+                    
+                    const botMsg = document.createElement('div');
+                    botMsg.className = 'message bot';
+                    botMsg.innerHTML = `<div class="message-bubble">${responses[Math.floor(Math.random() * responses.length)]}</div>`;
+                    messages.appendChild(botMsg);
+                    messages.scrollTop = messages.scrollHeight;
+                }, 1000);
+                
+                input.value = '';
+                messages.scrollTop = messages.scrollHeight;
+            }
+        }
+
+        // Enter key support for inputs
+        document.getElementById('previewInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendPreviewMessage();
+        });
+
+        document.getElementById('copilotInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendCopilotMessage();
+        });
+
+        // Close copilot when clicking outside
+        document.addEventListener('click', (e) => {
+            const copilot = document.querySelector('.floating-copilot');
+            const panel = document.getElementById('copilotPanel');
+            
+            if (!copilot.contains(e.target) && !panel.contains(e.target)) {
+                panel.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
+
