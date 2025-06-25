@@ -199,7 +199,66 @@ chatbot-builder/
 - Input validation
 - Environment variable protection
 
-## 📈 Performance
+## � Troubleshooting
+
+### Server Won't Start
+
+**Problem**: Server fails to start or shows errors
+**Solutions**:
+1. Check Node.js version: `node --version` (requires v18+)
+2. Install dependencies: `npm install`
+3. Check for port conflicts: Server runs on port 3000 by default
+4. Review console error messages for specific issues
+
+### Chat API Not Working
+
+**Problem**: AI chat functionality returns errors
+**Solutions**:
+1. Check if `OPENAI_API_KEY` is set in `.env` file
+2. Verify API key is valid in OpenAI dashboard
+3. Check server logs for specific error messages
+4. Test health endpoint: `http://localhost:3000/api/health`
+
+### Database Connection Issues
+
+**Problem**: MongoDB connection errors
+**Solutions**:
+1. MongoDB is optional - app runs without it
+2. If using MongoDB, ensure service is running
+3. Check `MONGO_URI` format: `mongodb://localhost:27017/database_name`
+4. Verify MongoDB service status
+
+### Missing Functions Error
+
+**Problem**: `getMaterialPrices is not defined` or similar
+**Solution**: This has been fixed in the latest version. The server now includes these functions.
+
+### Environment Variables
+
+**Problem**: Configuration not loading
+**Solutions**:
+1. Ensure `.env` file exists in project root
+2. Copy from `.env.example` if needed
+3. Check syntax - no spaces around `=`
+4. Restart server after changing `.env`
+
+### Health Check
+
+Test server status: `curl http://localhost:3000/api/health`
+
+Expected response:
+```json
+{
+  "status": "ok",
+  "server": "ChatFlo Chatbot Builder",
+  "services": {
+    "mongodb": "connected/disconnected",
+    "openai": "configured/not configured"
+  }
+}
+```
+
+## �📈 Performance
 
 - Gzip compression
 - Static file caching

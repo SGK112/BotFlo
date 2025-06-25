@@ -216,9 +216,15 @@ const chatLogSchema = new mongoose.Schema({
 const ChatLog = mongoose.model('ChatLog', chatLogSchema);
 
 // Initialize OpenAI API client
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+let openai = null;
+if (process.env.OPENAI_API_KEY) {
+  openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+  logger.info('OpenAI client initialized');
+} else {
+  logger.warn('OpenAI API key not provided - chat functionality will be limited');
+}
 
 // Helper function to generate a formatted timestamp
 function generateTimestamp() {
@@ -234,6 +240,130 @@ function logAPICall(endpoint, params, result) {
     resultLength: result ? JSON.stringify(result).length : 0,
   });
 }
+
+// Helper function to get material prices from MongoDB or mock data
+async function getMaterialPrices() {
+  try {
+    // If MongoDB is connected, try to fetch from there
+    if (mongoose.connection.readyState === 1) {
+      // If you have a Materials model, use it here
+      // For now, return mock data
+      logger.info('Returning mock material prices');
+    }
+    
+    // Return mock material data for demo purposes
+    return [
+      {
+        id: 1,
+        material: 'Granite',
+        colorName: 'Absolute Black',
+        vendorName: 'Stone Supplier A',
+        costSqFt: 45.50,
+        thickness: '3cm',
+        size: '3m x 1.5m',
+        priceGroup: 'Group 1',
+        availableSqFt: 150
+      },
+      {
+        id: 2,
+        material: 'Quartz',
+        colorName: 'Calacatta Gold',
+        vendorName: 'Stone Supplier B',
+        costSqFt: 65.00,
+        thickness: '2cm',
+        size: '3m x 1.4m',
+        priceGroup: 'Group 2',
+        availableSqFt: 200
+      },
+      {
+        id: 3,
+        material: 'Marble',
+        colorName: 'Carrara White',
+        vendorName: 'Stone Supplier C',
+        costSqFt: 55.75,
+        thickness: '3cm',
+        size: '2.8m x 1.6m',
+        priceGroup: 'Group 1',
+        availableSqFt: 120
+      }
+    ];
+  } catch (error) {
+    logger.error(`Error in getMaterialPrices: ${error.message}`);
+    return [];
+  }
+}
+
+// Helper function to get Shopify products or mock data
+async function getShopifyProducts(query = '') {
+  try {
+    // For demo purposes, return mock product data
+    // In production, this would connect to Shopify API
+    logger.info(`Fetching products for query: ${query}`);
+    
+    const mockProducts = [
+      {
+        id: 1,
+        title: 'Premium Granite Slab',
+        description: 'High-quality granite slab perfect for kitchen countertops',
+        price: 45.50,
+        image: '/images/granite-sample.jpg',
+        category: 'Granite'
+      },
+      {
+        id: 2,
+        title: 'Quartz Countertop Material',
+        description: 'Engineered quartz with consistent patterns and durability',
+        price: 65.00,
+        image: '/images/quartz-sample.jpg',
+        category: 'Quartz'
+      },
+      {
+        id: 3,
+        title: 'Natural Marble Slab',
+        description: 'Beautiful natural marble with unique veining patterns',
+        price: 55.75,
+        image: '/images/marble-sample.jpg',
+        category: 'Marble'
+      }
+    ];
+    
+    // Filter products based on query if provided
+    if (query) {
+      const filteredProducts = mockProducts.filter(product => 
+        product.title.toLowerCase().includes(query.toLowerCase()) ||
+        product.description.toLowerCase().includes(query.toLowerCase()) ||
+        product.category.toLowerCase().includes(query.toLowerCase())
+      );
+      return filteredProducts;
+    }
+    
+    return mockProducts;
+  } catch (error) {
+    logger.error(`Error in getShopifyProducts: ${error.message}`);
+    return [];
+  }
+}
+
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  const health = {
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    server: 'ChatFlo Chatbot Builder',
+    version: '2.0.0',
+    environment: {
+      node: process.version,
+      platform: process.platform,
+      uptime: process.uptime()
+    },
+    services: {
+      mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+      openai: process.env.OPENAI_API_KEY ? 'configured' : 'not configured'
+    }
+  };
+  
+  res.json(health);
+});
 
 // Define API routes
 app.get('/api/materials', async (req, res) => {
@@ -292,6 +422,14 @@ app.post('/api/chat', async (req, res) => {
       return res.status(400).json({ error: 'Message is required' });
     }
 
+    // Check if OpenAI API key is configured
+    if (!openai) {
+      logger.error('OpenAI client not initialized');
+      return res.status(500).json({ 
+        error: 'AI service not configured. Please check server configuration.' 
+      });
+    }
+
     // Create context for the AI
     let context = `You are the Surprise Granite Wizard AI assistant. 
     Today is ${new Date().toLocaleDateString()}.
@@ -320,21 +458,39 @@ app.post('/api/chat', async (req, res) => {
 
     const botReply = response.choices[0].message.content;
 
-    // Save the chat log
-    const chatLog = new ChatLog({
-      sessionId,
-      clientId,
-      clientEmail,
-      message,
-      response: botReply,
-    });
-    
-    await chatLog.save();
+    // Save the chat log if MongoDB is connected
+    if (mongoose.connection.readyState === 1) {
+      try {
+        const chatLog = new ChatLog({
+          sessionId,
+          clientId,
+          clientEmail,
+          message,
+          response: botReply,
+        });
+        
+        await chatLog.save();
+        logger.info('Chat log saved to database');
+      } catch (dbError) {
+        logger.error(`Failed to save chat log: ${dbError.message}`);
+        // Continue execution - don't fail the API call because of DB issues
+      }
+    } else {
+      logger.info('MongoDB not connected - chat log not saved');
+    }
 
     // Return the response
     res.json({ message: botReply });
   } catch (error) {
     logger.error(`Error in chat API: ${error.message}`);
+    
+    // Handle specific OpenAI API errors
+    if (error.code === 'invalid_api_key') {
+      return res.status(500).json({ error: 'AI service authentication failed' });
+    } else if (error.code === 'rate_limit_exceeded') {
+      return res.status(429).json({ error: 'Service temporarily unavailable. Please try again later.' });
+    }
+    
     res.status(500).json({ error: 'Error processing your request' });
   }
 });
