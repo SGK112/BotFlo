@@ -1,4 +1,9 @@
-require('dotenv').config();
+// Load environment variables (gracefully handle missing .env file)
+try {
+  require('dotenv').config();
+} catch (error) {
+  console.log('No .env file found, using environment variables from system');
+}
 const express = require('express');
 const cors = require('cors');
 const { OpenAI } = require('openai');
@@ -506,6 +511,6 @@ app.get('*', (req, res) => {
 });
 
 // Start server
-app.listen(port, () => {
-  logger.info(`Server running at http://localhost:${port}`);
+app.listen(port, '0.0.0.0', () => {
+  logger.info(`Server running at port ${port}`);
 });
