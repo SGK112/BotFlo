@@ -115,12 +115,12 @@ const upload = multer({
 });
 
 // Routes for the chatbot builder website
-app.get('/', (req, res) => {
+app.get('/old-builder', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'chatbot-builder-landing.html'));
 });
 
 app.get('/home', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'chatbot-builder-landing.html'));
+  res.redirect('/botflo-marketplace.html');
 });
 
 app.get('/about', (req, res) => {
@@ -1153,6 +1153,10 @@ app.get('/demo/:botType', (req, res) => {
 // Redirect root to marketplace
 app.get('/', (req, res) => {
   res.redirect('/botflo-marketplace.html');
+});
+
+app.get('/botflo-marketplace.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'botflo-marketplace.html'));
 });
 
 // Start the server
