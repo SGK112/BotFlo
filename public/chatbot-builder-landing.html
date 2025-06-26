@@ -958,6 +958,10 @@
                 <a href="./demo.html" class="btn btn-secondary btn-sm">Try Demo</a>
                 <a href="./easy-chatbot-builder.html" class="btn btn-primary btn-sm">Start Building</a>
             </div>
+
+            <button class="mobile-menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
     </nav>
 
@@ -1296,13 +1300,15 @@
             const navCta = document.querySelector('.nav-cta');
             const icon = document.querySelector('.mobile-menu-toggle i');
             
-            navMenu.classList.toggle('active');
-            navCta.classList.toggle('active');
-            
-            if (navMenu.classList.contains('active')) {
-                icon.className = 'fas fa-times';
-            } else {
-                icon.className = 'fas fa-bars';
+            if (navMenu && navCta && icon) {
+                navMenu.classList.toggle('active');
+                navCta.classList.toggle('active');
+                
+                if (navMenu.classList.contains('active')) {
+                    icon.className = 'fas fa-times';
+                } else {
+                    icon.className = 'fas fa-bars';
+                }
             }
         }
 
@@ -1310,46 +1316,51 @@
         document.addEventListener('DOMContentLoaded', function() {
             const mobileToggle = document.querySelector('.mobile-menu-toggle');
             const navMenu = document.querySelector('.nav-menu');
+            const navCta = document.querySelector('.nav-cta');
             
             if (mobileToggle && navMenu) {
                 mobileToggle.addEventListener('click', function() {
-                    navMenu.classList.toggle('mobile-open');
+                    navMenu.classList.toggle('active');
+                    if (navCta) {
+                        navCta.classList.toggle('active');
+                    }
                     const icon = mobileToggle.querySelector('i');
-                    icon.classList.toggle('fa-bars');
-                    icon.classList.toggle('fa-times');
+                    if (icon) {
+                        if (navMenu.classList.contains('active')) {
+                            icon.className = 'fas fa-times';
+                        } else {
+                            icon.className = 'fas fa-bars';
+                        }
+                    }
                 });
                 
                 // Close mobile menu when clicking on a link
                 navMenu.addEventListener('click', function(e) {
                     if (e.target.tagName === 'A') {
-                        navMenu.classList.remove('mobile-open');
+                        navMenu.classList.remove('active');
+                        if (navCta) {
+                            navCta.classList.remove('active');
+                        }
                         const icon = mobileToggle.querySelector('i');
-                        icon.classList.add('fa-bars');
-                        icon.classList.remove('fa-times');
+                        if (icon) {
+                            icon.className = 'fas fa-bars';
+                        }
                     }
                 });
-            }
-        });
 
-        // Mobile menu toggle
-        const mobileToggle = document.querySelector('.mobile-menu-toggle');
-        const navMenu = document.querySelector('.nav-menu');
-        
-        mobileToggle.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-            const icon = mobileToggle.querySelector('i');
-            if (navMenu.classList.contains('active')) {
-                icon.className = 'fas fa-times';
-            } else {
-                icon.className = 'fas fa-bars';
-            }
-        });
-
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.nav-container')) {
-                navMenu.classList.remove('active');
-                mobileToggle.querySelector('i').className = 'fas fa-bars';
+                // Close mobile menu when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!e.target.closest('.nav-container')) {
+                        navMenu.classList.remove('active');
+                        if (navCta) {
+                            navCta.classList.remove('active');
+                        }
+                        const icon = mobileToggle.querySelector('i');
+                        if (icon) {
+                            icon.className = 'fas fa-bars';
+                        }
+                    }
+                });
             }
         });
 
