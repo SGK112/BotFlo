@@ -411,6 +411,17 @@ app.get('/api/health', (req, res) => {
   res.json(health);
 });
 
+// API Status endpoint
+app.get('/api/status', (req, res) => {
+  res.json({
+    marketplace: 'active',
+    payments: process.env.STRIPE_SECRET_KEY ? 'configured' : 'not_configured',
+    database: 'optional',
+    bots_available: ['restaurant', 'support', 'realestate'],
+    last_updated: '2025-06-26'
+  });
+});
+
 // Define API routes
 app.get('/api/materials', async (req, res) => {
   try {
@@ -701,177 +712,560 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 function generateBotCode(botType, customization, uploadedFiles = []) {
   const apiKey = process.env.BOTFLO_API_KEY || 'demo-key';
   
-  // Base bot configuration
+  // Enhanced bot configuration with mobile-first design
   const botConfigs = {
     restaurant: {
       name: 'Restaurant Bot',
       welcomeMessage: customization.welcomeMessage || '🍕 Welcome to our restaurant! How can I help you today?',
-      features: ['menu', 'orders', 'reservations']
+      features: ['menu', 'orders', 'reservations'],
+      icon: '🍕'
     },
     support: {
       name: 'Customer Support Bot',
       welcomeMessage: customization.welcomeMessage || '👋 Hi! I\'m here to help with any questions.',
-      features: ['faq', 'tickets', 'escalation']
+      features: ['faq', 'tickets', 'escalation'],
+      icon: '🎧'
     },
     appointment: {
       name: 'Appointment Scheduler',
       welcomeMessage: customization.welcomeMessage || '📅 I can help you book an appointment!',
-      features: ['booking', 'calendar', 'reminders']
+      features: ['booking', 'calendar', 'reminders'],
+      icon: '📅'
+    },
+    realestate: {
+      name: 'Real Estate Bot',
+      welcomeMessage: customization.welcomeMessage || '🏠 Looking for your dream home? I can help!',
+      features: ['search', 'tours', 'leads'],
+      icon: '🏠'
     }
   };
   
   const config = botConfigs[botType] || botConfigs.support;
+  const primaryColor = customization.primaryColor || '#667eea';
+  const botName = customization.botName || config.name;
+  const animationStyle = customization.animationStyle || 'slideUp';
+  const botSize = customization.botSize || 350;
   
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${customization.botName || config.name}</title>
+    <title>${botName}</title>
     <style>
+        :root {
+            --primary: ${primaryColor};
+            --primary-dark: ${primaryColor}dd;
+            --secondary: #764ba2;
+            --accent: #f093fb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+
+        /* Mobile-First Animations */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 60%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            80% {
+                transform: translateY(-5px);
+            }
+        }
+
         .botflo-widget {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            width: 350px;
-            height: 500px;
-            background: ${customization.primaryColor || '#2563eb'};
-            border-radius: 16px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            width: ${Math.min(botSize, 400)}px;
+            height: ${Math.min(botSize * 1.6, 600)}px;
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: var(--shadow-xl);
             display: flex;
             flex-direction: column;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             z-index: 10000;
+            border: 1px solid var(--gray-200);
+            animation: ${animationStyle} 0.8s ease-out;
+            overflow: hidden;
         }
+
+        .botflo-widget.minimized {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
         .botflo-header {
-            background: ${customization.primaryColor || '#2563eb'};
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
             padding: 1rem;
-            border-radius: 16px 16px 0 0;
             display: flex;
             align-items: center;
+            gap: 0.75rem;
+            position: relative;
+        }
+
+        .botflo-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .botflo-info {
+            flex: 1;
+        }
+
+        .botflo-name {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .botflo-status {
+            font-size: 0.75rem;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #10b981;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .botflo-controls {
+            display: flex;
             gap: 0.5rem;
         }
+
+        .control-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+            backdrop-filter: blur(10px);
+        }
+
+        .control-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+
         .botflo-messages {
             flex: 1;
             padding: 1rem;
-            background: #f9fafb;
+            background: var(--gray-50);
             overflow-y: auto;
-        }
-        .botflo-input {
-            padding: 1rem;
-            background: white;
-            border-radius: 0 0 16px 16px;
             display: flex;
-            gap: 0.5rem;
+            flex-direction: column;
+            gap: 1rem;
         }
-        .botflo-input input {
-            flex: 1;
-            padding: 0.75rem;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            outline: none;
-        }
-        .botflo-input button {
-            padding: 0.75rem 1rem;
-            background: ${customization.primaryColor || '#2563eb'};
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-        }
+
         .message {
-            margin-bottom: 1rem;
             display: flex;
             align-items: flex-start;
             gap: 0.5rem;
+            animation: slideInRight 0.3s ease-out;
         }
+
         .message.bot {
             flex-direction: row;
         }
+
         .message.user {
             flex-direction: row-reverse;
         }
+
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+
+        .message.user .message-avatar {
+            background: var(--gray-400);
+        }
+
         .message-bubble {
             background: white;
             padding: 0.75rem 1rem;
-            border-radius: 16px;
+            border-radius: 1.25rem;
             max-width: 80%;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            border: 1px solid var(--gray-200);
         }
+
         .message.bot .message-bubble {
-            background: ${customization.primaryColor || '#2563eb'};
+            background: var(--primary);
             color: white;
+            border-color: var(--primary);
         }
+
+        .message-time {
+            font-size: 0.625rem;
+            opacity: 0.7;
+            margin-top: 0.25rem;
+            text-align: center;
+        }
+
+        .botflo-input {
+            padding: 1rem;
+            background: white;
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .input-field {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 1.5rem;
+            outline: none;
+            font-size: 0.875rem;
+            transition: border-color 0.2s;
+            background: var(--gray-50);
+        }
+
+        .input-field:focus {
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .send-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-md);
+        }
+
+        .send-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Mobile Responsive */
         @media (max-width: 768px) {
             .botflo-widget {
-                width: 90%;
-                height: 70%;
-                bottom: 10px;
-                right: 5%;
+                width: calc(100vw - 2rem);
+                height: calc(100vh - 4rem);
+                bottom: 1rem;
+                right: 1rem;
+                left: 1rem;
+                max-width: 400px;
+                margin: 0 auto;
             }
+
+            .botflo-widget.minimized {
+                width: 60px;
+                height: 60px;
+                right: 1rem;
+                left: auto;
+            }
+        }
+
+        /* Loading animation */
+        .typing-indicator {
+            display: flex;
+            gap: 0.25rem;
+            align-items: center;
+            padding: 0.75rem 1rem;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--gray-400);
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typing {
+            0%, 80%, 100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Quick actions */
+        .quick-actions {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0 1rem 1rem;
+            flex-wrap: wrap;
+        }
+
+        .quick-action {
+            padding: 0.5rem 0.75rem;
+            background: white;
+            border: 1px solid var(--gray-300);
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--gray-700);
+        }
+
+        .quick-action:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-1px);
         }
     </style>
 </head>
 <body>
     <div class="botflo-widget" id="botfloWidget">
         <div class="botflo-header">
-            <div style="width: 32px; height: 32px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                🤖
+            <div class="botflo-avatar">${config.icon}</div>
+            <div class="botflo-info">
+                <div class="botflo-name">${botName}</div>
+                <div class="botflo-status">
+                    <span class="status-dot"></span>
+                    Online • Powered by BotFlo.ai
+                </div>
             </div>
-            <div>
-                <div style="font-weight: 600;">${customization.botName || config.name}</div>
-                <div style="font-size: 12px; opacity: 0.8;">Powered by BotFlo.ai</div>
+            <div class="botflo-controls">
+                <button class="control-btn" onclick="minimizeWidget()" title="Minimize">−</button>
+                <button class="control-btn" onclick="closeWidget()" title="Close">×</button>
             </div>
         </div>
         
         <div class="botflo-messages" id="botfloMessages">
             <div class="message bot">
-                <div class="message-bubble">
-                    ${config.welcomeMessage}
+                <div class="message-avatar">${config.icon}</div>
+                <div>
+                    <div class="message-bubble">
+                        ${config.welcomeMessage}
+                    </div>
+                    <div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
                 </div>
             </div>
         </div>
+
+        <div class="quick-actions" id="quickActions">
+            ${getQuickActions(botType)}
+        </div>
         
         <div class="botflo-input">
-            <input type="text" id="botfloInput" placeholder="Type your message..." onkeypress="handleKeyPress(event)">
-            <button onclick="sendMessage()">Send</button>
+            <input type="text" class="input-field" id="botfloInput" placeholder="Type your message..." onkeypress="handleKeyPress(event)">
+            <button class="send-btn" onclick="sendMessage()" id="sendBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m22 2-7 20-4-9-9-4 20-7z"/>
+                </svg>
+            </button>
         </div>
     </div>
 
     <script>
-        // Protected API configuration - DO NOT MODIFY
+        // Enhanced bot configuration
         const BOTFLO_CONFIG = {
             apiKey: '${apiKey}',
-            endpoint: 'https://api.botflo.ai/chat',
+            endpoint: '/api/chat',
             botType: '${botType}',
             customization: ${JSON.stringify(customization)},
             uploadedFiles: ${JSON.stringify(uploadedFiles)}
         };
         
-        // Bot responses based on type
+        let isMinimized = false;
+        let messageHistory = [];
+        
+        // Enhanced bot responses based on type and uploaded files
         const botResponses = {
             restaurant: {
-                'menu|food|eat': 'Here\\'s our menu! What would you like to order?',
-                'order|delivery|takeout': 'I\\'d be happy to take your order! What can I get for you?',
-                'reservation|table|book': 'I can help with reservations! What date and time work for you?',
-                'hours|open|close': 'We\\'re open Monday-Friday 11am-10pm, weekends 10am-11pm.',
-                'default': 'I can help with our menu, taking orders, or making reservations. What do you need?'
+                'menu|food|eat|order': [
+                    'Here\\'s our menu! What would you like to order today? 🍽️',
+                    'I\\'d love to help you with our delicious menu options! What are you craving?',
+                    'Our chef\\'s specials are amazing today! Would you like to see what\\'s available?'
+                ],
+                'reservation|table|book': [
+                    'I can help you book a table! What date and time works for you? 📅',
+                    'Let me check our availability for you. When would you like to dine with us?'
+                ],
+                'hours|open|close|time': [
+                    'We\\'re open Monday-Friday 11am-10pm, weekends 10am-11pm. 🕐',
+                    'Our current hours are 11am-10pm weekdays, 10am-11pm weekends!'
+                ],
+                'default': [
+                    'I can help with our menu, taking orders, or making reservations. What do you need? 🍕',
+                    'Welcome! I\\'m here to help with anything restaurant-related. How can I assist you?'
+                ]
             },
             support: {
-                'help|support|problem': 'I\\'m here to help! What issue are you experiencing?',
-                'account|login|password': 'I can help with account issues. Are you having trouble logging in?',
-                'billing|payment|charge': 'For billing questions, let me get you to the right department.',
-                'bug|error|not working': 'Sorry you\\'re having technical issues! Let me help troubleshoot.',
-                'default': 'I\\'m your customer support assistant. How can I help you today?'
+                'help|support|problem|issue': [
+                    'I\\'m here to help! What issue are you experiencing? 🆘',
+                    'No worries, I\\'ll do my best to assist you. What\\'s the problem?'
+                ],
+                'account|login|password': [
+                    'I can help with account issues. Are you having trouble logging in? 🔐',
+                    'Account troubles? Let me help you get back on track!'
+                ],
+                'billing|payment|charge': [
+                    'For billing questions, I can help or connect you with our billing team. 💳',
+                    'Let me assist with your billing inquiry!'
+                ],
+                'bug|error|not working': [
+                    'Sorry you\\'re having technical issues! Let me help troubleshoot. 🔧',
+                    'Technical problems can be frustrating. Let\\'s figure this out together!'
+                ],
+                'default': [
+                    'I\\'m your customer support assistant. How can I help you today? 👋',
+                    'Hi there! I\\'m here to help solve any issues you might have.'
+                ]
             },
-            appointment: {
-                'book|schedule|appointment': 'I can help you book an appointment! What service do you need?',
-                'time|when|available': 'Let me check our availability. What day works best for you?',
-                'cancel|reschedule|change': 'I can help modify your appointment. What\\'s your booking reference?',
-                'default': 'I\\'m here to help with appointments. How can I assist you?'
+            realestate: {
+                'house|home|property|buy|sell': [
+                    'I\\'d love to help you find your dream home! What type of property are you looking for? 🏠',
+                    'Great! Let\\'s find you the perfect property. What\\'s your budget range?'
+                ],
+                'location|area|neighborhood': [
+                    'Location is so important! Which areas interest you most? 📍',
+                    'Let me help you explore the best neighborhoods for your needs!'
+                ],
+                'price|budget|cost': [
+                    'I can help you find properties within your budget. What price range works for you? 💰',
+                    'Budget planning is smart! What\\'s your ideal price range?'
+                ],
+                'tour|visit|viewing': [
+                    'I can schedule a viewing for you! Which properties caught your eye? 👁️',
+                    'Virtual or in-person tours available! When would work best for you?'
+                ],
+                'default': [
+                    'I\\'m here to help with all your real estate needs! Looking to buy, sell, or just browse? 🏠',
+                    'Welcome to your real estate assistant! How can I help you today?'
+                ]
             }
         };
+        
+        function getQuickActions(botType) {
+            const actions = {
+                restaurant: [
+                    'View Menu',
+                    'Make Reservation',
+                    'Order Online',
+                    'Our Hours'
+                ],
+                support: [
+                    'Contact Support',
+                    'Check Status',
+                    'FAQ',
+                    'Live Agent'
+                ],
+                realestate: [
+                    'Search Properties',
+                    'Schedule Tour',
+                    'Get Estimate',
+                    'Contact Agent'
+                ]
+            };
+            
+            return actions[botType]?.map(action => 
+                \`<div class="quick-action" onclick="sendQuickAction('\${action}')">\${action}</div>\`
+            ).join('') || '';
+        }
         
         function sendMessage() {
             const input = document.getElementById('botfloInput');
@@ -883,20 +1277,68 @@ function generateBotCode(botType, customization, uploadedFiles = []) {
             addMessage(message, 'user');
             input.value = '';
             
-            // Get bot response
+            // Show typing indicator
+            showTypingIndicator();
+            
+            // Get bot response with delay for realism
             setTimeout(() => {
+                hideTypingIndicator();
                 const response = getBotResponse(message);
                 addMessage(response, 'bot');
-            }, 500);
+                
+                // Store in history
+                messageHistory.push({user: message, bot: response, timestamp: new Date()});
+            }, 1000 + Math.random() * 1000); // 1-2 second delay
+        }
+        
+        function sendQuickAction(action) {
+            const input = document.getElementById('botfloInput');
+            input.value = action;
+            sendMessage();
         }
         
         function addMessage(text, sender) {
             const messagesContainer = document.getElementById('botfloMessages');
             const messageDiv = document.createElement('div');
             messageDiv.className = \`message \${sender}\`;
-            messageDiv.innerHTML = \`<div class="message-bubble">\${text}</div>\`;
+            
+            const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            const avatar = sender === 'bot' ? '${config.icon}' : '👤';
+            
+            messageDiv.innerHTML = \`
+                <div class="message-avatar">\${avatar}</div>
+                <div>
+                    <div class="message-bubble">\${text}</div>
+                    <div class="message-time">\${time}</div>
+                </div>
+            \`;
+            
             messagesContainer.appendChild(messageDiv);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        function showTypingIndicator() {
+            const messagesContainer = document.getElementById('botfloMessages');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message bot';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = \`
+                <div class="message-avatar">${config.icon}</div>
+                <div class="message-bubble">
+                    <div class="typing-indicator">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+            \`;
+            messagesContainer.appendChild(typingDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        function hideTypingIndicator() {
+            const indicator = document.getElementById('typingIndicator');
+            if (indicator) indicator.remove();
         }
         
         function getBotResponse(message) {
@@ -905,36 +1347,76 @@ function generateBotCode(botType, customization, uploadedFiles = []) {
             
             // Check uploaded files for context
             if (BOTFLO_CONFIG.uploadedFiles.length > 0) {
-                // If menu files uploaded and user asks about menu
-                if (lowerMessage.includes('menu') && BOTFLO_CONFIG.uploadedFiles.some(f => f.type === 'pdf' || f.type === 'image')) {
-                    return 'I have your menu loaded! Let me help you with that. What are you in the mood for?';
+                const fileTypes = BOTFLO_CONFIG.uploadedFiles.map(f => f.type);
+                if (lowerMessage.includes('menu') && fileTypes.includes('pdf')) {
+                    return 'I have your menu loaded! Let me help you with that. What are you in the mood for? 📋';
+                }
+                if (lowerMessage.includes('catalog') && fileTypes.includes('image')) {
+                    return 'I can see your product catalog! What specific item are you looking for? 🛍️';
                 }
             }
             
-            // Match patterns
-            for (const [pattern, response] of Object.entries(responses)) {
+            // Match patterns and return random response
+            for (const [pattern, responseArray] of Object.entries(responses)) {
                 if (pattern !== 'default') {
                     const keywords = pattern.split('|');
                     if (keywords.some(keyword => lowerMessage.includes(keyword))) {
-                        return response;
+                        return responseArray[Math.floor(Math.random() * responseArray.length)];
                     }
                 }
             }
             
-            return responses.default;
+            return responses.default[Math.floor(Math.random() * responses.default.length)];
         }
         
         function handleKeyPress(event) {
-            if (event.key === 'Enter') {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
                 sendMessage();
             }
         }
         
-        // Validate API key integrity (protection against modification)
-        if (!BOTFLO_CONFIG.apiKey || BOTFLO_CONFIG.apiKey.length < 8) {
-            console.error('BotFlo: Invalid API configuration');
-            document.getElementById('botfloWidget').innerHTML = '<div style="padding: 2rem; text-align: center; color: #ef4444;">Bot configuration error. Please contact support.</div>';
+        function minimizeWidget() {
+            const widget = document.getElementById('botfloWidget');
+            isMinimized = !isMinimized;
+            
+            if (isMinimized) {
+                widget.classList.add('minimized');
+                widget.innerHTML = \`
+                    <div style="width: 100%; height: 100%; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; cursor: pointer;" onclick="minimizeWidget()">
+                        ${config.icon}
+                    </div>
+                \`;
+            } else {
+                widget.classList.remove('minimized');
+                location.reload(); // Simple way to restore - in production you'd maintain state
+            }
         }
+        
+        function closeWidget() {
+            document.getElementById('botfloWidget').style.display = 'none';
+        }
+        
+        // Initialize widget
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add some initial quick actions
+            const quickActions = document.getElementById('quickActions');
+            if (quickActions && quickActions.children.length === 0) {
+                quickActions.style.display = 'none';
+            }
+            
+            // Validate API key integrity
+            if (!BOTFLO_CONFIG.apiKey || BOTFLO_CONFIG.apiKey.length < 8) {
+                console.error('BotFlo: Invalid API configuration');
+                document.getElementById('botfloWidget').innerHTML = \`
+                    <div style="padding: 2rem; text-align: center; color: var(--error); background: white; border-radius: 1.5rem; box-shadow: var(--shadow-xl);">
+                        <h3>⚠️ Configuration Error</h3>
+                        <p>This bot requires proper API configuration.</p>
+                        <p style="font-size: 0.875rem; margin-top: 1rem;">Contact: support@botflo.ai</p>
+                    </div>
+                \`;
+            }
+        });
     </script>
 </body>
 </html>`;
@@ -1136,7 +1618,7 @@ app.post('/api/notify', (req, res) => {
   }
 });
 
-// Demo bot endpoints
+// Demo bot endpoints - Enhanced
 app.get('/demo/:botType', (req, res) => {
   const { botType } = req.params;
   
@@ -1144,10 +1626,34 @@ app.get('/demo/:botType', (req, res) => {
   const demoCode = generateBotCode(botType, {
     botName: `${botType.charAt(0).toUpperCase() + botType.slice(1)} Bot Demo`,
     primaryColor: '#667eea',
-    welcomeMessage: 'This is a live demo! Try asking about our services.'
+    welcomeMessage: 'This is a live demo! Try asking about our services.',
+    animationStyle: 'slideUp',
+    botSize: 350
   }, []);
   
   res.send(demoCode);
+});
+
+// API Health Check
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    version: '2.0.0',
+    environment: process.env.NODE_ENV || 'development',
+    uptime: process.uptime()
+  });
+});
+
+// API Status endpoint
+app.get('/api/status', (req, res) => {
+  res.json({
+    marketplace: 'active',
+    payments: process.env.STRIPE_SECRET_KEY ? 'configured' : 'not_configured',
+    database: 'optional',
+    bots_available: ['restaurant', 'support', 'realestate'],
+    last_updated: '2025-06-26'
+  });
 });
 
 // Redirect root to marketplace

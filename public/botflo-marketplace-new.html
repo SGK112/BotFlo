@@ -185,18 +185,7 @@
             letter-spacing: 0.5px;
         }
 
-        @keyframes typing {
-            0%, 80%, 100% {
-                transform: scale(0.8);
-                opacity: 0.5;
-            }
-            40% {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-        /* Mobile Navigation Enhancements */
+        /* Navigation */
         .nav {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
@@ -707,140 +696,25 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Enhanced Mobile Responsive Design */
-        @media (max-width: 768px) {
-            .header {
-                padding: 2rem 1rem;
-                min-height: 50vh;
-            }
-
-            .nav-links {
-                display: none;
-            }
-
-            .mobile-menu-btn {
-                display: block;
-            }
-
+        /* Responsive Design */
+        @media (min-width: 480px) {
             .bot-grid {
                 grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-
-            .main-content {
-                padding: 2rem 1rem;
-            }
-
-            .hero-stats {
                 gap: 2rem;
-                justify-content: space-around;
             }
-
-            .stat {
-                flex: 1;
-                min-width: 0;
-            }
-
-            .customize-panel {
-                margin: 1rem;
-                border-radius: var(--border-radius);
-            }
-
-            .fab {
-                bottom: 1rem;
-                right: 1rem;
-                width: 50px;
-                height: 50px;
-                font-size: 1.25rem;
-                box-shadow: var(--shadow-lg);
-            }
-
-            /* Mobile-specific bot card improvements */
-            .bot-card {
-                margin-bottom: 1rem;
+            
+            .pricing-options {
+                grid-template-columns: 1fr 1fr;
             }
 
             .bot-actions {
-                flex-direction: column;
-                gap: 0.75rem;
-            }
-
-            .pricing-options {
-                grid-template-columns: 1fr;
-                gap: 0.75rem;
-            }
-
-            .pricing-option {
-                padding: 1rem;
-            }
-
-            /* Better mobile form inputs */
-            .input-field {
-                font-size: 16px; /* Prevents zoom on iOS */
-                padding: 1rem;
-            }
-
-            /* Improved mobile navigation */
-            .nav-content {
-                position: relative;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .header {
-                padding: 1.5rem 0.75rem;
-                min-height: 40vh;
-            }
-
-            .main-content {
-                padding: 1.5rem 0.75rem;
-            }
-
-            .logo {
-                font-size: 2.5rem;
-            }
-
-            .tagline {
-                font-size: 1rem;
-            }
-
-            .hero-stats {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .stat {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 1rem;
                 flex-direction: row;
             }
-
-            .bot-card {
-                border-radius: var(--border-radius);
-            }
-
-            .customize-panel {
-                margin: 0.5rem;
-            }
-
-            /* Ultra-mobile optimizations */
-            .color-picker {
-                grid-template-columns: repeat(4, 1fr);
-                gap: 0.5rem;
-            }
-
-            .color-option {
-                width: 35px;
-                height: 35px;
-            }
         }
 
-        /* Tablet improvements */
-        @media (min-width: 768px) and (max-width: 1024px) {
+        @media (min-width: 768px) {
             .header {
-                padding: 2.5rem 1rem;
+                padding: 3rem 1rem;
             }
 
             .nav-links {
@@ -857,11 +731,28 @@
             }
 
             .main-content {
-                padding: 3rem 1.5rem;
+                padding: 3rem 2rem;
             }
 
             .hero-stats {
-                gap: 3rem;
+                gap: 4rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .bot-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 2rem;
+            }
+
+            .bot-card {
+                animation-delay: var(--delay, 0s);
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .main-content {
+                padding: 4rem 2rem;
             }
         }
 
@@ -882,9 +773,6 @@
             transition: all 0.3s;
             z-index: 1000;
             animation: bounce 2s infinite;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .fab:hover {
@@ -978,11 +866,9 @@
             <a href="/" class="nav-logo">BotFlo</a>
             <div class="nav-links">
                 <a href="#bots">Bots</a>
-                <a href="#customize">Customize</a>
                 <a href="#pricing">Pricing</a>
-                <a href="/docs.html">Docs</a>
-                <a href="/contact.html">Support</a>
-                <a href="/builders-overview.html">Builders</a>
+                <a href="#docs">Docs</a>
+                <a href="#support">Support</a>
             </div>
             <button class="mobile-menu-btn">
                 <i class="fas fa-bars"></i>
@@ -1182,54 +1068,7 @@
             </div>
         </section>
 
-        <!-- Pricing Overview Section -->
-        <section id="pricing" style="padding: 4rem 0; background: linear-gradient(135deg, var(--gray-50) 0%, white 100%);">
-            <div style="max-width: 1200px; margin: 0 auto; padding: 0 1rem;">
-                <h2 class="section-title">💰 Simple, Transparent Pricing</h2>
-                <p class="section-subtitle">Choose between downloading the source code or letting us host it for you. No hidden fees, no long-term contracts.</p>
-                
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem;">
-                    <div style="background: white; padding: 2rem; border-radius: var(--border-radius-xl); box-shadow: var(--shadow-lg); border: 2px solid var(--gray-200); text-align: center;">
-                        <div style="font-size: 3rem; margin-bottom: 1rem;">📦</div>
-                        <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--gray-900);">Download & Host</h3>
-                        <div style="font-size: 2rem; font-weight: 700; color: var(--primary); margin-bottom: 1rem;">$19-$29</div>
-                        <p style="color: var(--gray-600); margin-bottom: 2rem;">One-time payment</p>
-                        <ul style="text-align: left; margin-bottom: 2rem; color: var(--gray-700);">
-                            <li style="margin-bottom: 0.5rem;"><i class="fas fa-check" style="color: var(--success); margin-right: 0.5rem;"></i>Complete source code</li>
-                            <li style="margin-bottom: 0.5rem;"><i class="fas fa-check" style="color: var(--success); margin-right: 0.5rem;"></i>Setup documentation</li>
-                            <li style="margin-bottom: 0.5rem;"><i class="fas fa-check" style="color: var(--success); margin-right: 0.5rem;"></i>Customization guide</li>
-                            <li style="margin-bottom: 0.5rem;"><i class="fas fa-check" style="color: var(--success); margin-right: 0.5rem;"></i>Free updates for 1 year</li>
-                        </ul>
-                        <a href="#bots" class="btn btn-secondary" style="width: 100%;">Choose Bot to Download</a>
-                    </div>
-                    
-                    <div style="background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); padding: 2rem; border-radius: var(--border-radius-xl); box-shadow: var(--shadow-xl); color: white; text-align: center; position: relative; border: 2px solid var(--primary);">
-                        <div style="position: absolute; top: -10px; right: 1rem; background: var(--warning); color: var(--gray-900); padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600;">POPULAR</div>
-                        <div style="font-size: 3rem; margin-bottom: 1rem;">🚀</div>
-                        <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Fully Hosted</h3>
-                        <div style="font-size: 2rem; font-weight: 700; margin-bottom: 1rem;">$29-$49</div>
-                        <p style="opacity: 0.9; margin-bottom: 2rem;">Per month</p>
-                        <ul style="text-align: left; margin-bottom: 2rem;">
-                            <li style="margin-bottom: 0.5rem;"><i class="fas fa-check" style="margin-right: 0.5rem;"></i>Fully managed hosting</li>
-                            <li style="margin-bottom: 0.5rem;"><i class="fas fa-check" style="margin-right: 0.5rem;"></i>Automatic updates</li>
-                            <li style="margin-bottom: 0.5rem;"><i class="fas fa-check" style="margin-right: 0.5rem;"></i>24/7 monitoring</li>
-                            <li style="margin-bottom: 0.5rem;"><i class="fas fa-check" style="margin-right: 0.5rem;"></i>Priority support</li>
-                            <li style="margin-bottom: 0.5rem;"><i class="fas fa-check" style="margin-right: 0.5rem;"></i>Custom domain</li>
-                        </ul>
-                        <a href="#bots" class="btn" style="width: 100%; background: white; color: var(--primary); font-weight: 600;">Get Started</a>
-                    </div>
-                </div>
-                
-                <div style="text-align: center; margin-top: 3rem; padding: 2rem; background: var(--gray-100); border-radius: var(--border-radius-xl);">
-                    <h4 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: var(--gray-800);">🎯 Need Something Custom?</h4>
-                    <p style="color: var(--gray-600); margin-bottom: 1.5rem;">We can build a completely custom chatbot tailored to your specific needs.</p>
-                    <a href="/contact.html" class="btn btn-primary">Get Custom Quote</a>
-                </div>
-            </div>
-        </section>
-
         <!-- Customization Panel -->
-        <section id="customize">
         <div id="customizePanel" class="customize-panel" style="display: none;">
             <div class="customize-header">
                 <h3>🎨 Customize Your Bot</h3>
@@ -1293,7 +1132,6 @@
                 </div>
             </div>
         </div>
-        </section>
     </main>
 
     <!-- Floating Action Button -->
@@ -1303,68 +1141,6 @@
 
     <!-- Demo Modal Container -->
     <div id="demoModal" style="display: none;"></div>
-
-    <!-- Footer -->
-    <footer style="background: linear-gradient(135deg, var(--gray-900) 0%, var(--gray-800) 100%); color: white; padding: 3rem 1rem 2rem;">
-        <div style="max-width: 1200px; margin: 0 auto;">
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
-                
-                <!-- Company Info -->
-                <div>
-                    <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; background: linear-gradient(45deg, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">🤖 BotFlo.ai</h3>
-                    <p style="color: var(--gray-300); margin-bottom: 1rem;">The world's first AI chatbot vending machine. Professional chatbots ready to deploy in minutes.</p>
-                    <div style="display: flex; gap: 1rem;">
-                        <a href="#" style="color: var(--gray-400); font-size: 1.25rem; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--gray-400)'"><i class="fab fa-twitter"></i></a>
-                        <a href="#" style="color: var(--gray-400); font-size: 1.25rem; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--gray-400)'"><i class="fab fa-github"></i></a>
-                        <a href="#" style="color: var(--gray-400); font-size: 1.25rem; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--gray-400)'"><i class="fab fa-discord"></i></a>
-                    </div>
-                </div>
-                
-                <!-- Quick Links -->
-                <div>
-                    <h4 style="font-weight: 600; margin-bottom: 1rem; color: white;">Quick Links</h4>
-                    <ul style="list-style: none; color: var(--gray-300);">
-                        <li style="margin-bottom: 0.5rem;"><a href="#bots" style="color: var(--gray-300); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--gray-300)'">Browse Bots</a></li>
-                        <li style="margin-bottom: 0.5rem;"><a href="#pricing" style="color: var(--gray-300); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--gray-300)'">Pricing</a></li>
-                        <li style="margin-bottom: 0.5rem;"><a href="/builders-overview.html" style="color: var(--gray-300); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--gray-300)'">Bot Builders</a></li>
-                        <li style="margin-bottom: 0.5rem;"><a href="/docs.html" style="color: var(--gray-300); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--gray-300)'">Documentation</a></li>
-                    </ul>
-                </div>
-                
-                <!-- Support -->
-                <div>
-                    <h4 style="font-weight: 600; margin-bottom: 1rem; color: white;">Support</h4>
-                    <ul style="list-style: none; color: var(--gray-300);">
-                        <li style="margin-bottom: 0.5rem;"><a href="/contact.html" style="color: var(--gray-300); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--gray-300)'">Contact Us</a></li>
-                        <li style="margin-bottom: 0.5rem;"><a href="/tutorials.html" style="color: var(--gray-300); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--gray-300)'">Tutorials</a></li>
-                        <li style="margin-bottom: 0.5rem;"><a href="/blog.html" style="color: var(--gray-300); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--gray-300)'">Blog</a></li>
-                        <li style="margin-bottom: 0.5rem;"><a href="/community.html" style="color: var(--gray-300); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--gray-300)'">Community</a></li>
-                    </ul>
-                </div>
-                
-                <!-- Newsletter -->
-                <div>
-                    <h4 style="font-weight: 600; margin-bottom: 1rem; color: white;">Stay Updated</h4>
-                    <p style="color: var(--gray-300); margin-bottom: 1rem; font-size: 0.875rem;">Get notified about new bot templates and features.</p>
-                    <div style="display: flex; gap: 0.5rem;">
-                        <input type="email" placeholder="Enter your email" style="flex: 1; padding: 0.75rem; border: 1px solid var(--gray-600); border-radius: 0.5rem; background: var(--gray-800); color: white; font-size: 0.875rem;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--gray-600)'">
-                        <button style="padding: 0.75rem 1rem; background: var(--primary); color: white; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 600; transition: background 0.2s;" onmouseover="this.style.background='var(--primary-dark)'" onmouseout="this.style.background='var(--primary)'">Subscribe</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div style="border-top: 1px solid var(--gray-700); padding-top: 2rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem;">
-                <div style="color: var(--gray-400); font-size: 0.875rem;">
-                    © 2025 BotFlo.ai. All rights reserved.
-                </div>
-                <div style="display: flex; gap: 2rem; font-size: 0.875rem;">
-                    <a href="/terms.html" style="color: var(--gray-400); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--gray-400)'">Terms</a>
-                    <a href="/privacy.html" style="color: var(--gray-400); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--gray-400)'">Privacy</a>
-                    <a href="/contact.html" style="color: var(--gray-400); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--gray-400)'">Support</a>
-                </div>
-            </div>
-        </div>
-    </footer>
 
     <script>
         // Global variables
@@ -1469,36 +1245,20 @@
             }
         }
 
-        // Show demo - Enhanced mobile-first experience
+        // Show demo
         function showDemo(botType) {
+            const demoUrl = `/demo/${botType}`;
             const modal = document.getElementById('demoModal');
             
-            // Enhanced demo with full-screen mobile experience
             modal.innerHTML = `
-                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 1rem;">
-                    <div style="background: white; border-radius: var(--border-radius); width: 100%; max-width: 500px; height: 90vh; max-height: 700px; position: relative; animation: slideUp 0.3s ease-out; display: flex; flex-direction: column; overflow: hidden;">
-                        
-                        <!-- Demo Header -->
-                        <div style="background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; padding: 1rem; display: flex; align-items: center; justify-content: space-between;">
-                            <div>
-                                <h3 style="margin: 0; font-size: 1.25rem; font-weight: 600;">🎬 ${botType.charAt(0).toUpperCase() + botType.slice(1)} Bot Demo</h3>
-                                <p style="margin: 0.25rem 0 0 0; opacity: 0.9; font-size: 0.875rem;">Try the full interactive experience</p>
-                            </div>
-                            <button onclick="closeDemoModal()" style="background: rgba(255,255,255,0.2); border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; font-size: 1.5rem; color: white; display: flex; align-items: center; justify-content: center;">×</button>
-                        </div>
-                        
-                        <!-- Demo Container -->
-                        <div style="flex: 1; background: #f5f5f5; position: relative; overflow: hidden;">
-                            ${generateDemoBot(botType)}
-                        </div>
-                        
-                        <!-- Demo Footer -->
-                        <div style="padding: 1rem; background: white; border-top: 1px solid #e5e7eb; display: flex; gap: 1rem;">
-                            <button class="btn btn-secondary" onclick="closeDemoModal()" style="flex: 1;">
-                                <i class="fas fa-times"></i> Close Demo
-                            </button>
-                            <button class="btn btn-primary" onclick="customizeBot('${botType}')" style="flex: 2;">
-                                <i class="fas fa-paint-brush"></i> Customize & Buy
+                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 1rem;">
+                    <div style="background: white; border-radius: 1rem; padding: 2rem; max-width: 90%; max-height: 90%; overflow: auto; position: relative; animation: slideUp 0.3s ease-out;">
+                        <button onclick="closeDemoModal()" style="position: absolute; top: 1rem; right: 1rem; background: var(--gray-200); border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; font-size: 1.2rem; color: var(--gray-600);">×</button>
+                        <h3 style="margin-bottom: 1rem; color: var(--gray-800);">🎬 ${botType.charAt(0).toUpperCase() + botType.slice(1)} Bot Demo</h3>
+                        <iframe src="${demoUrl}" style="width: 400px; height: 600px; border: 1px solid var(--gray-300); border-radius: 0.5rem; max-width: 100%;"></iframe>
+                        <div style="margin-top: 1rem; text-align: center;">
+                            <button class="btn btn-primary" onclick="customizeBot('${botType}')">
+                                <i class="fas fa-paint-brush"></i> Customize This Bot
                             </button>
                         </div>
                     </div>
@@ -1506,223 +1266,10 @@
             `;
             
             modal.style.display = 'block';
-            
-            // Prevent body scroll when modal is open
-            document.body.style.overflow = 'hidden';
         }
 
         function closeDemoModal() {
             document.getElementById('demoModal').style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-
-        // Generate interactive demo bot
-        function generateDemoBot(botType) {
-            const botConfigs = {
-                restaurant: {
-                    icon: '🍕',
-                    name: 'RestaurantBot',
-                    welcome: 'Welcome to our restaurant! 🍽️ How can I help you today?',
-                    quickActions: ['View Menu', 'Make Reservation', 'Order Delivery', 'Contact Us'],
-                    sampleResponses: {
-                        'menu': 'Here\'s our delicious menu! 🍕 Pizza from $12, 🍝 Pasta from $8, 🥗 Salads from $6. What sounds good?',
-                        'reservation': 'I\'d love to help you book a table! 📅 What date and time work for you?',
-                        'order': 'Great! Let\'s get your order started. 🚚 Would you like pickup or delivery?',
-                        'contact': 'You can reach us at (555) 123-4567 or visit us at 123 Main St. We\'re open 11am-10pm daily! 📞'
-                    }
-                },
-                support: {
-                    icon: '🎧',
-                    name: 'SupportBot',
-                    welcome: 'Hi there! 👋 I\'m here to help with any questions or issues you might have.',
-                    quickActions: ['Get Help', 'Check Status', 'Report Issue', 'Live Agent'],
-                    sampleResponses: {
-                        'help': 'I can help with account issues, billing questions, technical problems, and more! 🛠️ What do you need assistance with?',
-                        'status': 'Let me check that for you... ✅ All systems are operational. Is there a specific service you\'re asking about?',
-                        'issue': 'Sorry to hear you\'re having trouble! 🔧 Can you describe the issue you\'re experiencing?',
-                        'agent': 'I\'ll connect you with a live agent right away! 👨‍💼 Average wait time is currently 2 minutes.'
-                    }
-                },
-                realestate: {
-                    icon: '🏠',
-                    name: 'PropertyBot',
-                    welcome: 'Welcome to your real estate assistant! 🏡 Looking to buy, sell, or just browse properties?',
-                    quickActions: ['Search Homes', 'Schedule Tour', 'Get Valuation', 'Contact Agent'],
-                    sampleResponses: {
-                        'search': 'Perfect! 🔍 What\'s your ideal location and budget range? I can show you the best properties available.',
-                        'tour': 'I\'d love to schedule a tour for you! 🚶‍♀️ Which property interests you, and when works best?',
-                        'valuation': 'I can help estimate your property value! 💰 What\'s the address you\'d like me to analyze?',
-                        'agent': 'Let me connect you with one of our expert agents! 👨‍💼 They\'ll be in touch within 24 hours.'
-                    }
-                }
-            };
-
-            const config = botConfigs[botType] || botConfigs.support;
-
-            return `
-                <!-- Demo Bot Widget -->
-                <div style="position: absolute; bottom: 1rem; right: 1rem; left: 1rem; background: white; border-radius: var(--border-radius); box-shadow: 0 10px 25px rgba(0,0,0,0.2); display: flex; flex-direction: column; height: calc(100% - 2rem); max-width: 100%;">
-                    
-                    <!-- Bot Header -->
-                    <div style="background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; padding: 1rem; border-radius: var(--border-radius) var(--border-radius) 0 0; display: flex; align-items: center; gap: 0.75rem;">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">${config.icon}</div>
-                        <div style="flex: 1;">
-                            <div style="font-weight: 600; font-size: 1rem;">${config.name}</div>
-                            <div style="font-size: 0.75rem; opacity: 0.9; display: flex; align-items: center; gap: 0.25rem;">
-                                <div style="width: 6px; height: 6px; border-radius: 50%; background: #10b981; animation: pulse 2s infinite;"></div>
-                                Online • Powered by BotFlo.ai
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Messages Area -->
-                    <div id="demoMessages" style="flex: 1; padding: 1rem; background: #f9fafb; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem;">
-                        <!-- Welcome message -->
-                        <div style="display: flex; align-items: flex-start; gap: 0.5rem;">
-                            <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; flex-shrink: 0;">${config.icon}</div>
-                            <div>
-                                <div style="background: var(--primary); color: white; padding: 0.75rem 1rem; border-radius: calc(var(--border-radius) * 1.25); max-width: 280px; font-size: 0.875rem; line-height: 1.4;">
-                                    ${config.welcome}
-                                </div>
-                                <div style="font-size: 0.625rem; opacity: 0.7; margin-top: 0.25rem; padding-left: 1rem;">
-                                    ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Quick Actions -->
-                    <div style="padding: 0 1rem;">
-                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem;">
-                            ${config.quickActions.map(action => `
-                                <button onclick="sendDemoMessage('${action.toLowerCase()}', '${action}')" style="
-                                    padding: 0.5rem 0.75rem;
-                                    background: white;
-                                    border: 1px solid var(--gray-300);
-                                    border-radius: var(--border-radius);
-                                    font-size: 0.75rem;
-                                    cursor: pointer;
-                                    transition: all 0.2s;
-                                    color: var(--gray-700);
-                                " onmouseover="this.style.background='var(--primary)'; this.style.color='white'; this.style.borderColor='var(--primary)';" onmouseout="this.style.background='white'; this.style.color='var(--gray-700)'; this.style.borderColor='var(--gray-300)';">
-                                    ${action}
-                                </button>
-                            `).join('')}
-                        </div>
-                    </div>
-                    
-                    <!-- Input Area -->
-                    <div style="padding: 1rem; background: white; display: flex; gap: 0.75rem; align-items: center; border-top: 1px solid var(--gray-200);">
-                        <input type="text" id="demoInput" placeholder="Type your message..." style="
-                            flex: 1;
-                            padding: 0.75rem 1rem;
-                            border: 2px solid var(--gray-200);
-                            border-radius: calc(var(--border-radius) * 1.5);
-                            outline: none;
-                            font-size: 0.875rem;
-                            background: var(--gray-50);
-                        " onkeypress="if(event.key==='Enter') sendDemoMessage('custom', this.value)" onfocus="this.style.borderColor='var(--primary)'; this.style.background='white';" onblur="this.style.borderColor='var(--gray-200)'; this.style.background='var(--gray-50)';">
-                        <button onclick="sendDemoMessage('custom', document.getElementById('demoInput').value)" style="
-                            width: 40px;
-                            height: 40px;
-                            border: none;
-                            border-radius: 50%;
-                            background: var(--primary);
-                            color: white;
-                            cursor: pointer;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            box-shadow: var(--shadow-md);
-                        " onmouseover="this.style.background='var(--primary-dark)'; this.style.transform='scale(1.05)';" onmouseout="this.style.background='var(--primary)'; this.style.transform='scale(1)';">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="m22 2-7 20-4-9-9-4 20-7z"/>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-                
-                <script>
-                    const demoConfig = ${JSON.stringify(config)};
-                    
-                    function sendDemoMessage(type, message) {
-                        if (!message || message.trim() === '') return;
-                        
-                        const messagesContainer = document.getElementById('demoMessages');
-                        const input = document.getElementById('demoInput');
-                        
-                        // Add user message
-                        const userMsg = document.createElement('div');
-                        userMsg.style.cssText = 'display: flex; align-items: flex-start; gap: 0.5rem; flex-direction: row-reverse; animation: slideInRight 0.3s ease-out;';
-                        userMsg.innerHTML = \`
-                            <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--gray-400); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; flex-shrink: 0;">👤</div>
-                            <div>
-                                <div style="background: white; color: var(--gray-800); padding: 0.75rem 1rem; border-radius: calc(var(--border-radius) * 1.25); max-width: 280px; font-size: 0.875rem; line-height: 1.4; box-shadow: var(--shadow-sm); border: 1px solid var(--gray-200);">
-                                    \${message}
-                                </div>
-                                <div style="font-size: 0.625rem; opacity: 0.7; margin-top: 0.25rem; text-align: right; padding-right: 1rem;">
-                                    \${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-                                </div>
-                            </div>
-                        \`;
-                        messagesContainer.appendChild(userMsg);
-                        
-                        // Clear input
-                        if (input) input.value = '';
-                        
-                        // Show typing indicator
-                        const typingDiv = document.createElement('div');
-                        typingDiv.style.cssText = 'display: flex; align-items: flex-start; gap: 0.5rem;';
-                        typingDiv.id = 'typingIndicator';
-                        typingDiv.innerHTML = \`
-                            <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; flex-shrink: 0;">\${demoConfig.icon}</div>
-                            <div style="background: var(--primary); color: white; padding: 0.75rem 1rem; border-radius: calc(var(--border-radius) * 1.25); display: flex; align-items: center; gap: 0.25rem;">
-                                <div style="width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.7); animation: typing 1.4s infinite ease-in-out;"></div>
-                                <div style="width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.7); animation: typing 1.4s infinite ease-in-out; animation-delay: 0.16s;"></div>
-                                <div style="width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.7); animation: typing 1.4s infinite ease-in-out; animation-delay: 0.32s;"></div>
-                            </div>
-                        \`;
-                        messagesContainer.appendChild(typingDiv);
-                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                        
-                        // Get bot response after delay
-                        setTimeout(() => {
-                            document.getElementById('typingIndicator')?.remove();
-                            
-                            let response = 'Thanks for your message! This is a demo of how the bot responds. The real bot would be much smarter! 🤖';
-                            
-                            // Get contextual response
-                            if (type !== 'custom') {
-                                response = demoConfig.sampleResponses[type] || response;
-                            } else {
-                                const lowerMessage = message.toLowerCase();
-                                for (const [key, value] of Object.entries(demoConfig.sampleResponses)) {
-                                    if (lowerMessage.includes(key)) {
-                                        response = value;
-                                        break;
-                                    }
-                                }
-                            }
-                            
-                            const botMsg = document.createElement('div');
-                            botMsg.style.cssText = 'display: flex; align-items: flex-start; gap: 0.5rem; animation: slideInRight 0.3s ease-out;';
-                            botMsg.innerHTML = \`
-                                <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; flex-shrink: 0;">\${demoConfig.icon}</div>
-                                <div>
-                                    <div style="background: var(--primary); color: white; padding: 0.75rem 1rem; border-radius: calc(var(--border-radius) * 1.25); max-width: 280px; font-size: 0.875rem; line-height: 1.4;">
-                                        \${response}
-                                    </div>
-                                    <div style="font-size: 0.625rem; opacity: 0.7; margin-top: 0.25rem; padding-left: 1rem;">
-                                        \${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-                                    </div>
-                                </div>
-                            \`;
-                            messagesContainer.appendChild(botMsg);
-                            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                        }, 1000 + Math.random() * 1000);
-                    }
-                </script>
-            `;
         }
 
         // Customize bot
@@ -1870,88 +1417,9 @@
             }, 500);
         }
 
-        // Scroll to top with smooth animation
+        // Scroll to top
         function scrollToTop() {
-            window.scrollTo({ 
-                top: 0, 
-                behavior: 'smooth' 
-            });
-        }
-
-        // Show/hide FAB based on scroll position
-        window.addEventListener('scroll', function() {
-            const fab = document.querySelector('.fab');
-            if (fab) {
-                if (window.scrollY > 500) {
-                    fab.style.opacity = '1';
-                    fab.style.transform = 'scale(1)';
-                } else {
-                    fab.style.opacity = '0.7';
-                    fab.style.transform = 'scale(0.9)';
-                }
-            }
-        });
-
-        // Enhanced purchase flow with better error handling
-        function purchaseBot(botType) {
-            const botCard = event.target.closest('.bot-card');
-            const selectedOption = botCard.querySelector('.pricing-option.selected');
-            
-            if (!selectedOption) {
-                // Auto-select first option if none selected with visual feedback
-                const firstOption = botCard.querySelector('.pricing-option');
-                if (firstOption) {
-                    firstOption.click();
-                    
-                    // Show helpful message
-                    showMessage('💡 Selected download option for you! Click purchase again to continue.', 'info');
-                    
-                    // Highlight the button
-                    const purchaseBtn = event.target;
-                    purchaseBtn.style.animation = 'bounce 0.5s ease-out';
-                    setTimeout(() => purchaseBtn.style.animation = '', 500);
-                    return;
-                }
-            }
-
-            const type = selectedOption.dataset.type;
-            const price = selectedOption.dataset.price;
-            
-            // Add enhanced loading state
-            const button = event.target;
-            const originalText = button.innerHTML;
-            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-            button.disabled = true;
-            button.style.opacity = '0.7';
-            
-            // Add loading to the entire card
-            botCard.classList.add('loading');
-            
-            // Store purchase intent for analytics
-            localStorage.setItem('purchase_intent', JSON.stringify({
-                bot: botType,
-                type: type,
-                price: price,
-                timestamp: new Date().toISOString()
-            }));
-            
-            // Enhanced UX with staged loading
-            setTimeout(() => {
-                button.innerHTML = '<i class="fas fa-credit-card"></i> Redirecting...';
-                
-                setTimeout(() => {
-                    try {
-                        window.location.href = `/api/payment/create-checkout?bot=${botType}&type=${type}&price=${price}`;
-                    } catch (error) {
-                        // Error handling
-                        button.innerHTML = originalText;
-                        button.disabled = false;
-                        button.style.opacity = '1';
-                        botCard.classList.remove('loading');
-                        showMessage('❌ Something went wrong. Please try again.', 'error');
-                    }
-                }, 800);
-            }, 500);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // Update stats with animation
@@ -1978,19 +1446,15 @@
             });
         }
 
-        // Handle mobile menu - Enhanced
+        // Handle mobile menu
         const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
         if (mobileMenuBtn) {
             mobileMenuBtn.addEventListener('click', function() {
                 const navLinks = document.querySelector('.nav-links');
-                const icon = this.querySelector('i');
-                
                 if (navLinks) {
                     const isVisible = navLinks.style.display === 'flex';
-                    
+                    navLinks.style.display = isVisible ? 'none' : 'flex';
                     if (!isVisible) {
-                        // Show menu
-                        navLinks.style.display = 'flex';
                         navLinks.style.position = 'absolute';
                         navLinks.style.top = '100%';
                         navLinks.style.left = '0';
@@ -2000,127 +1464,25 @@
                         navLinks.style.boxShadow = 'var(--shadow-lg)';
                         navLinks.style.flexDirection = 'column';
                         navLinks.style.gap = '1rem';
-                        navLinks.style.borderRadius = '0 0 1rem 1rem';
-                        navLinks.style.border = '1px solid var(--gray-200)';
-                        navLinks.style.borderTop = 'none';
-                        navLinks.style.animation = 'slideUp 0.3s ease-out';
-                        navLinks.style.zIndex = '1000';
-                        
-                        // Change icon
-                        icon.className = 'fas fa-times';
-                        
-                        // Add backdrop
-                        const backdrop = document.createElement('div');
-                        backdrop.id = 'mobile-menu-backdrop';
-                        backdrop.style.cssText = `
-                            position: fixed;
-                            top: 0;
-                            left: 0;
-                            width: 100%;
-                            height: 100%;
-                            background: rgba(0,0,0,0.3);
-                            z-index: 999;
-                            animation: fadeIn 0.3s ease-out;
-                        `;
-                        backdrop.onclick = () => {
-                            navLinks.style.display = 'none';
-                            backdrop.remove();
-                            icon.className = 'fas fa-bars';
-                        };
-                        document.body.appendChild(backdrop);
-                        
-                        // Add click handlers to menu items
-                        navLinks.querySelectorAll('a').forEach(link => {
-                            link.addEventListener('click', () => {
-                                navLinks.style.display = 'none';
-                                const backdrop = document.getElementById('mobile-menu-backdrop');
-                                if (backdrop) backdrop.remove();
-                                icon.className = 'fas fa-bars';
-                            });
-                        });
-                        
-                    } else {
-                        // Hide menu
-                        navLinks.style.display = 'none';
-                        icon.className = 'fas fa-bars';
-                        const backdrop = document.getElementById('mobile-menu-backdrop');
-                        if (backdrop) backdrop.remove();
                     }
                 }
             });
         }
 
-        // Enhanced message system with multiple types
+        // Show success/error message
         function showMessage(message, type = 'success') {
-            // Remove existing messages
-            document.querySelectorAll('.success-message, .error-message, .info-message').forEach(msg => msg.remove());
-            
             const messageDiv = document.createElement('div');
-            const icons = {
-                success: 'fas fa-check-circle',
-                error: 'fas fa-exclamation-triangle', 
-                info: 'fas fa-info-circle',
-                warning: 'fas fa-exclamation-circle'
-            };
-            
-            const colors = {
-                success: 'var(--success)',
-                error: 'var(--error)',
-                info: 'var(--primary)',
-                warning: 'var(--warning)'
-            };
-            
             messageDiv.className = `${type}-message`;
-            messageDiv.style.cssText = `
-                background: ${colors[type] || colors.success};
-                color: white;
-                padding: 1rem 1.5rem;
-                border-radius: var(--border-radius);
-                margin: 1rem 0;
-                display: flex;
-                align-items: center;
-                gap: 0.75rem;
-                animation: slideInRight 0.5s ease-out;
-                position: fixed;
-                top: 2rem;
-                right: 2rem;
-                z-index: 9999;
-                box-shadow: var(--shadow-xl);
-                max-width: 400px;
-                font-weight: 500;
-                cursor: pointer;
-            `;
-            
             messageDiv.innerHTML = `
-                <i class="${icons[type] || icons.success}"></i>
-                <span style="flex: 1;">${message}</span>
-                <button onclick="this.parentElement.remove()" style="
-                    background: rgba(255,255,255,0.2);
-                    border: none;
-                    color: white;
-                    border-radius: 50%;
-                    width: 24px;
-                    height: 24px;
-                    cursor: pointer;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-size: 0.875rem;
-                ">×</button>
+                <i class="fas fa-${type === 'success' ? 'check' : 'exclamation-triangle'}"></i>
+                ${message}
             `;
-            
-            // Auto-remove click handler
-            messageDiv.addEventListener('click', () => messageDiv.remove());
             
             document.body.appendChild(messageDiv);
             
-            // Auto-remove after delay
             setTimeout(() => {
-                if (messageDiv.parentNode) {
-                    messageDiv.style.animation = 'slideInRight 0.3s ease-out reverse';
-                    setTimeout(() => messageDiv.remove(), 300);
-                }
-            }, type === 'error' ? 8000 : 5000);
+                messageDiv.remove();
+            }, 5000);
         }
 
         // Check for success/error messages in URL
@@ -2131,7 +1493,7 @@
             showMessage('❌ Payment failed. Please try again.', 'error');
         }
 
-        // Smooth scrolling for anchor links + keyboard support
+        // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -2140,158 +1502,8 @@
                     target.scrollIntoView({
                         behavior: 'smooth'
                     });
-                    
-                    // Focus management for accessibility
-                    target.focus();
                 }
             });
-        });
-
-        // Keyboard navigation support
-        document.addEventListener('keydown', function(e) {
-            // ESC key to close modals
-            if (e.key === 'Escape') {
-                const demoModal = document.getElementById('demoModal');
-                const customizePanel = document.getElementById('customizePanel');
-                
-                if (demoModal.style.display === 'block') {
-                    closeDemoModal();
-                }
-                
-                if (customizePanel.style.display === 'block') {
-                    closeCustomization();
-                }
-                
-                // Close mobile menu
-                const navLinks = document.querySelector('.nav-links');
-                const mobileMenuBtn = document.querySelector('.mobile-menu-btn i');
-                const backdrop = document.getElementById('mobile-menu-backdrop');
-                
-                if (navLinks && navLinks.style.display === 'flex') {
-                    navLinks.style.display = 'none';
-                    if (mobileMenuBtn) mobileMenuBtn.className = 'fas fa-bars';
-                    if (backdrop) backdrop.remove();
-                }
-            }
-            
-            // Tab navigation improvements
-            if (e.key === 'Tab') {
-                // Ensure focus is visible
-                e.target.style.outline = '2px solid var(--primary)';
-                e.target.style.outlineOffset = '2px';
-                
-                setTimeout(() => {
-                    e.target.style.outline = '';
-                    e.target.style.outlineOffset = '';
-                }, 3000);
-            }
-        });
-
-        // Touch and gesture improvements for mobile
-        let touchStartY = 0;
-        let touchStartX = 0;
-
-        document.addEventListener('touchstart', function(e) {
-            touchStartY = e.touches[0].clientY;
-            touchStartX = e.touches[0].clientX;
-        });
-
-        document.addEventListener('touchend', function(e) {
-            const touchEndY = e.changedTouches[0].clientY;
-            const touchEndX = e.changedTouches[0].clientX;
-            const deltaY = touchStartY - touchEndY;
-            const deltaX = touchStartX - touchEndX;
-            
-            // Swipe to close demo modal (swipe down)
-            if (deltaY < -100 && Math.abs(deltaX) < 50) {
-                const demoModal = document.getElementById('demoModal');
-                if (demoModal.style.display === 'block') {
-                    closeDemoModal();
-                }
-            }
-        });
-
-        // Performance optimization: Lazy load images and animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '50px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const target = entry.target;
-                    
-                    // Trigger animations when elements come into view
-                    if (target.classList.contains('bot-card')) {
-                        target.style.animationPlayState = 'running';
-                    }
-                    
-                    // Lazy load any images
-                    const images = target.querySelectorAll('img[data-src]');
-                    images.forEach(img => {
-                        img.src = img.dataset.src;
-                        img.removeAttribute('data-src');
-                    });
-                    
-                    observer.unobserve(target);
-                }
-            });
-        }, observerOptions);
-
-        // Observe bot cards for animations
-        document.querySelectorAll('.bot-card').forEach(card => {
-            observer.observe(card);
-        });
-
-        // App-like experience improvements
-        
-        // Prevent zoom on double tap for iOS
-        let lastTouchEnd = 0;
-        document.addEventListener('touchend', function (event) {
-            const now = (new Date()).getTime();
-            if (now - lastTouchEnd <= 300) {
-                event.preventDefault();
-            }
-            lastTouchEnd = now;
-        }, false);
-
-        // PWA-like features
-        
-        // Add to homescreen prompt
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            
-            // Show custom install button if needed
-            setTimeout(() => {
-                if (deferredPrompt) {
-                    showMessage('💡 Add BotFlo to your home screen for easy access!', 'info');
-                }
-            }, 30000); // Show after 30 seconds
-        });
-
-        // Handle app installation
-        function installApp() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        showMessage('🎉 Thanks for installing BotFlo!', 'success');
-                    }
-                    deferredPrompt = null;
-                });
-            }
-        }
-
-        // Offline support messaging
-        window.addEventListener('online', () => {
-            showMessage('🌐 You\'re back online!', 'success');
-        });
-
-        window.addEventListener('offline', () => {
-            showMessage('📱 You\'re offline. Some features may be limited.', 'warning');
         });
     </script>
 </body>

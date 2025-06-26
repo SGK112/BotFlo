@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BotFlo.ai - AI Chatbot Vending Machine 🤖</title>
+    <meta name="description" content="The world's first AI chatbot vending machine. Pick, customize, and deploy professional chatbots in minutes. Mobile-first design.">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5a6fd8;
+            --secondary: #764ba2;
+            --accent: #f093fb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            --border-radius: 0.75rem;
+            --border-radius-lg: 1rem;
+            --border-radius-xl: 1.5rem;
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--gray-800);
+            background: var(--gray-50);
+            font-size: 16px;
+            overflow-x: hidden;
+        }
+        
+        /* Mobile-First Animations */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 60%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            80% {
+                transform: translateY(-5px);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                box-shadow: 0 0 5px var(--primary);
+            }
+            50% {
+                box-shadow: 0 0 20px var(--primary), 0 0 30px var(--primary);
+            }
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            max-width: 90%;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        .logo {
+            font-size: clamp(2rem, 8vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #fff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .tagline {
+            font-size: clamp(1rem, 4vw, 1.5rem);
+            opacity: 0.95;
+            margin-bottom: 2rem;
+            font-weight: 400;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+            animation: slideUp 0.8s ease-out 0.2s both;
+        }
+
+        .stat-number {
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            font-weight: 700;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Navigation */
+        .nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow);
+            padding: 0.75rem 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--gray-700);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .mobile-menu-btn {
+            display: block;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--gray-700);
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .section-title {
+            font-size: clamp(1.75rem, 6vw, 2.5rem);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1rem;
+            color: var(--gray-900);
+        }
+
+        .section-subtitle {
+            font-size: clamp(1rem, 4vw, 1.25rem);
+            text-align: center;
+            color: var(--gray-600);
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Bot Grid - Mobile First */
+        .bot-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Bot Card - Enhanced Mobile Design */
+        .bot-card {
+            background: white;
+            border-radius: var(--border-radius-xl);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            border: 1px solid var(--gray-200);
+            animation: slideUp 0.6s ease-out both;
+        }
+
+        .bot-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary);
+        }
+
+        .bot-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .bot-header {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--gray-50) 0%, white 100%);
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .bot-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: var(--border-radius);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin-bottom: 1rem;
+            animation: bounce 2s infinite;
+        }
+
+        .bot-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--gray-900);
+        }
+        
+        .bot-description {
+            color: var(--gray-600);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .bot-body {
+            padding: 1.5rem;
+        }
+
+        .bot-features {
+            margin-bottom: 2rem;
+        }
+
+        .bot-features h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--gray-800);
+        }
+        
+        .bot-features ul {
+            list-style: none;
+        }
+        
+        .bot-features li {
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.875rem;
+            color: var(--gray-700);
+        }
+        
+        .bot-features i {
+            color: var(--success);
+            width: 16px;
+            font-size: 0.875rem;
+        }
+
+        /* Pricing Section */
+        .bot-pricing {
+            background: var(--gray-50);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .pricing-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .pricing-header h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--gray-800);
+        }
+
+        .pricing-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .pricing-option {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.25rem;
+            text-align: center;
+            border: 2px solid var(--gray-200);
+            transition: all 0.2s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .pricing-option:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .pricing-option.selected {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            animation: glow 2s infinite;
+        }
+
+        .pricing-option.selected .price {
+            color: white;
+        }
+
+        .pricing-type {
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+            opacity: 0.8;
+        }
+        
+        .price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .price-period {
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+
+        .price-description {
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        
+        .nav-links a:hover {
+            background: #f0f0f0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .bots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .bot-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .bot-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+        
+        .bot-image {
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .bot-image i {
+            font-size: 4rem;
+            color: white;
+            opacity: 0.8;
+        }
+        
+        .bot-content {
+            padding: 1.5rem;
+        }
+        
+        .bot-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .bot-description {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        
+        .bot-features {
+            margin-bottom: 1.5rem;
+        }
+        
+        .bot-features ul {
+            list-style: none;
+        }
+        
+        .bot-features li {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .bot-features i {
+            color: #28a745;
+            width: 16px;
+        }
+        
+        .bot-pricing {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .pricing-option {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .price {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .price-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .bot-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.875rem 1.5rem;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-demo {
+            background: var(--gray-100);
+            color: var(--gray-700);
+            border: 1px solid var(--gray-300);
+        }
+
+        .btn-demo:hover {
+            background: var(--gray-200);
+        }
+
+        /* Status Indicators */
+        .bot-status {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-available {
+            background: var(--success);
+            color: white;
+        }
+
+        .status-popular {
+            background: var(--warning);
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        .status-new {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* Mobile Customization Panel */
+        .customize-panel {
+            background: white;
+            border-radius: var(--border-radius-xl);
+            box-shadow: var(--shadow-xl);
+            margin: 2rem 0;
+            overflow: hidden;
+            border: 1px solid var(--gray-200);
+        }
+
+        .customize-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .customize-header h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .customize-body {
+            padding: 1.5rem;
+        }
+
+        .customize-option {
+            margin-bottom: 2rem;
+        }
+
+        .customize-option label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--gray-800);
+        }
+
+        .color-picker {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .color-option.selected {
+            border-color: var(--gray-800);
+            transform: scale(1.1);
+        }
+
+        .color-option.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            font-size: 0.875rem;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 0.875rem;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--gray-200);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            box-shadow: var(--shadow);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            border: none;
+        }
+
+        /* Bot Preview */
+        .bot-preview-container {
+            background: var(--gray-100);
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            margin: 1rem 0;
+            min-height: 200px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bot-preview {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            width: 300px;
+            max-width: calc(100% - 2rem);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Responsive Design */
+        @media (min-width: 480px) {
+            .bot-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .pricing-options {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .bot-actions {
+                flex-direction: row;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .header {
+                padding: 3rem 1rem;
+            }
+
+            .nav-links {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: none;
+            }
+
+            .bot-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+
+            .main-content {
+                padding: 3rem 2rem;
+            }
+
+            .hero-stats {
+                gap: 4rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .bot-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 2rem;
+            }
+
+            .bot-card {
+                animation-delay: var(--delay, 0s);
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .main-content {
+                padding: 4rem 2rem;
+            }
+        }
+
+        /* Floating Action Button for Mobile */
+        .fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            box-shadow: var(--shadow-xl);
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 1000;
+            animation: bounce 2s infinite;
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Loading States */
+        .loading {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loading::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* Success Messages */
+        .success-message {
+            background: var(--success);
+            color: white;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            animation: slideInRight 0.5s ease-out;
+        }
+
+        /* Error Messages */
+        .error-message {
+            background: var(--error);
+            color: white;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            animation: slideInRight 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <h1 class="logo">🤖 BotFlo.ai</h1>
+            <p class="tagline">The World's First AI Chatbot Vending Machine</p>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number">50+</span>
+                    <span class="stat-label">Bot Templates</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">2min</span>
+                    <span class="stat-label">Deploy Time</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">99.9%</span>
+                    <span class="stat-label">Uptime</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-content">
+            <a href="/" class="nav-logo">BotFlo</a>
+            <div class="nav-links">
+                <a href="#bots">Bots</a>
+                <a href="#pricing">Pricing</a>
+                <a href="#docs">Docs</a>
+                <a href="#support">Support</a>
+            </div>
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+    </nav>
+    
+    <section class="hero">
+        <div class="container">
+            <h1>Buy Ready-to-Use AI Chatbots</h1>
+            <p>Skip months of development. Get production-ready chatbots with your branding in minutes.</p>
+            
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-number">5+</div>
+                    <div>Bot Templates</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">2</div>
+                    <div>Deployment Options</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">$9</div>
+                    <div>Starting Price</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="section" id="marketplace">
+        <div class="container">
+            <h2>Available Chatbots</h2>
+            
+            <div class="bots-grid">
+                <!-- Restaurant Bot -->
+                <div class="bot-card">
+                    <div class="bot-image">
+                        <i class="fas fa-utensils"></i>
+                        <div class="coming-soon">LIVE NOW</div>
+                    </div>
+                    <div class="bot-content">
+                        <h3 class="bot-title">Restaurant Ordering Bot</h3>
+                        <p class="bot-description">Complete restaurant chatbot with menu display, order taking, and customer service.</p>
+                        
+                        <div class="bot-features">
+                            <ul>
+                                <li><i class="fas fa-check"></i> Upload menu PDFs/images</li>
+                                <li><i class="fas fa-check"></i> Order processing</li>
+                                <li><i class="fas fa-check"></i> Table reservations</li>
+                                <li><i class="fas fa-check"></i> Customer support</li>
+                                <li><i class="fas fa-check"></i> Multi-language support</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bot-pricing">
+                            <div class="pricing-option">
+                                <div class="price">$24</div>
+                                <div class="price-label">Download Code</div>
+                            </div>
+                            <div class="pricing-option">
+                                <div class="price">$39/mo</div>
+                                <div class="price-label">Hosted + Support</div>
+                            </div>
+                        </div>
+                        
+                        <div class="bot-actions">
+                            <button class="btn btn-primary" onclick="buyBot('restaurant', 'download')">Buy Code</button>
+                            <button class="btn btn-secondary" onclick="buyBot('restaurant', 'hosted')">Host for Me</button>
+                        </div>
+                        <button class="btn demo-btn" onclick="demoBot('restaurant')">👀 Live Demo</button>
+                    </div>
+                </div>
+                
+                <!-- Support Bot -->
+                <div class="bot-card">
+                    <div class="bot-image">
+                        <i class="fas fa-headset"></i>
+                        <div class="coming-soon">LIVE NOW</div>
+                    </div>
+                    <div class="bot-content">
+                        <h3 class="bot-title">Customer Support Bot</h3>
+                        <p class="bot-description">AI-powered customer support with knowledge base, ticket creation, and escalation.</p>
+                        
+                        <div class="bot-features">
+                            <ul>
+                                <li><i class="fas fa-check"></i> Knowledge base upload</li>
+                                <li><i class="fas fa-check"></i> Ticket creation</li>
+                                <li><i class="fas fa-check"></i> FAQ automation</li>
+                                <li><i class="fas fa-check"></i> Human escalation</li>
+                                <li><i class="fas fa-check"></i> Analytics dashboard</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bot-pricing">
+                            <div class="pricing-option">
+                                <div class="price">$19</div>
+                                <div class="price-label">Download Code</div>
+                            </div>
+                            <div class="pricing-option">
+                                <div class="price">$29/mo</div>
+                                <div class="price-label">Hosted + Support</div>
+                            </div>
+                        </div>
+                        
+                        <div class="bot-actions">
+                            <button class="btn btn-primary" onclick="buyBot('support', 'download')">Buy Code</button>
+                            <button class="btn btn-secondary" onclick="buyBot('support', 'hosted')">Host for Me</button>
+                        </div>
+                        <button class="btn demo-btn" onclick="demoBot('support')">👀 Live Demo</button>
+                    </div>
+                </div>
+                
+                <!-- Real Estate Bot -->
+                <div class="bot-card">
+                    <div class="bot-image">
+                        <i class="fas fa-home"></i>
+                        <div class="coming-soon">Coming Soon</div>
+                    </div>
+                    <div class="bot-content">
+                        <h3 class="bot-title">Real Estate Bot</h3>
+                        <p class="bot-description">Property listing assistant with virtual tours, appointment booking, and lead capture.</p>
+                        
+                        <div class="bot-features">
+                            <ul>
+                                <li><i class="fas fa-check"></i> Property listings upload</li>
+                                <li><i class="fas fa-check"></i> Virtual tour integration</li>
+                                <li><i class="fas fa-check"></i> Appointment scheduling</li>
+                                <li><i class="fas fa-check"></i> Lead qualification</li>
+                                <li><i class="fas fa-check"></i> CRM integration</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bot-pricing">
+                            <div class="pricing-option">
+                                <div class="price">$29</div>
+                                <div class="price-label">Download Code</div>
+                            </div>
+                            <div class="pricing-option">
+                                <div class="price">$49/mo</div>
+                                <div class="price-label">Hosted + Support</div>
+                            </div>
+                        </div>
+                        
+                        <div class="bot-actions">
+                            <button class="btn btn-primary" disabled>Coming Dec 15</button>
+                            <button class="btn btn-secondary" onclick="notifyMe('realestate')">Notify Me</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- E-commerce Bot -->
+                <div class="bot-card">
+                    <div class="bot-image">
+                        <i class="fas fa-shopping-cart"></i>
+                        <div class="coming-soon">Coming Soon</div>
+                    </div>
+                    <div class="bot-content">
+                        <h3 class="bot-title">E-commerce Assistant</h3>
+                        <p class="bot-description">Product recommendations, order tracking, and shopping assistance for online stores.</p>
+                        
+                        <div class="bot-features">
+                            <ul>
+                                <li><i class="fas fa-check"></i> Product catalog upload</li>
+                                <li><i class="fas fa-check"></i> Order tracking</li>
+                                <li><i class="fas fa-check"></i> Product recommendations</li>
+                                <li><i class="fas fa-check"></i> Cart assistance</li>
+                                <li><i class="fas fa-check"></i> Shopify integration</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bot-pricing">
+                            <div class="pricing-option">
+                                <div class="price">$34</div>
+                                <div class="price-label">Download Code</div>
+                            </div>
+                            <div class="pricing-option">
+                                <div class="price">$59/mo</div>
+                                <div class="price-label">Hosted + Support</div>
+                            </div>
+                        </div>
+                        
+                        <div class="bot-actions">
+                            <button class="btn btn-primary" disabled>Coming Dec 20</button>
+                            <button class="btn btn-secondary" onclick="notifyMe('ecommerce')">Notify Me</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Appointment Bot -->
+                <div class="bot-card">
+                    <div class="bot-image">
+                        <i class="fas fa-calendar-check"></i>
+                        <div class="coming-soon">Coming Soon</div>
+                    </div>
+                    <div class="bot-content">
+                        <h3 class="bot-title">Appointment Booking Bot</h3>
+                        <p class="bot-description">Smart scheduling assistant with calendar integration and automated confirmations.</p>
+                        
+                        <div class="bot-features">
+                            <ul>
+                                <li><i class="fas fa-check"></i> Calendar integration</li>
+                                <li><i class="fas fa-check"></i> Service selection</li>
+                                <li><i class="fas fa-check"></i> Automated reminders</li>
+                                <li><i class="fas fa-check"></i> Rescheduling handling</li>
+                                <li><i class="fas fa-check"></i> Payment collection</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bot-pricing">
+                            <div class="pricing-option">
+                                <div class="price">$22</div>
+                                <div class="price-label">Download Code</div>
+                            </div>
+                            <div class="pricing-option">
+                                <div class="price">$35/mo</div>
+                                <div class="price-label">Hosted + Support</div>
+                            </div>
+                        </div>
+                        
+                        <div class="bot-actions">
+                            <button class="btn btn-primary" disabled>Coming Dec 18</button>
+                            <button class="btn btn-secondary" onclick="notifyMe('appointment')">Notify Me</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Lead Generation Bot -->
+                <div class="bot-card">
+                    <div class="bot-image">
+                        <i class="fas fa-magnet"></i>
+                        <div class="coming-soon">Coming Soon</div>
+                    </div>
+                    <div class="bot-content">
+                        <h3 class="bot-title">Lead Generation Bot</h3>
+                        <p class="bot-description">Qualify prospects, capture contact info, and nurture leads automatically.</p>
+                        
+                        <div class="bot-features">
+                            <ul>
+                                <li><i class="fas fa-check"></i> Lead qualification</li>
+                                <li><i class="fas fa-check"></i> Contact capture</li>
+                                <li><i class="fas fa-check"></i> Follow-up sequences</li>
+                                <li><i class="fas fa-check"></i> CRM integration</li>
+                                <li><i class="fas fa-check"></i> Lead scoring</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bot-pricing">
+                            <div class="pricing-option">
+                                <div class="price">$27</div>
+                                <div class="price-label">Download Code</div>
+                            </div>
+                            <div class="pricing-option">
+                                <div class="price">$45/mo</div>
+                                <div class="price-label">Hosted + Support</div>
+                            </div>
+                        </div>
+                        
+                        <div class="bot-actions">
+                            <button class="btn btn-primary" disabled>Coming Dec 22</button>
+                            <button class="btn btn-secondary" onclick="notifyMe('leadgen')">Notify Me</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="revenue-info">
+        <div class="container">
+            <h2>Two Ways to Deploy</h2>
+            
+            <div class="revenue-grid">
+                <div class="revenue-card">
+                    <h3>💻 Download Code</h3>
+                    <p><strong>One-time payment</strong></p>
+                    <p>Get the complete bot code with your API keys embedded. Host anywhere you want. Perfect for developers and agencies.</p>
+                    <ul style="text-align: left; margin-top: 1rem;">
+                        <li>✅ Complete source code</li>
+                        <li>✅ Your branding/styling</li>
+                        <li>✅ Host anywhere</li>
+                        <li>✅ API key protection</li>
+                        <li>✅ Documentation included</li>
+                    </ul>
+                </div>
+                
+                <div class="revenue-card">
+                    <h3>☁️ Hosted Service</h3>
+                    <p><strong>Monthly subscription</strong></p>
+                    <p>We handle hosting, maintenance, and support. Get your own subdomain and dashboard. Perfect for businesses.</p>
+                    <ul style="text-align: left; margin-top: 1rem;">
+                        <li>✅ Custom subdomain</li>
+                        <li>✅ File upload interface</li>
+                        <li>✅ Analytics dashboard</li>
+                        <li>✅ 24/7 monitoring</li>
+                        <li>✅ Customer support</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Payment Modal -->
+    <div id="paymentModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 2rem; border-radius: 12px; max-width: 500px; width: 90%;">
+            <h3 id="modalTitle">Complete Your Purchase</h3>
+            <div id="modalContent"></div>
+            <div style="margin-top: 2rem; text-align: right;">
+                <button onclick="closeModal()" style="margin-right: 1rem; padding: 0.5rem 1rem; background: #ccc; border: none; border-radius: 4px;">Cancel</button>
+                <button id="payButton" class="btn btn-primary">Pay Now</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Payment functions
+        function buyBot(botType, deploymentType) {
+            const prices = {
+                restaurant: { download: 24, hosted: 39 },
+                support: { download: 19, hosted: 29 }
+            };
+            
+            const botNames = {
+                restaurant: 'Restaurant Ordering Bot',
+                support: 'Customer Support Bot'
+            };
+            
+            const price = prices[botType][deploymentType];
+            const currency = deploymentType === 'hosted' ? '/month' : '';
+            
+            document.getElementById('modalTitle').textContent = `Buy ${botNames[botType]}`;
+            document.getElementById('modalContent').innerHTML = `
+                <p><strong>Bot:</strong> ${botNames[botType]}</p>
+                <p><strong>Deployment:</strong> ${deploymentType === 'download' ? 'Download Code' : 'Hosted Service'}</p>
+                <p><strong>Price:</strong> $${price}${currency}</p>
+                <p style="margin-top: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 6px;">
+                    ${deploymentType === 'download' 
+                        ? '✅ Complete source code<br>✅ API keys embedded<br>✅ Documentation included<br>✅ Host anywhere' 
+                        : '✅ Custom subdomain<br>✅ File upload dashboard<br>✅ Analytics included<br>✅ 24/7 support'}
+                </p>
+            `;
+            
+            document.getElementById('payButton').onclick = () => processPayment(botType, deploymentType, price);
+            document.getElementById('paymentModal').style.display = 'block';
+        }
+        
+        function processPayment(botType, deploymentType, price) {
+            // This will integrate with Stripe
+            alert(`Processing payment for ${botType} bot (${deploymentType}) - $${price}${deploymentType === 'hosted' ? '/month' : ''}.\n\nRedirecting to Stripe checkout...`);
+            
+            // TODO: Integrate with actual Stripe checkout
+            window.location.href = `/api/payment/create-checkout?bot=${botType}&type=${deploymentType}&price=${price}`;
+        }
+        
+        function demoBot(botType) {
+            // Open demo in new window
+            window.open(`/demo/${botType}`, '_blank');
+        }
+        
+        function notifyMe(botType) {
+            const email = prompt('Enter your email to be notified when this bot is ready:');
+            if (email) {
+                fetch('/api/notify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, botType })
+                });
+                alert('✅ You\'ll be notified when this bot is ready!');
+            }
+        }
+        
+        function closeModal() {
+            document.getElementById('paymentModal').style.display = 'none';
+        }
+        
+        // Close modal on outside click
+        document.getElementById('paymentModal').onclick = function(e) {
+            if (e.target === this) closeModal();
+        }
+    </script>
+</body>
+</html>
