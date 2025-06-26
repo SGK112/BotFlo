@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deploy Your Chatbot - ChatFlo</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #2563eb;
+            --accent-green: #10b981;
+            --bg-white: #ffffff;
+            --bg-gray-50: #f9fafb;
+            --text-dark: #1f2937;
+            --border-gray: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-gray-50);
+            color: var(--text-dark);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .setup-card {
+            background: var(--bg-white);
+            border-radius: 16px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .setup-header {
+            margin-bottom: 3rem;
+        }
+
+        .bot-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .setup-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .setup-subtitle {
+            font-size: 1.2rem;
+            color: #6b7280;
+            margin-bottom: 2rem;
+        }
+
+        .step {
+            text-align: left;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            border: 2px solid var(--border-gray);
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+
+        .step.completed {
+            border-color: var(--accent-green);
+            background: #f0fdf4;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            background: var(--primary-blue);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .step.completed .step-number {
+            background: var(--accent-green);
+        }
+
+        .step-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .input-group input,
+        .input-group select,
+        .input-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border-gray);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus,
+        .input-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--accent-green);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .success-message {
+            background: #f0fdf4;
+            border: 2px solid var(--accent-green);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .embed-code {
+            background: #1f2937;
+            color: #f9fafb;
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 1rem 0;
+            text-align: left;
+            overflow-x: auto;
+        }
+
+        .copy-btn {
+            background: #374151;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border-gray);
+            border-radius: 4px;
+            margin: 2rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-blue);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="setup-card">
+            <div class="setup-header">
+                <div class="bot-icon" id="botIcon">🎧</div>
+                <h1 class="setup-title" id="botTitle">Customer Support Bot</h1>
+                <p class="setup-subtitle">Let's get your chatbot live in just 3 easy steps!</p>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+
+            <!-- Step 1: Basic Information -->
+            <div class="step" id="step1">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Basic Information</div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="botName">What should we call your chatbot?</label>
+                    <input type="text" id="botName" placeholder="e.g., Customer Support Assistant" value="Customer Support Assistant">
+                </div>
+                
+                <div class="input-group">
+                    <label for="businessName">Your Business Name</label>
+                    <input type="text" id="businessName" placeholder="e.g., Acme Corporation">
+                </div>
+                
+                <div class="input-group">
+                    <label for="websiteUrl">Your Website URL</label>
+                    <input type="url" id="websiteUrl" placeholder="https://yourwebsite.com">
+                </div>
+                
+                <button class="btn btn-primary" onclick="completeStep(1)">
+                    <i class="fas fa-arrow-right"></i> Continue
+                </button>
+            </div>
+
+            <!-- Step 2: Customization -->
+            <div class="step" id="step2" style="display: none;">
+                <div class="step-header">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Customize Your Bot</div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="welcomeMessage">Welcome Message</label>
+                    <textarea id="welcomeMessage" rows="3" placeholder="Hello! I'm here to help you with any questions.">👋 Hi! I'm your customer support assistant. How can I help you today?</textarea>
+                </div>
+                
+                <div class="input-group">
+                    <label for="botColor">Bot Color Theme</label>
+                    <select id="botColor">
+                        <option value="#2563eb">Professional Blue</option>
+                        <option value="#10b981">Success Green</option>
+                        <option value="#8b5cf6">Creative Purple</option>
+                        <option value="#f59e0b">Energetic Orange</option>
+                        <option value="#ef4444">Bold Red</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="supportEmail">Support Email (for escalations)</label>
+                    <input type="email" id="supportEmail" placeholder="support@yourcompany.com">
+                </div>
+                
+                <button class="btn btn-primary" onclick="completeStep(2)">
+                    <i class="fas fa-arrow-right"></i> Continue
+                </button>
+            </div>
+
+            <!-- Step 3: Deploy -->
+            <div class="step" id="step3" style="display: none;">
+                <div class="step-header">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Deploy & Go Live</div>
+                </div>
+                
+                <p style="margin-bottom: 2rem;">Choose how you want to deploy your chatbot:</p>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
+                    <button class="btn btn-primary" onclick="deployOption('embed')" style="padding: 1.5rem; text-align: center;">
+                        <div>
+                            <i class="fas fa-code" style="font-size: 2rem; display: block; margin-bottom: 0.5rem;"></i>
+                            <strong>Website Embed</strong><br>
+                            <small>Add to your existing site</small>
+                        </div>
+                    </button>
+                    
+                    <button class="btn btn-primary" onclick="deployOption('subdomain')" style="padding: 1.5rem; text-align: center;">
+                        <div>
+                            <i class="fas fa-globe" style="font-size: 2rem; display: block; margin-bottom: 0.5rem;"></i>
+                            <strong>Hosted Page</strong><br>
+                            <small>Get a custom URL</small>
+                        </div>
+                    </button>
+                </div>
+                
+                <button class="btn btn-success" onclick="completeStep(3)" style="width: 100%; padding: 1.5rem; font-size: 1.2rem;">
+                    <i class="fas fa-rocket"></i> Deploy My Chatbot
+                </button>
+            </div>
+
+            <!-- Success Message -->
+            <div class="success-message" id="successMessage" style="display: none;">
+                <h2 style="color: var(--accent-green); margin-bottom: 1rem;">
+                    <i class="fas fa-check-circle"></i> Congratulations!
+                </h2>
+                <p style="margin-bottom: 2rem;">Your chatbot is now live and ready to help your customers!</p>
+                
+                <div id="deploymentDetails"></div>
+                
+                <div style="margin-top: 2rem;">
+                    <button class="btn btn-primary" onclick="viewDashboard()" style="margin-right: 1rem;">
+                        <i class="fas fa-chart-line"></i> View Dashboard
+                    </button>
+                    <button class="btn btn-success" onclick="testChatbot()">
+                        <i class="fas fa-comments"></i> Test Your Bot
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        let deploymentType = 'embed';
+        
+        // Get bot type from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const botType = urlParams.get('bot') || 'support';
+        
+        // Bot configurations
+        const botConfigs = {
+            support: {
+                icon: '🎧',
+                title: 'Customer Support Bot',
+                defaultName: 'Customer Support Assistant',
+                defaultMessage: '👋 Hi! I\'m your customer support assistant. How can I help you today?'
+            },
+            appointment: {
+                icon: '📅',
+                title: 'Appointment Scheduler',
+                defaultName: 'Appointment Assistant',
+                defaultMessage: '📅 Hello! I can help you book an appointment that fits your schedule. What service do you need?'
+            },
+            shopping: {
+                icon: '🛒',
+                title: 'Shopping Assistant',
+                defaultName: 'Shopping Helper',
+                defaultMessage: '🛍️ Welcome to our store! I\'m your personal shopping assistant. What can I help you find today?'
+            },
+            restaurant: {
+                icon: '🍕',
+                title: 'Restaurant Bot',
+                defaultName: 'Restaurant Assistant',
+                defaultMessage: '🍕 Welcome to our restaurant! I can help with our menu, take orders, or make reservations. What would you like?'
+            },
+            lead: {
+                icon: '🎯',
+                title: 'Lead Generator',
+                defaultName: 'Lead Assistant',
+                defaultMessage: '🎯 Hi there! I\'m here to help you learn more about our services. What\'s your biggest business challenge?'
+            },
+            realestate: {
+                icon: '🏠',
+                title: 'Real Estate Bot',
+                defaultName: 'Real Estate Assistant',
+                defaultMessage: '🏠 Hello! I\'m your real estate assistant. Are you looking to buy, sell, or rent? I can help you find the perfect property!'
+            }
+        };
+        
+        // Initialize with correct bot type
+        function initializeBot() {
+            const config = botConfigs[botType];
+            document.getElementById('botIcon').textContent = config.icon;
+            document.getElementById('botTitle').textContent = config.title;
+            document.getElementById('botName').value = config.defaultName;
+            document.getElementById('welcomeMessage').value = config.defaultMessage;
+        }
+        
+        function completeStep(step) {
+            // Validate current step
+            if (step === 1) {
+                const botName = document.getElementById('botName').value.trim();
+                const businessName = document.getElementById('businessName').value.trim();
+                const websiteUrl = document.getElementById('websiteUrl').value.trim();
+                
+                if (!botName || !businessName || !websiteUrl) {
+                    alert('Please fill in all required fields.');
+                    return;
+                }
+            }
+            
+            if (step === 2) {
+                const welcomeMessage = document.getElementById('welcomeMessage').value.trim();
+                const supportEmail = document.getElementById('supportEmail').value.trim();
+                
+                if (!welcomeMessage || !supportEmail) {
+                    alert('Please fill in all required fields.');
+                    return;
+                }
+            }
+            
+            // Mark current step as completed
+            document.getElementById(`step${step}`).classList.add('completed');
+            
+            // Show next step or finish
+            if (step < 3) {
+                setTimeout(() => {
+                    document.getElementById(`step${step}`).style.display = 'none';
+                    document.getElementById(`step${step + 1}`).style.display = 'block';
+                    currentStep = step + 1;
+                    updateProgress();
+                }, 500);
+            } else {
+                // Deploy the chatbot
+                deployBot();
+            }
+            
+            updateProgress();
+        }
+        
+        function updateProgress() {
+            const progress = (currentStep / 3) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+        
+        function deployOption(type) {
+            deploymentType = type;
+            // Visual feedback
+            document.querySelectorAll('.step#step3 .btn-primary').forEach(btn => {
+                btn.style.background = '#2563eb';
+            });
+            event.target.style.background = '#10b981';
+        }
+        
+        function deployBot() {
+            // Hide step 3
+            document.getElementById('step3').style.display = 'none';
+            
+            // Show success message
+            document.getElementById('successMessage').style.display = 'block';
+            
+            // Generate deployment details
+            const botName = document.getElementById('botName').value;
+            const businessName = document.getElementById('businessName').value;
+            const botColor = document.getElementById('botColor').value;
+            
+            let deploymentDetails = '';
+            
+            if (deploymentType === 'embed') {
+                const embedCode = generateEmbedCode(botName, botColor);
+                deploymentDetails = `
+                    <h3>📋 Embed Code</h3>
+                    <p>Copy this code and paste it into your website before the closing &lt;/body&gt; tag:</p>
+                    <div class="embed-code">${embedCode}</div>
+                    <button class="copy-btn" onclick="copyEmbedCode()">📋 Copy Code</button>
+                `;
+            } else {
+                const subdomain = businessName.toLowerCase().replace(/[^a-z0-9]/g, '') + '-bot';
+                deploymentDetails = `
+                    <h3>🌐 Your Chatbot URL</h3>
+                    <p>Your chatbot is live at:</p>
+                    <div style="background: #f3f4f6; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                        <strong>https://${subdomain}.chatflo.io</strong>
+                    </div>
+                    <button class="copy-btn" onclick="copyUrl('https://${subdomain}.chatflo.io')">📋 Copy URL</button>
+                `;
+            }
+            
+            document.getElementById('deploymentDetails').innerHTML = deploymentDetails;
+            
+            // Update progress to 100%
+            document.getElementById('progressFill').style.width = '100%';
+            
+            // Simulate deployment process
+            setTimeout(() => {
+                alert('🎉 Your chatbot is now processing 24/7! You should see visitors start interacting within minutes.');
+            }, 2000);
+        }
+        
+        function generateEmbedCode(botName, botColor) {
+            return `&lt;!-- ChatFlo Bot --&gt;
+&lt;div id="chatflo-bot"&gt;&lt;/div&gt;
+&lt;script&gt;
+(function() {
+    var bot = document.createElement('script');
+    bot.src = 'https://cdn.chatflo.io/widget.js';
+    bot.setAttribute('data-bot-name', '${botName}');
+    bot.setAttribute('data-bot-color', '${botColor}');
+    bot.setAttribute('data-bot-type', '${botType}');
+    document.head.appendChild(bot);
+})();
+&lt;/script&gt;`;
+        }
+        
+        function copyEmbedCode() {
+            const embedCode = document.querySelector('.embed-code').textContent;
+            navigator.clipboard.writeText(embedCode.replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
+            alert('📋 Embed code copied to clipboard!');
+        }
+        
+        function copyUrl(url) {
+            navigator.clipboard.writeText(url);
+            alert('📋 URL copied to clipboard!');
+        }
+        
+        function viewDashboard() {
+            window.open('./dashboard.html', '_blank');
+        }
+        
+        function testChatbot() {
+            alert('🧪 Test mode activated! Try asking your bot questions to see how it responds.');
+            // You could open a test widget here
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializeBot);
+    </script>
+</body>
+</html>

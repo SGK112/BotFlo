@@ -1,7 +1,7 @@
 {
-  "name": "chatbot-builder",
+  "name": "botflo-marketplace",
   "version": "2.0.0",
-  "description": "Professional chatbot building platform with drag-and-drop interface, templates, and deployment tools.",
+  "description": "BotFlo.ai - Ready-to-Deploy AI Chatbot Marketplace. Buy production-ready chatbots with code or hosted service.",
   "main": "server.js",
   "engines": {
     "node": ">=18.0.0",
@@ -28,11 +28,13 @@
     "googleapis": "^140.0.0",
     "helmet": "^8.0.0",
     "mongoose": "^8.15.1",
+    "multer": "^1.4.5",
     "node-cache": "^5.1.2",
     "node-fetch": "^2.6.12",
     "nodemailer": "^6.10.1",
     "openai": "^4.50.1",
     "pdf-parse": "^1.1.1",
+    "stripe": "^13.0.0",
     "uuid": "^10.0.0",
     "winston": "^3.17.0"
   },
