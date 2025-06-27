@@ -147,41 +147,37 @@ const upload = multer({
 });
 
 // Routes for the chatbot builder website
-app.get('/old-builder', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'chatbot-builder-landing.html'));
+
+// ============================================================================
+// SIMPLIFIED ROUTING FOR MODERN NAVIGATION
+// ============================================================================
+
+// Favicon
+app.get('/favicon.ico', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'favicon.svg'));
 });
 
-app.get('/home', (req, res) => {
-  res.redirect('/botflo-marketplace.html');
+app.get('/favicon.svg', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'favicon.svg'));
 });
 
-app.get('/about', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'about.html'));
+// Root route - Main landing page
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'botflo-marketplace.html'));
 });
 
-app.get('/features', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'features.html'));
-});
+// ============================================================================
+// MAIN NAVIGATION ROUTES (Only 3-4 core routes)
+// ============================================================================
 
-app.get('/templates', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'templates.html'));
-});
-
-app.get('/pricing', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'pricing.html'));
-});
-
-app.get('/contact', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'contact.html'));
-});
-
-// Builder overview and comparison page
+// 1. BUILD BOT - Main builder hub
 app.get('/builders', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'builders-overview.html'));
+  res.sendFile(path.join(__dirname, 'public', 'builders-overview-new.html'));
 });
 
+// Builder sub-routes
 app.get('/builders/visual', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'advanced-flow-builder.html'));
+  res.sendFile(path.join(__dirname, 'public', 'visual-bot-builder-enhanced.html'));
 });
 
 app.get('/builders/enhanced', (req, res) => {
@@ -189,58 +185,62 @@ app.get('/builders/enhanced', (req, res) => {
 });
 
 app.get('/builders/simple', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'chatbot.html'));
+  res.sendFile(path.join(__dirname, 'public', 'easy-chatbot-builder.html'));
 });
 
-// Demo route - this is what you want!
+// Pro builder route (as mentioned in the URL)
+app.get('/builders/chatbot-builder-pro.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'chatbot-builder-pro.html'));
+});
+
+app.get('/builders/pro', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'chatbot-builder-pro.html'));
+});
+
+// Demo route - direct to enhanced builder
 app.get('/demo', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'enhanced-chatbot-designer.html'));
 });
 
-// Marketplace route - Pre-built chatbots
+// 2. MARKETPLACE - Pre-built chatbots
 app.get('/marketplace', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'marketplace.html'));
 });
 
-// Direct routes for backward compatibility
-app.get('/enhanced-chatbot-designer.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'enhanced-chatbot-designer.html'));
+// 3. PRICING - Core business page
+app.get('/pricing', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'pricing.html'));
 });
 
-app.get('/chatbot-visual-builder.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'chatbot-visual-builder.html'));
-});
+// ============================================================================
+// REDIRECTS - Simplify navigation by redirecting secondary pages
+// ============================================================================
 
-app.get('/chatbot-test.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'chatbot-test.html'));
-});
+// Home aliases
+app.get('/home', (req, res) => res.redirect('/'));
+app.get('/index', (req, res) => res.redirect('/'));
 
-// Additional site pages
-app.get('/integrations', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'integrations.html'));
-});
+// Redirect secondary pages to main navigation or homepage sections
+app.get('/about', (req, res) => res.redirect('/#about'));
+app.get('/features', (req, res) => res.redirect('/#features'));
+app.get('/templates', (req, res) => res.redirect('/marketplace'));
+app.get('/contact', (req, res) => res.redirect('/#contact'));
 
-app.get('/docs', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'docs.html'));
-});
+// Support & docs redirect to homepage or builders
+app.get('/docs', (req, res) => res.redirect('/builders'));
+app.get('/tutorial', (req, res) => res.redirect('/builders'));
+app.get('/tutorials', (req, res) => res.redirect('/builders'));
+app.get('/support', (req, res) => res.redirect('/#support'));
+app.get('/blog', (req, res) => res.redirect('/#blog'));
+app.get('/community', (req, res) => res.redirect('/#community'));
 
-app.get('/tutorials', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'tutorials.html'));
-});
+// Integrations redirect to builders (where integrations are handled)
+app.get('/integrations', (req, res) => res.redirect('/builders'));
 
-app.get('/blog', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'blog.html'));
-});
+// ============================================================================
+// LEGAL & AUTH PAGES (Keep but don't feature in main nav)
+// ============================================================================
 
-app.get('/community', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'community.html'));
-});
-
-app.get('/support', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'support.html'));
-});
-
-// Legal pages
 app.get('/privacy', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'privacy.html'));
 });
@@ -249,7 +249,6 @@ app.get('/terms', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'terms.html'));
 });
 
-// Authentication routes (for future implementation)
 app.get('/login', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
@@ -262,7 +261,17 @@ app.get('/dashboard', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
 });
 
-// Original Surprise Granite chatbot interface
+// ============================================================================
+// LEGACY COMPATIBILITY (For existing links)
+// ============================================================================
+
+// Direct HTML file access (for backward compatibility)
+app.get('/enhanced-chatbot-designer.html', (req, res) => res.redirect('/demo'));
+app.get('/chatbot-visual-builder.html', (req, res) => res.redirect('/builders/visual'));
+app.get('/chatbot-test.html', (req, res) => res.redirect('/demo'));
+app.get('/old-builder', (req, res) => res.redirect('/builders'));
+
+// Legacy routes
 app.get('/surprise-granite', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
@@ -1498,10 +1507,6 @@ app.get('/api/payment/create-checkout', async (req, res) => {
     
     if (isRecurring) {
       // Create subscription for hosted service
-    };
-    
-    if (isRecurring) {
-      // Create subscription for hosted service
       sessionConfig.line_items = [{
         price_data: {
           currency: 'usd',
@@ -1887,6 +1892,35 @@ app.get('/bot-builder', (req, res) => {
 
 app.get('/builder/:type', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'bot-builder.html'));
+});
+
+// Additional footer routes
+app.get('/contact', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'contact.html'));
+});
+
+app.get('/careers', (req, res) => {
+  res.redirect('/#contact'); // Redirect to contact section for now
+});
+
+app.get('/status', (req, res) => {
+  res.json({ status: 'All systems operational', timestamp: new Date().toISOString() });
+});
+
+app.get('/api', (req, res) => {
+  res.redirect('/docs'); // Redirect to documentation
+});
+
+app.get('/changelog', (req, res) => {
+  res.redirect('/blog'); // Redirect to blog for now
+});
+
+app.get('/cookies', (req, res) => {
+  res.redirect('/privacy'); // Redirect to privacy policy
+});
+
+app.get('/security', (req, res) => {
+  res.redirect('/docs'); // Redirect to documentation
 });
 
 // Start the server

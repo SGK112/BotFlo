@@ -3,8 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pricing - ChatBot Builder Pro</title>
-    <meta name="description" content="Choose the perfect plan for your chatbot needs. From free starter plans to enterprise solutions with advanced features and support.">
+    <title>Pricing - BotFlo Chatbot Builder</title>
+    <meta name="description" content="Simple, transparent pricing for building AI chatbots. Start free and scale as you grow.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="alternate icon" href="/favicon.ico">
+    
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -40,59 +45,14 @@
             line-height: 1.6;
             color: var(--text-dark);
             overflow-x: hidden;
+            /* Navigation CSS handles top spacing */
         }
 
-        /* Header */
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border-gray);
-            z-index: 1000;
-            transition: all 0.3s ease;
-        }
+        /* Old header styles removed - using shared-nav-new.css */
 
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            height: 70px;
-        }
+        /* Navigation styles removed - using shared-nav-new.css */
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--primary-blue);
-            text-decoration: none;
-        }
-
-        .nav-menu {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .nav-item a {
-            text-decoration: none;
-            color: var(--text-dark);
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .nav-item a:hover {
-            color: var(--primary-blue);
-        }
-
+        /* Button styles for content (keeping these as they're used in pricing plans) */
         .btn {
             padding: 12px 24px;
             border-radius: 8px;
@@ -146,7 +106,7 @@
         /* Hero Section */
         .hero {
             background: linear-gradient(135deg, var(--bg-gray-50) 0%, var(--secondary-blue) 100%);
-            padding: 120px 0 80px;
+            padding: 60px 0 80px; /* Reduced top padding since nav CSS adds 80px to body */
             text-align: center;
         }
 
@@ -586,37 +546,13 @@
             transform: translateY(0);
         }
     </style>
+    
+    <!-- Load shared navigation styles and scripts -->
+    <link rel="stylesheet" href="/shared-nav-new.css">
+    <script src="/shared-nav-new.js"></script>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="main-nav">
-        <div class="nav-container">
-            <a href="./" class="nav-logo">
-                <i class="fas fa-robot"></i>
-                ChatFlow
-            </a>
-            
-            <ul class="nav-menu">
-                <li class="nav-item"><a href="./easy-chatbot-builder.html">Easy Builder</a></li>
-                <li class="nav-item"><a href="./chatbot-builder-pro.html">Pro Builder</a></li>
-                <li class="nav-item"><a href="./demo.html">Demo</a></li>
-                <li class="nav-item"><a href="./tutorial.html">Tutorial</a></li>
-                <li class="nav-item"><a href="./pricing.html" class="active">Pricing</a></li>
-                <li class="nav-item"><a href="./about.html">About</a></li>
-            </ul>
-
-            <div class="nav-cta">
-                <a href="./demo.html" class="btn btn-secondary btn-sm">Try Demo</a>
-                <a href="./easy-chatbot-builder.html" class="btn btn-primary btn-sm">Start Building</a>
-            </div>
-
-            <button class="mobile-menu-toggle">
-                <i class="fas fa-bars"></i>
-            </button>
-        </div>
-    </nav>
-        </nav>
-    </header>
+    <!-- Navigation will be inserted by shared-nav-new.js -->
 
     <!-- Hero Section -->
     <section class="hero">

@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Easy Chatbot Builder - Build Your Bot in Minutes!</title>
+    <title>Easy Chatbot Builder - ChatFlo</title>
+    
+    <!-- Shared Navigation -->
+    <link rel="stylesheet" href="shared-nav-new.css">
+    <script src="shared-nav-new.js"></script>
+    
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="./css/shared.css" rel="stylesheet">
@@ -673,31 +678,10 @@
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="main-nav">
-        <div class="nav-container">
-            <a href="./" class="nav-logo">
-                <i class="fas fa-robot"></i>
-                ChatFlow
-            </a>
-            
-            <ul class="nav-menu">
-                <li class="nav-item"><a href="./easy-chatbot-builder.html" class="active">Easy Builder</a></li>
-                <li class="nav-item"><a href="./chatbot-builder-pro.html">Pro Builder</a></li>
-                <li class="nav-item"><a href="./demo.html">Demo</a></li>
-                <li class="nav-item"><a href="./tutorial.html">Tutorial</a></li>
-                <li class="nav-item"><a href="./pricing.html">Pricing</a></li>
-                <li class="nav-item"><a href="./about.html">About</a></li>
-            </ul>
+    <!-- Navigation will be injected here -->
+    <div id="navigation-placeholder"></div>
 
-            <div class="nav-cta">
-                <a href="./demo.html" class="btn btn-secondary btn-sm">Try Demo</a>
-                <a href="./tutorial.html" class="btn btn-ghost btn-sm">Help</a>
-            </div>
-        </div>
-    </nav>
-
-    <div class="page-content">
+    <div class="page-content" style="padding-top: 5rem;">
         <!-- Builder Header -->
         <div class="header">
             <h1><i class="fas fa-magic"></i> Easy Chatbot Builder</h1>
@@ -1328,7 +1312,7 @@
 1. Save this file as "chatbot.html"
 2. Upload it to your website
 3. Add this code to your main website pages where you want the chatbot:
-   <script src="chatbot.html"></script>
+   <!-- Integration: Load the chatbot widget code here -->
 4. That's it! Your chatbot is now live.
 
 Need help? Email us at support@yoursite.com
@@ -1587,12 +1571,15 @@ Ready to take your chatbots to the next level?`);
         document.addEventListener('DOMContentLoaded', function() {
             updateProgress();
             speak("Welcome to the Easy Chatbot Builder! I'll help you create a chatbot for your website in just a few minutes. Let's get started!");
-        });
-
-        // Enter key handling for test input
-        document.getElementById('testInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                sendTestMessage();
+            
+            // Enter key handling for test input - wrapped in DOMContentLoaded
+            const testInput = document.getElementById('testInput');
+            if (testInput) {
+                testInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        sendTestMessage();
+                    }
+                });
             }
         });
     </script>
