@@ -714,9 +714,6 @@
                     <button class="btn btn-demo" onclick="showDemo('restaurant')">
                         <i class="fas fa-play"></i> Try Demo
                     </button>
-                    <button class="btn btn-secondary" onclick="customizeBot('restaurant')" style="margin-right: 0.5rem;">
-                        <i class="fas fa-edit"></i> Customize
-                    </button>
                     <button class="btn btn-primary" onclick="purchaseBot('restaurant')">
                         <i class="fas fa-shopping-cart"></i> Purchase
                     </button>
@@ -755,9 +752,6 @@
                     <button class="btn btn-demo" onclick="showDemo('support')">
                         <i class="fas fa-play"></i> Try Demo
                     </button>
-                    <button class="btn btn-secondary" onclick="customizeBot('support')" style="margin-right: 0.5rem;">
-                        <i class="fas fa-edit"></i> Customize
-                    </button>
                     <button class="btn btn-primary" onclick="purchaseBot('support')">
                         <i class="fas fa-shopping-cart"></i> Purchase
                     </button>
@@ -795,9 +789,6 @@
                 <div class="bot-actions">
                     <button class="btn btn-demo" onclick="showDemo('realestate')">
                         <i class="fas fa-play"></i> Try Demo
-                    </button>
-                    <button class="btn btn-secondary" onclick="customizeBot('realestate')" style="margin-right: 0.5rem;">
-                        <i class="fas fa-edit"></i> Customize
                     </button>
                     <button class="btn btn-primary" onclick="purchaseBot('realestate')">
                         <i class="fas fa-shopping-cart"></i> Purchase
@@ -968,94 +959,8 @@
             content.innerHTML = generateDemoBot(config);
             customizeBtn.onclick = () => purchaseBot(botType);
             
-            // Create quick action buttons after HTML is inserted
-            setTimeout(() => {
-                createQuickActionButtons(config);
-            }, 100);
-            
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
-        }
-        
-        function createQuickActionButtons(config) {
-            const container = document.getElementById('quickActionsContainer');
-            if (!container) return;
-            
-            container.innerHTML = '';
-            
-            config.quickActions.forEach(action => {
-                const button = document.createElement('button');
-                button.textContent = action;
-                button.style.cssText = `
-                    padding: 0.5rem 0.75rem;
-                    background: white;
-                    border: 1px solid var(--gray-300);
-                    border-radius: 0.75rem;
-                    font-size: 0.75rem;
-                    cursor: pointer;
-                    transition: all 0.2s;
-                    color: var(--gray-700);
-                `;
-                
-                button.addEventListener('click', () => {
-                    sendDemoMessage(action.toLowerCase().replace(/\s+/g, ''), action);
-                });
-                
-                button.addEventListener('mouseover', () => {
-                    button.style.background = 'var(--primary)';
-                    button.style.color = 'white';
-                    button.style.borderColor = 'var(--primary)';
-                });
-                
-                button.addEventListener('mouseout', () => {
-                    button.style.background = 'white';
-                    button.style.color = 'var(--gray-700)';
-                    button.style.borderColor = 'var(--gray-300)';
-                });
-                
-                container.appendChild(button);
-            });
-            
-            // Set up input and send button event listeners
-            const input = document.getElementById('demoInput');
-            const sendBtn = document.getElementById('demoSendBtn');
-            
-            if (input) {
-                input.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        sendDemoMessage('custom', input.value);
-                    }
-                });
-                
-                input.addEventListener('focus', () => {
-                    input.style.borderColor = 'var(--primary)';
-                    input.style.background = 'white';
-                });
-                
-                input.addEventListener('blur', () => {
-                    input.style.borderColor = 'var(--gray-200)';
-                    input.style.background = 'var(--gray-50)';
-                });
-            }
-            
-            if (sendBtn) {
-                sendBtn.addEventListener('click', () => {
-                    const input = document.getElementById('demoInput');
-                    if (input) {
-                        sendDemoMessage('custom', input.value);
-                    }
-                });
-                
-                sendBtn.addEventListener('mouseover', () => {
-                    sendBtn.style.background = 'var(--primary-dark)';
-                    sendBtn.style.transform = 'scale(1.05)';
-                });
-                
-                sendBtn.addEventListener('mouseout', () => {
-                    sendBtn.style.background = 'var(--primary)';
-                    sendBtn.style.transform = 'scale(1)';
-                });
-            }
         }
 
         function closeDemoModal() {
@@ -1099,7 +1004,21 @@
                     
                     <!-- Quick Actions -->
                     <div style="padding: 0 1rem;">
-                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem;" id="quickActionsContainer">
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                            ${config.quickActions.map(action => `
+                                <button onclick="sendDemoMessage('${action.toLowerCase().replace(/\s+/g, '')}', '${action}')" style="
+                                    padding: 0.5rem 0.75rem;
+                                    background: white;
+                                    border: 1px solid var(--gray-300);
+                                    border-radius: 0.75rem;
+                                    font-size: 0.75rem;
+                                    cursor: pointer;
+                                    transition: all 0.2s;
+                                    color: var(--gray-700);
+                                " onmouseover="this.style.background='var(--primary)'; this.style.color='white'; this.style.borderColor='var(--primary)';" onmouseout="this.style.background='white'; this.style.color='var(--gray-700)'; this.style.borderColor='var(--gray-300)';">
+                                    ${action}
+                                </button>
+                            `).join('')}
                         </div>
                     </div>
                     
@@ -1113,16 +1032,8 @@
                             outline: none;
                             font-size: 0.875rem;
                             background: var(--gray-50);
-                        " id="demoInput" placeholder="Type your message..." style="
-                            flex: 1;
-                            padding: 0.75rem 1rem;
-                            border: 2px solid var(--gray-200);
-                            border-radius: 1.5rem;
-                            outline: none;
-                            font-size: 0.875rem;
-                            background: var(--gray-50);
-                        ">
-                        <button id="demoSendBtn" style="
+                        " onkeypress="if(event.key==='Enter') sendDemoMessage('custom', this.value)" onfocus="this.style.borderColor='var(--primary)'; this.style.background='white';" onblur="this.style.borderColor='var(--gray-200)'; this.style.background='var(--gray-50)';">
+                        <button onclick="sendDemoMessage('custom', document.getElementById('demoInput').value)" style="
                             width: 40px;
                             height: 40px;
                             border: none;
@@ -1134,7 +1045,7 @@
                             align-items: center;
                             justify-content: center;
                             box-shadow: var(--shadow-md);
-                        ">
+                        " onmouseover="this.style.background='var(--primary-dark)'; this.style.transform='scale(1.05)';" onmouseout="this.style.background='var(--primary)'; this.style.transform='scale(1)';">
                             <i class="fas fa-paper-plane"></i>
                         </button>
                     </div>
@@ -1226,14 +1137,6 @@
 
         // Purchase functionality
         function purchaseBot(botType) {
-            // Check if this is a customize request
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('customize') === 'true') {
-                // Redirect to bot builder for customization
-                window.location.href = `/bot-builder?bot=${botType}&customize=true`;
-                return;
-            }
-            
             const botCard = document.querySelector(`[data-bot="${botType}"]`);
             if (!botCard) {
                 showNotification('Bot not found', 'error');

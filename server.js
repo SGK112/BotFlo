@@ -19,21 +19,40 @@ const path = require('path');
 const multer = require('multer');
 const fs = require('fs');
 
-// Add Stripe for payments
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || 'sk_test_...');
-
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Logger
+// Logger (initialize early)
 const logger = winston.createLogger({
   level: 'info',
-  format: winston.format.combine(winston.format.timestamp(), winston.format.json()),
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.errors({ stack: true }),
+    winston.format.json()
+  ),
+  defaultMeta: { service: 'botflo-app' },
   transports: [
-    new winston.transports.Console(),
-    new winston.transports.File({ filename: 'error.log', level: 'error' })
-  ],
+    new winston.transports.File({ filename: 'error.log', level: 'error' }),
+    new winston.transports.Console({
+      format: winston.format.simple()
+    })
+  ]
 });
+
+// Add Stripe for payments
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || 'sk_test_demo_key');
+
+// Check if Stripe is properly configured
+const isStripeConfigured = process.env.STRIPE_SECRET_KEY && 
+  (process.env.STRIPE_SECRET_KEY.startsWith('sk_test_') || process.env.STRIPE_SECRET_KEY.startsWith('sk_live_')) &&
+  process.env.STRIPE_SECRET_KEY.length > 30;
+
+// Log Stripe configuration status
+if (isStripeConfigured) {
+  logger.info('✅ Stripe payment system configured');
+} else {
+  logger.warn('⚠️ Stripe not configured properly - using demo mode for payments');
+}
 
 // Enable Trust Proxy
 app.set('trust proxy', 1);
@@ -82,6 +101,19 @@ app.use(
 );
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Initialize Bot Builder API
+try {
+  const { BotBuilderAPI } = require('./api/bot-builder-api');
+  const botBuilderAPI = new BotBuilderAPI();
+  
+  // Mount the bot builder API routes
+  app.use('/api', botBuilderAPI.getRouter());
+  
+  logger.info('🤖 Bot Builder API initialized');
+} catch (error) {
+  logger.warn('⚠️ Bot Builder API not available:', error.message);
+}
 
 // Set up file upload middleware
 const storage = multer.diskStorage({
@@ -746,6 +778,18 @@ function generateBotCode(botType, customization, uploadedFiles = []) {
   const animationStyle = customization.animationStyle || 'slideUp';
   const botSize = customization.botSize || 350;
   
+  // Generate quick actions
+  const quickActionsMap = {
+    restaurant: ['View Menu', 'Make Reservation', 'Order Online', 'Our Hours'],
+    support: ['Contact Support', 'Check Status', 'FAQ', 'Live Agent'],
+    realestate: ['Search Properties', 'Schedule Tour', 'Get Estimate', 'Contact Agent']
+  };
+  
+  const quickActions = quickActionsMap[botType] || quickActionsMap.support;
+  const quickActionsHtml = quickActions.map(action => 
+    `<div class="quick-action" onclick="sendQuickAction('${action}')">${action}</div>`
+  ).join('');
+  
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1147,7 +1191,7 @@ function generateBotCode(botType, customization, uploadedFiles = []) {
         </div>
 
         <div class="quick-actions" id="quickActions">
-            ${getQuickActions(botType)}
+            ${quickActionsHtml}
         </div>
         
         <div class="botflo-input">
@@ -1239,33 +1283,6 @@ function generateBotCode(botType, customization, uploadedFiles = []) {
                 ]
             }
         };
-        
-        function getQuickActions(botType) {
-            const actions = {
-                restaurant: [
-                    'View Menu',
-                    'Make Reservation',
-                    'Order Online',
-                    'Our Hours'
-                ],
-                support: [
-                    'Contact Support',
-                    'Check Status',
-                    'FAQ',
-                    'Live Agent'
-                ],
-                realestate: [
-                    'Search Properties',
-                    'Schedule Tour',
-                    'Get Estimate',
-                    'Contact Agent'
-                ]
-            };
-            
-            return actions[botType]?.map(action => 
-                \`<div class="quick-action" onclick="sendQuickAction('\${action}')">\${action}</div>\`
-            ).join('') || '';
-        }
         
         function sendMessage() {
             const input = document.getElementById('botfloInput');
@@ -1427,6 +1444,8 @@ app.get('/api/payment/create-checkout', async (req, res) => {
   try {
     const { bot, type, price } = req.query;
     
+    logger.info(`Payment requested: bot=${bot}, type=${type}, price=${price}`);
+    
     // Bot pricing configuration
     const botPricing = {
       restaurant: { 
@@ -1451,7 +1470,14 @@ app.get('/api/payment/create-checkout', async (req, res) => {
     
     const botInfo = botPricing[bot];
     if (!botInfo || !botInfo[type]) {
+      logger.error(`Invalid bot or pricing type: bot=${bot}, type=${type}`);
       return res.status(400).json({ error: 'Invalid bot or pricing type' });
+    }
+    
+    // If Stripe is not properly configured, use demo mode
+    if (!isStripeConfigured) {
+      logger.info('Using demo payment mode');
+      return res.redirect(`/api/payment/demo-checkout?bot=${bot}&type=${type}&price=${price}`);
     }
     
     const isRecurring = type === 'hosted';
@@ -1461,12 +1487,17 @@ app.get('/api/payment/create-checkout', async (req, res) => {
     const sessionConfig = {
       payment_method_types: ['card'],
       mode: mode,
-      success_url: `${req.protocol}://${req.get('host')}/success?session_id={CHECKOUT_SESSION_ID}&bot=${bot}&type=${type}`,
-      cancel_url: `${req.protocol}://${req.get('host')}/botflo-marketplace.html`,
+      success_url: `${process.env.BASE_URL || `${req.protocol}://${req.get('host')}`}/success?session_id={CHECKOUT_SESSION_ID}&bot=${bot}&type=${type}`,
+      cancel_url: `${process.env.BASE_URL || `${req.protocol}://${req.get('host')}`}/botflo-marketplace.html?cancelled=true`,
       metadata: {
         bot_type: bot,
-        deployment_type: type
+        deployment_type: type,
+        price: price.toString()
       }
+    };
+    
+    if (isRecurring) {
+      // Create subscription for hosted service
     };
     
     if (isRecurring) {
@@ -1500,99 +1531,283 @@ app.get('/api/payment/create-checkout', async (req, res) => {
       }];
     }
     
+    logger.info('Creating Stripe checkout session...');
     const session = await stripe.checkout.sessions.create(sessionConfig);
+    
+    logger.info(`Stripe session created: ${session.id}`);
     
     // Redirect to Stripe Checkout
     res.redirect(303, session.url);
     
   } catch (error) {
     logger.error(`Checkout creation error: ${error.message}`);
-    res.status(500).json({ error: 'Payment processing error' });
+    
+    // If Stripe error related to API key, fall back to demo mode
+    if (error.message.includes('Invalid API Key') || error.message.includes('api_key') || !isStripeConfigured) {
+      logger.warn('Stripe API key issue, falling back to demo mode');
+      return res.redirect(`/api/payment/demo-checkout?bot=${req.query.bot}&type=${req.query.type}&price=${req.query.price}`);
+    }
+    
+    res.status(500).json({ error: 'Payment processing error', details: error.message });
+  }
+});
+
+// Demo/Test payment endpoint for development
+app.get('/api/payment/demo-checkout', async (req, res) => {
+  try {
+    const { bot, type, price } = req.query;
+    
+    logger.info(`Demo payment requested: bot=${bot}, type=${type}, price=${price}`);
+    
+    // Validate parameters
+    if (!bot || !type || !price) {
+      return res.status(400).json({ error: 'Missing required parameters: bot, type, price' });
+    }
+    
+    // Bot pricing configuration
+    const botPricing = {
+      restaurant: { 
+        name: 'Restaurant Ordering Bot',
+        download: 24, 
+        hosted: 39,
+        description: 'Complete restaurant chatbot with menu, orders & reservations'
+      },
+      support: { 
+        name: 'Customer Support Bot',
+        download: 19, 
+        hosted: 29,
+        description: 'AI customer support with knowledge base & ticket creation'
+      },
+      realestate: { 
+        name: 'Real Estate Bot',
+        download: 29, 
+        hosted: 49,
+        description: 'Property listings with virtual tours & lead capture'
+      }
+    };
+    
+    const botInfo = botPricing[bot];
+    if (!botInfo || !botInfo[type]) {
+      return res.status(400).json({ error: 'Invalid bot or pricing type' });
+    }
+    
+    // Simulate payment processing delay
+    setTimeout(() => {
+      // Generate a fake session ID for demo purposes
+      const fakeSessionId = `demo_sess_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      
+      // Redirect to success page with demo session
+      const successUrl = `/success?session_id=${fakeSessionId}&bot=${bot}&type=${type}&demo=true`;
+      res.redirect(303, successUrl);
+    }, 1000);
+    
+  } catch (error) {
+    logger.error(`Demo checkout error: ${error.message}`);
+    res.status(500).json({ error: 'Demo payment processing error' });
   }
 });
 
 // Success page after payment
 app.get('/success', async (req, res) => {
   try {
-    const { session_id, bot, type } = req.query;
+    const { session_id, bot, type, demo } = req.query;
     
     if (!session_id) {
-      return res.redirect('/botflo-marketplace.html');
+      return res.redirect('/botflo-marketplace.html?error=no_session');
     }
     
-    // Retrieve the session from Stripe
-    const session = await stripe.checkout.sessions.retrieve(session_id);
+    let isValidPayment = false;
+    let sessionData = {};
     
-    if (session.payment_status === 'paid') {
-      // Payment successful - provide download or setup hosted service
-      const successHtml = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <title>Purchase Successful - BotFlo.ai</title>
-            <style>
-                body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
-                       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-                       margin: 0; padding: 2rem; color: white; }
-                .container { max-width: 600px; margin: 0 auto; text-align: center; 
-                            background: white; color: #333; padding: 3rem; border-radius: 16px; }
-                .success-icon { font-size: 4rem; margin-bottom: 1rem; }
-                h1 { color: #28a745; }
-                .download-btn { background: #28a745; color: white; padding: 1rem 2rem; 
-                               text-decoration: none; border-radius: 8px; display: inline-block; 
-                               margin: 1rem; font-weight: 600; }
-                .support-info { background: #f8f9fa; padding: 1rem; border-radius: 8px; margin: 1rem 0; }
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                <div class="success-icon">✅</div>
-                <h1>Payment Successful!</h1>
-                <p>Thank you for purchasing the <strong>${bot.charAt(0).toUpperCase() + bot.slice(1)} Bot</strong>!</p>
-                
-                ${type === 'download' ? `
-                    <div class="support-info">
-                        <h3>📦 Your Bot Code is Ready</h3>
-                        <p>Download your complete bot source code below:</p>
-                        <a href="/api/download/${bot}-bot-${session_id}.zip" class="download-btn">Download Bot Code</a>
-                        <p><small>Includes: HTML, JavaScript, documentation, and customization guide</small></p>
-                    </div>
-                ` : `
-                    <div class="support-info">
-                        <h3>🚀 Your Hosted Bot is Being Set Up</h3>
-                        <p>Your bot will be live at: <strong>${bot}-${session_id.slice(-8)}.botflo.ai</strong></p>
-                        <p>Setup will complete within 24 hours. You'll receive an email with:</p>
-                        <ul style="text-align: left;">
-                            <li>Your bot's live URL</li>
-                            <li>Dashboard access credentials</li>
-                            <li>File upload instructions</li>
-                            <li>Customization options</li>
-                        </ul>
-                        <a href="mailto:support@botflo.ai?subject=Bot Setup - ${session_id}" class="download-btn">Contact Support</a>
-                    </div>
-                `}
-                
-                <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #eee;">
-                    <h3>🎯 Quick Start Tips</h3>
-                    <p>1. Check your email for detailed setup instructions</p>
-                    <p>2. Join our Discord community for support: <strong>discord.gg/botflo</strong></p>
-                    <p>3. Need help? Email <strong>support@botflo.ai</strong></p>
-                </div>
-                
-                <a href="/botflo-marketplace.html" style="color: #667eea; text-decoration: none;">← Back to Marketplace</a>
-            </div>
-        </body>
-        </html>
-      `;
+    if (demo === 'true' || session_id.startsWith('demo_')) {
+      // Demo mode - simulate successful payment
+      logger.info(`Demo payment completed: ${session_id}`);
+      isValidPayment = true;
+      sessionData = {
+        id: session_id,
+        payment_status: 'paid',
+        amount_total: 0,
+        mode: 'demo'
+      };
+    } else if (isStripeConfigured) {
+      // Real Stripe payment - retrieve session
+      try {
+        const session = await stripe.checkout.sessions.retrieve(session_id);
+        logger.info(`Stripe session retrieved: ${session.id}, status: ${session.payment_status}`);
+        isValidPayment = session.payment_status === 'paid';
+        sessionData = session;
+      } catch (stripeError) {
+        logger.error(`Error retrieving Stripe session: ${stripeError.message}`);
+        return res.redirect('/botflo-marketplace.html?error=payment_verification_failed');
+      }
+    } else {
+      // Stripe not configured but got a real session ID - treat as demo
+      logger.warn('Received session ID but Stripe not configured, treating as demo');
+      isValidPayment = true;
+      sessionData = { id: session_id, payment_status: 'demo', mode: 'demo' };
+    }
+    
+    if (isValidPayment) {
+      // Generate download link and bot code
+      const downloadToken = generateDownloadToken(bot, type, session_id);
       
+      // Payment successful - provide download or setup hosted service
+      const successHtml = generateSuccessPage(bot, type, session_id, downloadToken, sessionData.mode === 'demo');
       res.send(successHtml);
     } else {
-      res.redirect('/botflo-marketplace.html?error=payment_failed');
+      logger.warn(`Payment not completed: ${session_id}`);
+      res.redirect('/botflo-marketplace.html?error=payment_not_completed');
     }
     
   } catch (error) {
     logger.error(`Success page error: ${error.message}`);
     res.redirect('/botflo-marketplace.html?error=session_error');
+  }
+});
+
+// Generate download token for security
+function generateDownloadToken(bot, type, sessionId) {
+  const timestamp = Date.now();
+  const hash = require('crypto')
+    .createHash('md5')
+    .update(`${bot}-${type}-${sessionId}-${timestamp}`)
+    .digest('hex');
+  return `${bot}_${type}_${timestamp}_${hash.substring(0, 8)}`;
+}
+
+// Generate success page HTML
+function generateSuccessPage(bot, type, sessionId, downloadToken, isDemo = false) {
+  const botName = bot.charAt(0).toUpperCase() + bot.slice(1);
+  const demoNote = isDemo ? '<div style="background: #fef3c7; color: #92400e; padding: 1rem; border-radius: 8px; margin: 1rem 0;"><strong>Demo Mode:</strong> This is a demonstration. No payment was processed.</div>' : '';
+  
+  return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Purchase ${isDemo ? 'Demo ' : ''}Successful - BotFlo.ai</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body { 
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                margin: 0; padding: 1rem; color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            }
+            .container { 
+                max-width: 600px; width: 100%; text-align: center; 
+                background: white; color: #333; padding: 2rem; border-radius: 16px; 
+                box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+            }
+            .success-icon { font-size: 4rem; margin-bottom: 1rem; }
+            h1 { color: #10b981; margin-bottom: 1rem; }
+            .download-btn { 
+                background: #10b981; color: white; padding: 1rem 2rem; 
+                text-decoration: none; border-radius: 8px; display: inline-block; 
+                margin: 1rem; font-weight: 600; transition: all 0.3s;
+            }
+            .download-btn:hover { background: #059669; transform: translateY(-2px); }
+            .support-info { 
+                background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin: 1rem 0; 
+                border-left: 4px solid #667eea;
+            }
+            .back-link { 
+                color: #667eea; text-decoration: none; font-weight: 500; 
+                display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 2rem;
+            }
+            .back-link:hover { text-decoration: underline; }
+            .tips { background: #e0e7ff; padding: 1.5rem; border-radius: 8px; margin: 1rem 0; }
+            .tips h3 { color: #3730a3; margin-bottom: 1rem; }
+            .tips ul { text-align: left; color: #4338ca; }
+            .tips li { margin-bottom: 0.5rem; }
+            @media (max-width: 768px) {
+                .container { margin: 0; padding: 1.5rem; }
+                .success-icon { font-size: 3rem; }
+                h1 { font-size: 1.75rem; }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="success-icon">${isDemo ? '🎯' : '✅'}</div>
+            <h1>${isDemo ? 'Demo' : 'Purchase'} Successful!</h1>
+            <p>Thank you for ${isDemo ? 'trying' : 'purchasing'} the <strong>${botName} Bot</strong>!</p>
+            
+            ${demoNote}
+            
+            ${type === 'download' ? `
+                <div class="support-info">
+                    <h3>📦 Your Bot Code is Ready</h3>
+                    <p>Download your complete bot source code below:</p>
+                    <a href="/api/download/${downloadToken}" class="download-btn">
+                        📥 Download Bot Code
+                    </a>
+                    <p><small>Includes: HTML, JavaScript, documentation, and customization guide</small></p>
+                    <h3>🚀 Your Hosted Bot is Being Set Up</h3>
+                    <p>Your bot will be live at: <strong>${bot}-${sessionId.slice(-8)}.botflo.ai</strong></p>
+                    <p>Setup will complete within 24 hours. You'll receive an email with:</p>
+                    <ul style="text-align: left; margin: 1rem 0;">
+                        <li>Your bot's live URL</li>
+                        <li>Dashboard access credentials</li>
+                        <li>File upload instructions</li>
+                        <li>Customization options</li>
+                    </ul>
+                    <a href="mailto:support@botflo.ai?subject=Bot Setup - ${sessionId}" class="download-btn">
+                        📧 Contact Support
+                    </a>
+                    ${isDemo ? '<p><small><em>Demo hosting is for testing only - not a live service</em></small></p>' : ''}
+                </div>
+            ` : ''}
+            
+            <div class="tips">
+                <h3>🎯 Quick Start Tips</h3>
+                <ul>
+                    <li>Check your email for detailed setup instructions</li>
+                    <li>Join our Discord community: <strong>discord.gg/botflo</strong></li>
+                    <li>Need help? Email <strong>support@botflo.ai</strong></li>
+                    <li>View documentation at <strong>docs.botflo.ai</strong></li>
+                </ul>
+            </div>
+            
+            <a href="/botflo-marketplace.html" class="back-link">
+                ← Back to Marketplace
+            </a>
+        </div>
+    </body>
+    </html>
+  `;
+}
+
+// Download endpoint for purchased bots
+app.get('/api/download/:token', (req, res) => {
+  try {
+    const { token } = req.params;
+    
+    if (!token) {
+      return res.status(400).send('Download token required');
+    }
+    
+    // In production, verify token in database
+    // For now, we'll extract bot type from token
+    const botType = token.replace('download_', '').replace(/_\d+$/, '');
+    
+    logger.info(`Download request for token: ${token}, botType: ${botType}`);
+    
+    // Generate bot code
+    const botCode = generateBotCode(botType, {
+      title: `Custom ${botType.charAt(0).toUpperCase() + botType.slice(1)} Bot`,
+      isPaid: true,
+      downloadToken: token
+    });
+    
+    // Set headers for download
+    res.setHeader('Content-Type', 'text/html');
+    res.setHeader('Content-Disposition', `attachment; filename="${botType}-bot.html"`);
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    
+    res.send(botCode);
+    
+  } catch (error) {
+    logger.error(`Download error: ${error.message}`);
+    res.status(500).send('Download failed');
   }
 });
 
@@ -1663,6 +1878,15 @@ app.get('/', (req, res) => {
 
 app.get('/botflo-marketplace.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'botflo-marketplace.html'));
+});
+
+// Bot Builder route
+app.get('/bot-builder', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'bot-builder.html'));
+});
+
+app.get('/builder/:type', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'bot-builder.html'));
 });
 
 // Start the server
