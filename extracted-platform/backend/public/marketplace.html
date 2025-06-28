@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace - Pre-built AI Chatbots | BotFlo</title>
+    <meta name="description" content="Browse our marketplace of ready-to-deploy AI chatbots for every business need. Install and customize in minutes.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="alternate icon" href="/favicon.ico">
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary-blue: #eff6ff;
+            --accent-purple: #8b5cf6;
+            --accent-green: #10b981;
+            --accent-orange: #f59e0b;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --bg-white: #ffffff;
+            --bg-gray-50: #f9fafb;
+            --border-gray: #e5e7eb;
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: var(--bg-gray-50);
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-white);
+            border-bottom: 1px solid var(--border-gray);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-blue);
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: var(--primary-blue);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-purple) 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Filter Section */
+        .filters {
+            background: var(--bg-white);
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--border-gray);
+        }
+
+        .filters-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px 12px 48px;
+            border: 2px solid var(--border-gray);
+            border-radius: 8px;
+            font-size: 16px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: 16px center;
+            background-size: 20px;
+        }
+
+        .filter-tags {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-tag {
+            padding: 8px 16px;
+            background: var(--secondary-blue);
+            color: var(--primary-blue);
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .filter-tag:hover,
+        .filter-tag.active {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        /* Marketplace Grid */
+        .marketplace {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .marketplace-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .marketplace-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .chatbot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .chatbot-card {
+            background: var(--bg-white);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chatbot-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary-blue);
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--accent-green);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .card-badge.trending {
+            background: var(--accent-orange);
+        }
+
+        .card-badge.new {
+            background: var(--accent-purple);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .card-description {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .card-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-tag {
+            background: var(--secondary-blue);
+            color: var(--primary-blue);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .card-price {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .price-period {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-demo {
+            flex: 1;
+            background: var(--secondary-blue);
+            color: var(--primary-blue);
+            border: none;
+            text-align: center;
+        }
+
+        .btn-deploy {
+            flex: 2;
+        }
+
+        /* Demo Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: var(--bg-white);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        .chatbot-demo {
+            border: 2px solid var(--border-gray);
+            border-radius: 12px;
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .demo-header {
+            background: var(--primary-blue);
+            color: white;
+            padding: 1rem;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .demo-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background: var(--bg-gray-50);
+        }
+
+        .demo-message {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .demo-message.bot {
+            flex-direction: row;
+        }
+
+        .demo-message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-bubble {
+            background: var(--bg-white);
+            padding: 0.75rem 1rem;
+            border-radius: 16px;
+            max-width: 80%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .demo-message.bot .message-bubble {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .demo-input {
+            display: flex;
+            padding: 1rem;
+            border-top: 1px solid var(--border-gray);
+            background: var(--bg-white);
+            border-radius: 0 0 10px 10px;
+        }
+
+        .demo-input input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid var(--border-gray);
+            border-radius: 8px;
+            margin-right: 0.5rem;
+        }
+
+        .demo-input button {
+            padding: 0.75rem 1rem;
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .filters-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .chatbot-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    
+    <!-- Load shared navigation styles and scripts -->
+    <link rel="stylesheet" href="/shared-nav-new.css">
+    <script src="/shared-nav-new.js"></script>
+</head>
+<body>
+    <!-- Navigation will be inserted by shared-nav-new.js -->
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <h1>Professional AI Bots Ready to Deploy</h1>
+            <p>Skip the complexity. Choose from our marketplace of industry-specific AI chatbots. Deploy in 5 minutes with your branding and data.</p>
+            
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number">50+</span>
+                    <span class="stat-label">Ready Chatbots</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">5 Min</span>
+                    <span class="stat-label">To Deploy</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">99.9%</span>
+                    <span class="stat-label">Uptime</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filters -->
+    <section class="filters">
+        <div class="filters-container">
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="Search chatbots by industry or feature...">
+            </div>
+            
+            <div class="filter-tags">
+                <span class="filter-tag active" data-category="all">All</span>
+                <span class="filter-tag" data-category="business">Business</span>
+                <span class="filter-tag" data-category="ecommerce">E-commerce</span>
+                <span class="filter-tag" data-category="service">Service</span>
+                <span class="filter-tag" data-category="industry">Industry</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Marketplace -->
+    <section class="marketplace" id="marketplace">
+        <div class="marketplace-header">
+            <h2>Choose Your Perfect Chatbot</h2>
+            <p>Professional chatbots designed for specific industries and use cases</p>
+        </div>
+
+        <div class="chatbot-grid">
+            <!-- Customer Support Bot -->
+            <div class="chatbot-card" data-category="business">
+                <div class="card-badge trending">Trending</div>
+                <div class="card-icon">🎧</div>
+                <h3 class="card-title">Customer Support Bot</h3>
+                <p class="card-description">Handle customer inquiries, create tickets, and escalate to human agents when needed. Perfect for any business.</p>
+                
+                <div class="card-features">
+                    <span class="feature-tag">FAQ</span>
+                    <span class="feature-tag">Ticket Creation</span>
+                    <span class="feature-tag">Live Handoff</span>
+                    <span class="feature-tag">24/7 Support</span>
+                </div>
+                
+                <div class="card-price">
+                    <div>
+                        <span class="price">$19</span>
+                        <span class="price-period">/month</span>
+                    </div>
+                </div>
+                
+                <div class="card-actions">
+                    <button class="btn btn-demo" onclick="showDemo('support')">
+                        <i class="fas fa-play"></i> Try Demo
+                    </button>
+                    <button class="btn btn-primary btn-deploy">
+                        <i class="fas fa-rocket"></i> Deploy Now
+                    </button>
+                </div>
+            </div>
+
+            <!-- Appointment Scheduler -->
+            <div class="chatbot-card" data-category="service">
+                <div class="card-badge">Popular</div>
+                <div class="card-icon">📅</div>
+                <h3 class="card-title">Appointment Scheduler</h3>
+                <p class="card-description">Automated booking system with calendar integration, reminders, and payment processing. Great for clinics, salons, consultants.</p>
+                
+                <div class="card-features">
+                    <span class="feature-tag">Calendar Sync</span>
+                    <span class="feature-tag">Payments</span>
+                    <span class="feature-tag">Reminders</span>
+                    <span class="feature-tag">Rescheduling</span>
+                </div>
+                
+                <div class="card-price">
+                    <div>
+                        <span class="price">$24</span>
+                        <span class="price-period">/month</span>
+                    </div>
+                </div>
+                
+                <div class="card-actions">
+                    <button class="btn btn-demo" onclick="showDemo('appointment')">
+                        <i class="fas fa-play"></i> Try Demo
+                    </button>
+                    <button class="btn btn-primary btn-deploy">
+                        <i class="fas fa-rocket"></i> Deploy Now
+                    </button>
+                </div>
+            </div>
+
+            <!-- E-commerce Shopping Bot -->
+            <div class="chatbot-card" data-category="ecommerce">
+                <div class="card-badge new">New</div>
+                <div class="card-icon">🛒</div>
+                <h3 class="card-title">Shopping Assistant</h3>
+                <p class="card-description">Help customers find products, manage cart, process orders, and track shipments. Boost your e-commerce sales.</p>
+                
+                <div class="card-features">
+                    <span class="feature-tag">Product Search</span>
+                    <span class="feature-tag">Cart Management</span>
+                    <span class="feature-tag">Order Tracking</span>
+                    <span class="feature-tag">Recommendations</span>
+                </div>
+                
+                <div class="card-price">
+                    <div>
+                        <span class="price">$29</span>
+                        <span class="price-period">/month</span>
+                    </div>
+                </div>
+                
+                <div class="card-actions">
+                    <button class="btn btn-demo" onclick="showDemo('shopping')">
+                        <i class="fas fa-play"></i> Try Demo
+                    </button>
+                    <button class="btn btn-primary btn-deploy">
+                        <i class="fas fa-rocket"></i> Deploy Now
+                    </button>
+                </div>
+            </div>
+
+            <!-- Restaurant Bot -->
+            <div class="chatbot-card" data-category="industry">
+                <div class="card-icon">🍕</div>
+                <h3 class="card-title">Restaurant Bot</h3>
+                <p class="card-description">Take orders, show menus, handle reservations, and coordinate delivery. Perfect for restaurants and food services.</p>
+                
+                <div class="card-features">
+                    <span class="feature-tag">Menu Display</span>
+                    <span class="feature-tag">Order Taking</span>
+                    <span class="feature-tag">Reservations</span>
+                    <span class="feature-tag">Delivery</span>
+                </div>
+                
+                <div class="card-price">
+                    <div>
+                        <span class="price">$22</span>
+                        <span class="price-period">/month</span>
+                    </div>
+                </div>
+                
+                <div class="card-actions">
+                    <button class="btn btn-demo" onclick="showDemo('restaurant')">
+                        <i class="fas fa-play"></i> Try Demo
+                    </button>
+                    <button class="btn btn-primary btn-deploy">
+                        <i class="fas fa-rocket"></i> Deploy Now
+                    </button>
+                </div>
+            </div>
+
+            <!-- Lead Generation Bot -->
+            <div class="chatbot-card" data-category="business">
+                <div class="card-badge trending">Trending</div>
+                <div class="card-icon">🎯</div>
+                <h3 class="card-title">Lead Generator</h3>
+                <p class="card-description">Qualify leads, collect contact information, and integrate with your CRM. Turn website visitors into customers.</p>
+                
+                <div class="card-features">
+                    <span class="feature-tag">Lead Qualification</span>
+                    <span class="feature-tag">CRM Integration</span>
+                    <span class="feature-tag">Email Capture</span>
+                    <span class="feature-tag">Follow-up</span>
+                </div>
+                
+                <div class="card-price">
+                    <div>
+                        <span class="price">$27</span>
+                        <span class="price-period">/month</span>
+                    </div>
+                </div>
+                
+                <div class="card-actions">
+                    <button class="btn btn-demo" onclick="showDemo('lead')">
+                        <i class="fas fa-play"></i> Try Demo
+                    </button>
+                    <button class="btn btn-primary btn-deploy">
+                        <i class="fas fa-rocket"></i> Deploy Now
+                    </button>
+                </div>
+            </div>
+
+            <!-- Real Estate Bot -->
+            <div class="chatbot-card" data-category="industry">
+                <div class="card-icon">🏠</div>
+                <h3 class="card-title">Real Estate Bot</h3>
+                <p class="card-description">Help clients search properties, schedule viewings, calculate mortgages, and connect with agents.</p>
+                
+                <div class="card-features">
+                    <span class="feature-tag">Property Search</span>
+                    <span class="feature-tag">Virtual Tours</span>
+                    <span class="feature-tag">Mortgage Calc</span>
+                    <span class="feature-tag">Agent Connect</span>
+                </div>
+                
+                <div class="card-price">
+                    <div>
+                        <span class="price">$32</span>
+                        <span class="price-period">/month</span>
+                    </div>
+                </div>
+                
+                <div class="card-actions">
+                    <button class="btn btn-demo" onclick="showDemo('realestate')">
+                        <i class="fas fa-play"></i> Try Demo
+                    </button>
+                    <button class="btn btn-primary btn-deploy">
+                        <i class="fas fa-rocket"></i> Deploy Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Modal -->
+    <div class="modal" id="demoModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Chatbot Demo</h3>
+                <button class="modal-close" onclick="closeDemo()">&times;</button>
+            </div>
+            
+            <div class="chatbot-demo">
+                <div class="demo-header">
+                    <i class="fas fa-robot"></i>
+                    <span id="demoTitle">Customer Support Bot</span>
+                    <div style="margin-left: auto;">
+                        <i class="fas fa-circle" style="color: #10b981; font-size: 8px;"></i>
+                        <span style="font-size: 12px;">Online</span>
+                    </div>
+                </div>
+                
+                <div class="demo-messages" id="demoMessages">
+                    <div class="demo-message bot">
+                        <div class="message-bubble">
+                            <div>👋 Hello! I'm here to help you. What can I assist you with today?</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="demo-input">
+                    <input type="text" id="demoInput" placeholder="Type your message..." onkeypress="handleDemoEnter(event)">
+                    <button onclick="sendDemoMessage()">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div style="margin-top: 1.5rem; text-align: center;">
+                <button class="btn btn-primary" onclick="deployBot()">
+                    <i class="fas fa-rocket"></i> Deploy This Bot
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Demo data for different chatbots
+        const demoData = {
+            support: {
+                title: "Customer Support Bot",
+                responses: {
+                    "hi|hello|hey": "Hello! I'm your customer support assistant. I can help with account issues, billing questions, or technical problems. What do you need help with?",
+                    "account|login|password": "I can help you with account issues! Are you having trouble logging in, need to reset your password, or something else?",
+                    "billing|payment|invoice": "For billing questions, I can check your account status, explain charges, or help with payment issues. What specific billing question do you have?",
+                    "technical|bug|error": "Sorry to hear you're experiencing technical issues! Can you describe what's happening? I'll either help resolve it or connect you with our technical team.",
+                    "default": "I understand you need help with that. Let me connect you with a human agent who can assist you better. Please hold on..."
+                }
+            },
+            appointment: {
+                title: "Appointment Scheduler",
+                responses: {
+                    "hi|hello|hey": "Hello! I'm here to help you book an appointment. What type of service are you interested in?",
+                    "book|appointment|schedule": "Great! I can help you schedule an appointment. What service do you need? We offer consultations (30 min), full sessions (60 min), and premium packages (90 min).",
+                    "available|time|when": "I have availability this week! What day works best for you - weekday or weekend? Morning or afternoon preference?",
+                    "cancel|reschedule|change": "No problem! I can help you reschedule. What's your current booking reference number?",
+                    "default": "I can help you with booking, rescheduling, or questions about our services. What would you like to do?"
+                }
+            },
+            shopping: {
+                title: "Shopping Assistant",
+                responses: {
+                    "hi|hello|hey": "Welcome to our store! I'm your personal shopping assistant. Are you looking for anything specific today?",
+                    "product|item|search": "I'd love to help you find the perfect product! What category are you interested in? Clothing, electronics, home goods, or something else?",
+                    "price|cost|budget": "I can help you find items within your budget! What's your price range? I can show you our best deals and current promotions too.",
+                    "cart|checkout|buy": "Ready to checkout? I can help you review your cart, apply discount codes, or answer any questions about shipping and returns.",
+                    "default": "I'm here to help you shop! I can help you find products, check prices, manage your cart, or answer any questions about our store."
+                }
+            },
+            restaurant: {
+                title: "Restaurant Bot",
+                responses: {
+                    "hi|hello|hey": "Welcome to our restaurant! I can help you with our menu, take your order, or make a reservation. What would you like?",
+                    "menu|food|eat": "Here's our current menu! We have appetizers, main courses, desserts, and beverages. Any dietary restrictions I should know about?",
+                    "order|delivery|takeout": "I'd be happy to take your order! Would you like delivery or pickup? And what can I get started for you?",
+                    "reservation|table|book": "I can help you make a reservation! What date and time were you thinking? How many people will be dining?",
+                    "default": "I can help you with our menu, taking orders, making reservations, or answering questions about our restaurant. What do you need?"
+                }
+            },
+            lead: {
+                title: "Lead Generator",
+                responses: {
+                    "hi|hello|hey": "Hi there! I'm here to help you learn more about our services. What's your biggest business challenge right now?",
+                    "service|product|solution": "Great question! Our solutions help businesses save time and increase efficiency. What industry are you in? I can show you relevant case studies.",
+                    "price|cost|budget": "I'd love to discuss pricing with you! Our solutions typically pay for themselves within 3 months. Can I get your email to send you a custom quote?",
+                    "demo|trial|test": "Absolutely! I can set up a personalized demo for you. What's your name and email address? Our specialist will contact you within 24 hours.",
+                    "default": "I'm here to help you learn about our solutions and see if we're a good fit for your business. What questions do you have?"
+                }
+            },
+            realestate: {
+                title: "Real Estate Bot",
+                responses: {
+                    "hi|hello|hey": "Hello! I'm your real estate assistant. Are you looking to buy, sell, or rent? I can help you find the perfect property!",
+                    "buy|purchase|house": "Exciting! I can help you find your dream home. What's your budget range? Any specific location or features you're looking for?",
+                    "sell|listing|value": "I can help you sell your property! First, let me connect you with one of our agents for a free market analysis. What's your property address?",
+                    "rent|rental|lease": "I can help you find great rental properties! What's your budget and preferred location? Any specific requirements like pet-friendly or parking?",
+                    "default": "I'm here to help with all your real estate needs - buying, selling, or renting. I can also connect you with our experienced agents. How can I help?"
+                }
+            }
+        };
+
+        let currentDemo = null;
+
+        // Filter functionality
+        document.querySelectorAll('.filter-tag').forEach(tag => {
+            tag.addEventListener('click', function() {
+                // Remove active class from all tags
+                document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
+                // Add active class to clicked tag
+                this.classList.add('active');
+                
+                const category = this.dataset.category;
+                filterChatbots(category);
+            });
+        });
+
+        function filterChatbots(category) {
+            const cards = document.querySelectorAll('.chatbot-card');
+            cards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Search functionality
+        document.querySelector('.search-input').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const cards = document.querySelectorAll('.chatbot-card');
+            
+            cards.forEach(card => {
+                const title = card.querySelector('.card-title').textContent.toLowerCase();
+                const description = card.querySelector('.card-description').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Demo functionality
+        function showDemo(botType) {
+            currentDemo = botType;
+            const demo = demoData[botType];
+            
+            document.getElementById('modalTitle').textContent = demo.title + ' Demo';
+            document.getElementById('demoTitle').textContent = demo.title;
+            document.getElementById('demoMessages').innerHTML = `
+                <div class="demo-message bot">
+                    <div class="message-bubble">
+                        <div>👋 Hello! I'm your ${demo.title.toLowerCase()}. What can I help you with today?</div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('demoModal').style.display = 'flex';
+            document.getElementById('demoInput').focus();
+        }
+
+        function closeDemo() {
+            document.getElementById('demoModal').style.display = 'none';
+            currentDemo = null;
+        }
+
+        function sendDemoMessage() {
+            const input = document.getElementById('demoInput');
+            const message = input.value.trim();
+            
+            if (!message || !currentDemo) return;
+            
+            // Add user message
+            const messagesContainer = document.getElementById('demoMessages');
+            messagesContainer.innerHTML += `
+                <div class="demo-message user">
+                    <div class="message-bubble">
+                        <div>${message}</div>
+                    </div>
+                </div>
+            `;
+            
+            // Clear input
+            input.value = '';
+            
+            // Generate bot response
+            setTimeout(() => {
+                const response = generateDemoResponse(message, currentDemo);
+                messagesContainer.innerHTML += `
+                    <div class="demo-message bot">
+                        <div class="message-bubble">
+                            <div>${response}</div>
+                        </div>
+                    </div>
+                `;
+                
+                // Scroll to bottom
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }, 1000);
+            
+            // Scroll to bottom
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function generateDemoResponse(message, botType) {
+            const demo = demoData[botType];
+            const lowerMessage = message.toLowerCase();
+            
+            // Check for keyword matches
+            for (const [keywords, response] of Object.entries(demo.responses)) {
+                if (keywords !== 'default') {
+                    const keywordList = keywords.split('|');
+                    if (keywordList.some(keyword => lowerMessage.includes(keyword))) {
+                        return response;
+                    }
+                }
+            }
+            
+            // Return default response
+            return demo.responses.default;
+        }
+
+        function handleDemoEnter(event) {
+            if (event.key === 'Enter') {
+                sendDemoMessage();
+            }
+        }
+
+        function deployBot() {
+            alert('🚀 Great choice! You\'ll be redirected to set up your ' + demoData[currentDemo].title + '. This will just take a few minutes!');
+            closeDemo();
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('demoModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDemo();
+            }
+        });
+    </script>
+</body>
+</html>

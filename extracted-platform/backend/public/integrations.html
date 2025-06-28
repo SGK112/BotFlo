@@ -815,50 +815,5 @@
             });
         });
     </script>
-
-    <!-- Smart Co-pilot Integration -->
-    <script src="/js/smart-copilot.js"></script>
-    <script src="/js/smart-copilot-ui.js"></script>
-    <script>
-        // Initialize the Smart BotFlo Co-pilot for integrations page
-        document.addEventListener('DOMContentLoaded', function() {
-            const copilot = new SmartBotFloCopilot();
-            const copilotUI = new SmartCopilotUI(copilot);
-            
-            // Set context for integrations page
-            copilot.setContext({
-                page: 'integrations',
-                features: ['crm', 'messaging', 'ecommerce', 'analytics'],
-                userType: 'integrator'
-            });
-            
-            // Integrations-specific intents
-            copilot.onIntent = function(intent, message) {
-                if (intent === 'help' && message.toLowerCase().includes('setup')) {
-                    copilotUI.addMessage(
-                        "⚙️ Setting up an integration is easy! Here's the general process:\n\n1. **Choose Integration**: Select from our available integrations\n2. **Connect Account**: Authenticate with your service\n3. **Configure Settings**: Map fields and set preferences\n4. **Test Connection**: Verify everything works\n\nWhich integration interests you?",
-                        'bot'
-                    );
-                    return true;
-                }
-                if (intent === 'help' && message.toLowerCase().includes('webhook')) {
-                    copilotUI.addMessage(
-                        "🪝 Webhooks let your chatbot communicate with external services!\n\n• **Incoming Webhooks**: Trigger chatbot actions\n• **Outgoing Webhooks**: Send data to your systems\n• **Real-time Events**: Get notified of conversations\n\nCheck our API documentation for webhook setup guides!",
-                        'bot'
-                    );
-                    return true;
-                }
-                return false;
-            };
-            
-            // Show welcome message for integrations
-            setTimeout(() => {
-                copilotUI.addMessage(
-                    "🔗 Ready to connect BotFlo with your favorite tools? I can help you set up integrations, configure webhooks, or troubleshoot connections. What would you like to integrate?",
-                    'bot'
-                );
-            }, 1500);
-        });
-    </script>
 </body>
 </html>

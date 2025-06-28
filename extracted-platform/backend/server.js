@@ -170,13 +170,8 @@ app.get('/', (req, res) => {
 // MAIN NAVIGATION ROUTES (Only 3-4 core routes)
 // ============================================================================
 
-// 1. BUILD BOT - Main builder hub (Advanced Flow Builder)
+// 1. BUILD BOT - Main builder hub
 app.get('/builders', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'bot-builder-advanced.html'));
-});
-
-// Builder alternatives
-app.get('/builders/overview', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'builders-overview-new.html'));
 });
 

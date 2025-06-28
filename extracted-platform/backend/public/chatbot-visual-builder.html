@@ -1,0 +1,1543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surprise Granite AI - Advanced Visual Chatbot Builder</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/svg.js@3.2.0/dist/svg.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: #f8fafc;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Top Header */
+        .header {
+            height: 60px;
+            background: #1e293b;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            border-bottom: 1px solid #334155;
+            z-index: 1000;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: 600;
+            color: #3b82f6;
+        }
+
+        .chatbot-name {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .btn-secondary {
+            background: #475569;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #334155;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            height: calc(100vh - 60px);
+        }
+
+        /* Left Sidebar - Component Library */
+        .sidebar {
+            width: 280px;
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .sidebar-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .sidebar-subtitle {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        /* Component Categories */
+        .component-category {
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .category-header {
+            padding: 16px 20px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .category-header:hover {
+            background: #f1f5f9;
+        }
+
+        .category-content {
+            padding: 12px 0;
+        }
+
+        .component-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            margin: 4px 12px;
+            border-radius: 8px;
+            cursor: grab;
+            transition: all 0.2s;
+            border: 2px dashed transparent;
+        }
+
+        .component-item:hover {
+            background: #f8fafc;
+            border-color: #3b82f6;
+        }
+
+        .component-item:active {
+            cursor: grabbing;
+        }
+
+        .component-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 16px;
+        }
+
+        .component-info h4 {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1e293b;
+            margin-bottom: 2px;
+        }
+
+        .component-info p {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        /* Icon Colors */
+        .icon-interaction { background: #dbeafe; color: #3b82f6; }
+        .icon-logic { background: #fef3c7; color: #d97706; }
+        .icon-ai { background: #d1fae5; color: #059669; }
+        .icon-action { background: #fde2e8; color: #dc2626; }
+        .icon-data { background: #ede9fe; color: #7c3aed; }
+
+        /* Workspace */
+        .workspace {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #f8fafc;
+        }
+
+        .workspace-header {
+            padding: 16px 20px;
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .workspace-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .workspace-tools {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tool-btn {
+            padding: 6px 12px;
+            border: 1px solid #d1d5db;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            color: #374151;
+            transition: all 0.2s;
+        }
+
+        .tool-btn:hover {
+            background: #f9fafb;
+            border-color: #9ca3af;
+        }
+
+        .tool-btn.active {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        /* Canvas */
+        .canvas-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .canvas {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background: 
+                radial-gradient(circle, #e2e8f0 1px, transparent 1px);
+            background-size: 20px 20px;
+            overflow: auto;
+        }
+
+        .canvas-content {
+            position: relative;
+            width: 3000px;
+            height: 2000px;
+            min-height: 100%;
+        }
+
+        /* Flow Nodes */
+        .flow-node {
+            position: absolute;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            min-width: 200px;
+            cursor: move;
+            transition: all 0.2s;
+        }
+
+        .flow-node:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+        }
+
+        .flow-node.selected {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .flow-node.dragging {
+            z-index: 1000;
+            transform: rotate(5deg);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .node-header {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .node-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+            font-size: 12px;
+        }
+
+        .node-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1e293b;
+            flex: 1;
+        }
+
+        .node-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .node-action {
+            width: 20px;
+            height: 20px;
+            border: none;
+            background: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #64748b;
+            transition: all 0.2s;
+        }
+
+        .node-action:hover {
+            background: #f1f5f9;
+            color: #374151;
+        }
+
+        .node-body {
+            padding: 16px;
+        }
+
+        .node-description {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 12px;
+        }
+
+        .node-config {
+            font-size: 12px;
+        }
+
+        .config-item {
+            margin-bottom: 8px;
+        }
+
+        .config-label {
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 4px;
+        }
+
+        .config-value {
+            color: #64748b;
+            background: #f8fafc;
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* Connection Points */
+        .connection-point {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: white;
+            border: 2px solid #94a3b8;
+            border-radius: 50%;
+            cursor: crosshair;
+            transition: all 0.2s;
+        }
+
+        .connection-point:hover {
+            border-color: #3b82f6;
+            background: #dbeafe;
+            transform: scale(1.2);
+        }
+
+        .connection-point.input {
+            top: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .connection-point.output {
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Connections */
+        .connection {
+            position: absolute;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .connection path {
+            stroke: #94a3b8;
+            stroke-width: 2;
+            fill: none;
+            transition: stroke 0.2s;
+        }
+
+        .connection:hover path {
+            stroke: #3b82f6;
+        }
+
+        /* Right Panel - Properties */
+        .properties-panel {
+            width: 320px;
+            background: white;
+            border-left: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .properties-header {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .properties-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+
+        .properties-subtitle {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .properties-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .property-group {
+            margin-bottom: 24px;
+        }
+
+        .property-group-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 12px;
+        }
+
+        .property-item {
+            margin-bottom: 16px;
+        }
+
+        .property-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 6px;
+        }
+
+        .property-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .property-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .property-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .property-select {
+            background: white;
+        }
+
+        /* Drop Zone */
+        .drop-zone {
+            position: absolute;
+            border: 2px dashed #94a3b8;
+            border-radius: 8px;
+            background: rgba(59, 130, 246, 0.05);
+            display: none;
+        }
+
+        .drop-zone.active {
+            display: block;
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            padding: 12px 16px;
+            background: #10b981;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: translateX(400px);
+            transition: transform 0.3s;
+            z-index: 2000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        /* Minimap */
+        .minimap {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 200px;
+            height: 120px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .minimap-content {
+            width: 100%;
+            height: 100%;
+            background: #f8fafc;
+            position: relative;
+        }
+
+        .minimap-node {
+            position: absolute;
+            background: #3b82f6;
+            border-radius: 2px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 240px;
+            }
+            
+            .properties-panel {
+                width: 280px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar,
+            .properties-panel {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                z-index: 1001;
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            
+            .sidebar.open,
+            .properties-panel.open {
+                transform: translateX(0);
+            }
+            
+            .properties-panel {
+                right: 0;
+                transform: translateX(100%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <div class="logo">🏗️ Surprise Granite AI</div>
+            <div class="chatbot-name">Untitled Chatbot</div>
+        </div>
+        <div class="header-actions">
+            <button class="btn btn-secondary" onclick="testChatbot()">
+                <i class="fas fa-play"></i> Test
+            </button>
+            <button class="btn btn-secondary" onclick="saveChatbot()">
+                <i class="fas fa-save"></i> Save
+            </button>
+            <button class="btn btn-primary" onclick="deployChatbot()">
+                <i class="fas fa-rocket"></i> Deploy
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Left Sidebar - Component Library -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">Components</div>
+                <div class="sidebar-subtitle">Drag components to build your flow</div>
+            </div>
+
+            <!-- Interactions Category -->
+            <div class="component-category">
+                <div class="category-header" onclick="toggleCategory(this)">
+                    <span><i class="fas fa-comments"></i> Interactions</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="category-content">
+                    <div class="component-item" draggable="true" data-component="welcome">
+                        <div class="component-icon icon-interaction">👋</div>
+                        <div class="component-info">
+                            <h4>Welcome Message</h4>
+                            <p>Greet your visitors</p>
+                        </div>
+                    </div>
+                    
+                    <div class="component-item" draggable="true" data-component="message">
+                        <div class="component-icon icon-interaction">💬</div>
+                        <div class="component-info">
+                            <h4>Bot Response</h4>
+                            <p>Send a message to user</p>
+                        </div>
+                    </div>
+                    
+                    <div class="component-item" draggable="true" data-component="question">
+                        <div class="component-icon icon-interaction">❓</div>
+                        <div class="component-info">
+                            <h4>User Input</h4>
+                            <p>Collect user response</p>
+                        </div>
+                    </div>
+                    
+                    <div class="component-item" draggable="true" data-component="quickreply">
+                        <div class="component-icon icon-interaction">⚡</div>
+                        <div class="component-info">
+                            <h4>Quick Replies</h4>
+                            <p>Multiple choice buttons</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Logic Category -->
+            <div class="component-category">
+                <div class="category-header" onclick="toggleCategory(this)">
+                    <span><i class="fas fa-sitemap"></i> Logic</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="category-content">
+                    <div class="component-item" draggable="true" data-component="condition">
+                        <div class="component-icon icon-logic">🔀</div>
+                        <div class="component-info">
+                            <h4>Condition</h4>
+                            <p>Branch conversation flow</p>
+                        </div>
+                    </div>
+                    
+                    <div class="component-item" draggable="true" data-component="random">
+                        <div class="component-icon icon-logic">🎲</div>
+                        <div class="component-info">
+                            <h4>Random Path</h4>
+                            <p>Randomize responses</p>
+                        </div>
+                    </div>
+                    
+                    <div class="component-item" draggable="true" data-component="delay">
+                        <div class="component-icon icon-logic">⏱️</div>
+                        <div class="component-info">
+                            <h4>Delay</h4>
+                            <p>Add timing to responses</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Category -->
+            <div class="component-category">
+                <div class="category-header" onclick="toggleCategory(this)">
+                    <span><i class="fas fa-robot"></i> AI Assistant</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="category-content">
+                    <div class="component-item" draggable="true" data-component="ai-assist">
+                        <div class="component-icon icon-ai">🤖</div>
+                        <div class="component-info">
+                            <h4>AI Assist</h4>
+                            <p>Smart AI responses</p>
+                        </div>
+                    </div>
+                    
+                    <div class="component-item" draggable="true" data-component="knowledge">
+                        <div class="component-icon icon-ai">📚</div>
+                        <div class="component-info">
+                            <h4>Knowledge Base</h4>
+                            <p>Query knowledge articles</p>
+                        </div>
+                    </div>
+                    
+                    <div class="component-item" draggable="true" data-component="sentiment">
+                        <div class="component-icon icon-ai">😊</div>
+                        <div class="component-info">
+                            <h4>Sentiment Analysis</h4>
+                            <p>Detect user emotion</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions Category -->
+            <div class="component-category">
+                <div class="category-header" onclick="toggleCategory(this)">
+                    <span><i class="fas fa-bolt"></i> Actions</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="category-content">
+                    <div class="component-item" draggable="true" data-component="webhook">
+                        <div class="component-icon icon-action">🔗</div>
+                        <div class="component-info">
+                            <h4>Webhook</h4>
+                            <p>External API call</p>
+                        </div>
+                    </div>
+                    
+                    <div class="component-item" draggable="true" data-component="email">
+                        <div class="component-icon icon-action">📧</div>
+                        <div class="component-info">
+                            <h4>Send Email</h4>
+                            <p>Send notification email</p>
+                        </div>
+                    </div>
+                    
+                    <div class="component-item" draggable="true" data-component="handover">
+                        <div class="component-icon icon-action">👨‍💼</div>
+                        <div class="component-info">
+                            <h4>Human Handover</h4>
+                            <p>Transfer to agent</p>
+                        </div>
+                    </div>
+                    
+                    <div class="component-item" draggable="true" data-component="close">
+                        <div class="component-icon icon-action">🚪</div>
+                        <div class="component-info">
+                            <h4>Close Chat</h4>
+                            <p>End conversation</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Category -->
+            <div class="component-category">
+                <div class="category-header" onclick="toggleCategory(this)">
+                    <span><i class="fas fa-database"></i> Data</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="category-content">
+                    <div class="component-item" draggable="true" data-component="variable">
+                        <div class="component-icon icon-data">💾</div>
+                        <div class="component-info">
+                            <h4>Set Variable</h4>
+                            <p>Store user data</p>
+                        </div>
+                    </div>
+                    
+                    <div class="component-item" draggable="true" data-component="segment">
+                        <div class="component-icon icon-data">👥</div>
+                        <div class="component-info">
+                            <h4>User Segment</h4>
+                            <p>Tag and categorize users</p>
+                        </div>
+                    </div>
+                    
+                    <div class="component-item" draggable="true" data-component="attribute">
+                        <div class="component-icon icon-data">🏷️</div>
+                        <div class="component-info">
+                            <h4>User Attribute</h4>
+                            <p>Collect user information</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Workspace -->
+        <div class="workspace">
+            <div class="workspace-header">
+                <div class="workspace-title">Chatbot Flow</div>
+                <div class="workspace-tools">
+                    <button class="tool-btn active" data-tool="select">
+                        <i class="fas fa-mouse-pointer"></i> Select
+                    </button>
+                    <button class="tool-btn" data-tool="connect">
+                        <i class="fas fa-link"></i> Connect
+                    </button>
+                    <button class="tool-btn" data-tool="zoom-in">
+                        <i class="fas fa-search-plus"></i>
+                    </button>
+                    <button class="tool-btn" data-tool="zoom-out">
+                        <i class="fas fa-search-minus"></i>
+                    </button>
+                    <button class="tool-btn" data-tool="fit">
+                        <i class="fas fa-expand-arrows-alt"></i> Fit
+                    </button>
+                </div>
+            </div>
+
+            <div class="canvas-container">
+                <div class="canvas" id="canvas">
+                    <div class="canvas-content" id="canvasContent">
+                        <!-- Flow nodes will be added here dynamically -->
+                    </div>
+                </div>
+                
+                <!-- Drop zone indicator -->
+                <div class="drop-zone" id="dropZone"></div>
+                
+                <!-- Minimap -->
+                <div class="minimap">
+                    <div class="minimap-content" id="minimapContent"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel - Properties -->
+        <div class="properties-panel">
+            <div class="properties-header">
+                <div class="properties-title">Properties</div>
+                <div class="properties-subtitle">Configure selected component</div>
+            </div>
+            
+            <div class="properties-content" id="propertiesContent">
+                <div class="property-group">
+                    <div class="property-group-title">General</div>
+                    <div class="property-item">
+                        <label class="property-label">Component Name</label>
+                        <input type="text" class="property-input" placeholder="Enter component name">
+                    </div>
+                    <div class="property-item">
+                        <label class="property-label">Description</label>
+                        <textarea class="property-input property-textarea" placeholder="Describe this component"></textarea>
+                    </div>
+                </div>
+                
+                <div class="property-group">
+                    <div class="property-group-title">Configuration</div>
+                    <div class="property-item">
+                        <label class="property-label">Message</label>
+                        <textarea class="property-input property-textarea" placeholder="Enter your message"></textarea>
+                    </div>
+                    <div class="property-item">
+                        <label class="property-label">Delay (ms)</label>
+                        <input type="number" class="property-input" value="1000" min="0">
+                    </div>
+                </div>
+                
+                <div class="property-group">
+                    <div class="property-group-title">Advanced</div>
+                    <div class="property-item">
+                        <label class="property-label">Variable Name</label>
+                        <input type="text" class="property-input" placeholder="variable_name">
+                    </div>
+                    <div class="property-item">
+                        <label class="property-label">Conditions</label>
+                        <select class="property-input property-select">
+                            <option>Equals</option>
+                            <option>Contains</option>
+                            <option>Greater than</option>
+                            <option>Less than</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+
+    <script>
+        class ChatbotVisualBuilder {
+            constructor() {
+                this.nodes = new Map();
+                this.connections = [];
+                this.selectedNode = null;
+                this.draggedNode = null;
+                this.currentTool = 'select';
+                this.nodeCounter = 0;
+                this.scale = 1;
+                this.panOffset = { x: 0, y: 0 };
+                
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.setupDragAndDrop();
+                this.createStartNode();
+            }
+
+            setupEventListeners() {
+                // Tool selection
+                document.querySelectorAll('.tool-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const tool = e.currentTarget.dataset.tool;
+                        this.setTool(tool);
+                    });
+                });
+
+                // Canvas interactions
+                const canvas = document.getElementById('canvas');
+                canvas.addEventListener('click', (e) => {
+                    if (e.target === canvas || e.target.id === 'canvasContent') {
+                        this.deselectNode();
+                    }
+                });
+
+                // Category toggles
+                window.toggleCategory = (header) => {
+                    const content = header.nextElementSibling;
+                    const icon = header.querySelector('.fa-chevron-down');
+                    
+                    if (content.style.display === 'none') {
+                        content.style.display = 'block';
+                        icon.style.transform = 'rotate(0deg)';
+                    } else {
+                        content.style.display = 'none';
+                        icon.style.transform = 'rotate(-90deg)';
+                    }
+                };
+
+                // Global functions
+                window.testChatbot = () => this.testChatbot();
+                window.saveChatbot = () => this.saveChatbot();
+                window.deployChatbot = () => this.deployChatbot();
+            }
+
+            setupDragAndDrop() {
+                // Component drag start
+                document.querySelectorAll('.component-item').forEach(item => {
+                    item.addEventListener('dragstart', (e) => {
+                        const componentType = e.target.dataset.component;
+                        e.dataTransfer.setData('text/plain', componentType);
+                        e.dataTransfer.effectAllowed = 'copy';
+                    });
+                });
+
+                // Canvas drop handling
+                const canvasContent = document.getElementById('canvasContent');
+                
+                canvasContent.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'copy';
+                    this.showDropZone(e.clientX, e.clientY);
+                });
+
+                canvasContent.addEventListener('dragleave', (e) => {
+                    this.hideDropZone();
+                });
+
+                canvasContent.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    const componentType = e.dataTransfer.getData('text/plain');
+                    const rect = canvasContent.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    this.createNode(componentType, x, y);
+                    this.hideDropZone();
+                });
+            }
+
+            createStartNode() {
+                // Create the initial start node
+                this.createNode('welcome', 100, 100, true);
+            }
+
+            createNode(type, x, y, isStart = false) {
+                const nodeId = isStart ? 'start' : `node_${++this.nodeCounter}`;
+                
+                const nodeConfig = this.getNodeConfig(type);
+                const nodeElement = this.createNodeElement(nodeId, nodeConfig, x, y);
+                
+                const node = {
+                    id: nodeId,
+                    type: type,
+                    x: x,
+                    y: y,
+                    element: nodeElement,
+                    config: { ...nodeConfig.config },
+                    connections: { input: [], output: [] }
+                };
+
+                this.nodes.set(nodeId, node);
+                document.getElementById('canvasContent').appendChild(nodeElement);
+                
+                this.selectNode(nodeId);
+                this.updateMinimap();
+                this.showNotification(`${nodeConfig.name} added to flow`);
+                
+                return node;
+            }
+
+            getNodeConfig(type) {
+                const configs = {
+                    welcome: {
+                        name: 'Welcome Message',
+                        icon: '👋',
+                        iconClass: 'icon-interaction',
+                        description: 'Greet your visitors',
+                        config: {
+                            message: 'Hello! How can I help you today?',
+                            delay: 1000
+                        }
+                    },
+                    message: {
+                        name: 'Bot Response',
+                        icon: '💬',
+                        iconClass: 'icon-interaction',
+                        description: 'Send a message to user',
+                        config: {
+                            message: 'This is a bot response',
+                            delay: 1000,
+                            typing: true
+                        }
+                    },
+                    question: {
+                        name: 'User Input',
+                        icon: '❓',
+                        iconClass: 'icon-interaction',
+                        description: 'Collect user response',
+                        config: {
+                            question: 'What is your name?',
+                            inputType: 'text',
+                            variable: 'user_name',
+                            required: true
+                        }
+                    },
+                    quickreply: {
+                        name: 'Quick Replies',
+                        icon: '⚡',
+                        iconClass: 'icon-interaction',
+                        description: 'Multiple choice buttons',
+                        config: {
+                            question: 'Choose an option:',
+                            options: ['Option 1', 'Option 2', 'Option 3']
+                        }
+                    },
+                    condition: {
+                        name: 'Condition',
+                        icon: '🔀',
+                        iconClass: 'icon-logic',
+                        description: 'Branch conversation flow',
+                        config: {
+                            variable: 'user_input',
+                            operator: 'equals',
+                            value: 'yes'
+                        }
+                    },
+                    'ai-assist': {
+                        name: 'AI Assist',
+                        icon: '🤖',
+                        iconClass: 'icon-ai',
+                        description: 'Smart AI responses',
+                        config: {
+                            knowledgeBase: 'default',
+                            confidence: 0.8,
+                            fallback: 'I need to connect you with a human agent.'
+                        }
+                    },
+                    webhook: {
+                        name: 'Webhook',
+                        icon: '🔗',
+                        iconClass: 'icon-action',
+                        description: 'External API call',
+                        config: {
+                            url: 'https://api.example.com/webhook',
+                            method: 'POST',
+                            headers: {}
+                        }
+                    },
+                    handover: {
+                        name: 'Human Handover',
+                        icon: '👨‍💼',
+                        iconClass: 'icon-action',
+                        description: 'Transfer to agent',
+                        config: {
+                            department: 'support',
+                            message: 'Connecting you with an agent...'
+                        }
+                    }
+                };
+
+                return configs[type] || configs.message;
+            }
+
+            createNodeElement(nodeId, config, x, y) {
+                const nodeDiv = document.createElement('div');
+                nodeDiv.className = 'flow-node';
+                nodeDiv.style.left = x + 'px';
+                nodeDiv.style.top = y + 'px';
+                nodeDiv.dataset.nodeId = nodeId;
+
+                nodeDiv.innerHTML = `
+                    <div class="node-header">
+                        <div class="node-icon ${config.iconClass}">${config.icon}</div>
+                        <div class="node-title">${config.name}</div>
+                        <div class="node-actions">
+                            <button class="node-action" onclick="builder.editNode('${nodeId}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="node-action" onclick="builder.deleteNode('${nodeId}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="node-body">
+                        <div class="node-description">${config.description}</div>
+                        <div class="node-config">
+                            ${this.renderNodeConfig(config.config)}
+                        </div>
+                    </div>
+                    <div class="connection-point input" data-direction="input"></div>
+                    <div class="connection-point output" data-direction="output"></div>
+                `;
+
+                // Make node draggable
+                this.makeNodeDraggable(nodeDiv);
+                
+                // Node selection
+                nodeDiv.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.selectNode(nodeId);
+                });
+
+                return nodeDiv;
+            }
+
+            renderNodeConfig(config) {
+                let html = '';
+                Object.entries(config).slice(0, 2).forEach(([key, value]) => {
+                    if (typeof value === 'string' && value.length > 30) {
+                        value = value.substring(0, 27) + '...';
+                    }
+                    html += `
+                        <div class="config-item">
+                            <div class="config-label">${key}:</div>
+                            <div class="config-value">${value}</div>
+                        </div>
+                    `;
+                });
+                return html;
+            }
+
+            makeNodeDraggable(nodeElement) {
+                let isDragging = false;
+                let dragOffset = { x: 0, y: 0 };
+
+                nodeElement.addEventListener('mousedown', (e) => {
+                    if (e.target.closest('.node-action')) return;
+                    
+                    isDragging = true;
+                    nodeElement.classList.add('dragging');
+                    
+                    const rect = nodeElement.getBoundingClientRect();
+                    const canvasRect = document.getElementById('canvasContent').getBoundingClientRect();
+                    
+                    dragOffset.x = e.clientX - rect.left;
+                    dragOffset.y = e.clientY - rect.top;
+                    
+                    e.preventDefault();
+                });
+
+                document.addEventListener('mousemove', (e) => {
+                    if (!isDragging) return;
+                    
+                    const canvasRect = document.getElementById('canvasContent').getBoundingClientRect();
+                    const x = e.clientX - canvasRect.left - dragOffset.x;
+                    const y = e.clientY - canvasRect.top - dragOffset.y;
+                    
+                    nodeElement.style.left = Math.max(0, x) + 'px';
+                    nodeElement.style.top = Math.max(0, y) + 'px';
+                    
+                    // Update node position in data
+                    const node = this.nodes.get(nodeElement.dataset.nodeId);
+                    if (node) {
+                        node.x = x;
+                        node.y = y;
+                    }
+                    
+                    this.updateMinimap();
+                });
+
+                document.addEventListener('mouseup', () => {
+                    if (isDragging) {
+                        isDragging = false;
+                        nodeElement.classList.remove('dragging');
+                    }
+                });
+            }
+
+            selectNode(nodeId) {
+                // Deselect previous node
+                if (this.selectedNode) {
+                    const prevNode = this.nodes.get(this.selectedNode);
+                    if (prevNode) {
+                        prevNode.element.classList.remove('selected');
+                    }
+                }
+
+                // Select new node
+                this.selectedNode = nodeId;
+                const node = this.nodes.get(nodeId);
+                if (node) {
+                    node.element.classList.add('selected');
+                    this.updatePropertiesPanel(node);
+                }
+            }
+
+            deselectNode() {
+                if (this.selectedNode) {
+                    const node = this.nodes.get(this.selectedNode);
+                    if (node) {
+                        node.element.classList.remove('selected');
+                    }
+                    this.selectedNode = null;
+                    this.clearPropertiesPanel();
+                }
+            }
+
+            updatePropertiesPanel(node) {
+                const propertiesContent = document.getElementById('propertiesContent');
+                const config = this.getNodeConfig(node.type);
+                
+                propertiesContent.innerHTML = `
+                    <div class="property-group">
+                        <div class="property-group-title">General</div>
+                        <div class="property-item">
+                            <label class="property-label">Component Name</label>
+                            <input type="text" class="property-input" value="${config.name}" readonly>
+                        </div>
+                        <div class="property-item">
+                            <label class="property-label">Description</label>
+                            <textarea class="property-input property-textarea" readonly>${config.description}</textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="property-group">
+                        <div class="property-group-title">Configuration</div>
+                        ${this.renderPropertyInputs(node.config, node.id)}
+                    </div>
+                `;
+            }
+
+            renderPropertyInputs(config, nodeId) {
+                let html = '';
+                Object.entries(config).forEach(([key, value]) => {
+                    const inputType = this.getInputType(key, value);
+                    html += `
+                        <div class="property-item">
+                            <label class="property-label">${this.formatLabel(key)}</label>
+                            ${this.renderPropertyInput(key, value, inputType, nodeId)}
+                        </div>
+                    `;
+                });
+                return html;
+            }
+
+            renderPropertyInput(key, value, type, nodeId) {
+                switch (type) {
+                    case 'textarea':
+                        return `<textarea class="property-input property-textarea" 
+                                onchange="builder.updateNodeConfig('${nodeId}', '${key}', this.value)">${value}</textarea>`;
+                    case 'number':
+                        return `<input type="number" class="property-input" value="${value}" 
+                                onchange="builder.updateNodeConfig('${nodeId}', '${key}', this.value)">`;
+                    case 'select':
+                        return `<select class="property-input property-select" 
+                                onchange="builder.updateNodeConfig('${nodeId}', '${key}', this.value)">
+                                <option value="equals">Equals</option>
+                                <option value="contains">Contains</option>
+                                <option value="greater">Greater than</option>
+                                <option value="less">Less than</option>
+                                </select>`;
+                    default:
+                        return `<input type="text" class="property-input" value="${value}" 
+                                onchange="builder.updateNodeConfig('${nodeId}', '${key}', this.value)">`;
+                }
+            }
+
+            getInputType(key, value) {
+                if (key.includes('message') || key.includes('question') || key.includes('description')) {
+                    return 'textarea';
+                }
+                if (key.includes('delay') || typeof value === 'number') {
+                    return 'number';
+                }
+                if (key.includes('operator') || key.includes('method')) {
+                    return 'select';
+                }
+                return 'text';
+            }
+
+            formatLabel(key) {
+                return key.replace(/([A-Z])/g, ' $1')
+                          .replace(/^./, str => str.toUpperCase())
+                          .replace(/_/g, ' ');
+            }
+
+            updateNodeConfig(nodeId, key, value) {
+                const node = this.nodes.get(nodeId);
+                if (node) {
+                    node.config[key] = value;
+                    
+                    // Update the visual representation
+                    const configDiv = node.element.querySelector('.node-config');
+                    configDiv.innerHTML = this.renderNodeConfig(node.config);
+                    
+                    this.showNotification('Configuration updated');
+                }
+            }
+
+            clearPropertiesPanel() {
+                const propertiesContent = document.getElementById('propertiesContent');
+                propertiesContent.innerHTML = `
+                    <div class="property-group">
+                        <div class="property-group-title">No Selection</div>
+                        <p style="color: #64748b; font-size: 14px;">Select a component to edit its properties</p>
+                    </div>
+                `;
+            }
+
+            editNode(nodeId) {
+                this.selectNode(nodeId);
+                this.showNotification('Edit mode activated');
+            }
+
+            deleteNode(nodeId) {
+                if (nodeId === 'start') {
+                    this.showNotification('Cannot delete start node', 'error');
+                    return;
+                }
+
+                const node = this.nodes.get(nodeId);
+                if (node) {
+                    node.element.remove();
+                    this.nodes.delete(nodeId);
+                    
+                    if (this.selectedNode === nodeId) {
+                        this.selectedNode = null;
+                        this.clearPropertiesPanel();
+                    }
+                    
+                    this.updateMinimap();
+                    this.showNotification('Component deleted');
+                }
+            }
+
+            setTool(tool) {
+                this.currentTool = tool;
+                
+                // Update UI
+                document.querySelectorAll('.tool-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelector(`[data-tool="${tool}"]`).classList.add('active');
+                
+                // Handle tool-specific actions
+                switch (tool) {
+                    case 'zoom-in':
+                        this.scale = Math.min(this.scale * 1.2, 3);
+                        this.applyZoom();
+                        break;
+                    case 'zoom-out':
+                        this.scale = Math.max(this.scale / 1.2, 0.3);
+                        this.applyZoom();
+                        break;
+                    case 'fit':
+                        this.fitToScreen();
+                        break;
+                }
+            }
+
+            applyZoom() {
+                const canvasContent = document.getElementById('canvasContent');
+                canvasContent.style.transform = `scale(${this.scale})`;
+                canvasContent.style.transformOrigin = '0 0';
+            }
+
+            fitToScreen() {
+                // Calculate bounds of all nodes
+                let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+                
+                this.nodes.forEach(node => {
+                    minX = Math.min(minX, node.x);
+                    minY = Math.min(minY, node.y);
+                    maxX = Math.max(maxX, node.x + 200); // Approximate node width
+                    maxY = Math.max(maxY, node.y + 150); // Approximate node height
+                });
+
+                if (this.nodes.size === 0) return;
+
+                const canvas = document.getElementById('canvas');
+                const canvasRect = canvas.getBoundingClientRect();
+                
+                const contentWidth = maxX - minX;
+                const contentHeight = maxY - minY;
+                
+                const scaleX = (canvasRect.width * 0.8) / contentWidth;
+                const scaleY = (canvasRect.height * 0.8) / contentHeight;
+                
+                this.scale = Math.min(scaleX, scaleY, 1);
+                this.applyZoom();
+                
+                // Center the content
+                canvas.scrollLeft = minX * this.scale - (canvasRect.width - contentWidth * this.scale) / 2;
+                canvas.scrollTop = minY * this.scale - (canvasRect.height - contentHeight * this.scale) / 2;
+            }
+
+            showDropZone(x, y) {
+                const dropZone = document.getElementById('dropZone');
+                const canvas = document.getElementById('canvas');
+                const rect = canvas.getBoundingClientRect();
+                
+                dropZone.style.left = (x - rect.left - 100) + 'px';
+                dropZone.style.top = (y - rect.top - 75) + 'px';
+                dropZone.style.width = '200px';
+                dropZone.style.height = '150px';
+                dropZone.classList.add('active');
+            }
+
+            hideDropZone() {
+                const dropZone = document.getElementById('dropZone');
+                dropZone.classList.remove('active');
+            }
+
+            updateMinimap() {
+                const minimapContent = document.getElementById('minimapContent');
+                minimapContent.innerHTML = '';
+                
+                // Calculate scale for minimap
+                const scale = 0.05; // Adjust as needed
+                
+                this.nodes.forEach(node => {
+                    const minimapNode = document.createElement('div');
+                    minimapNode.className = 'minimap-node';
+                    minimapNode.style.left = (node.x * scale) + 'px';
+                    minimapNode.style.top = (node.y * scale) + 'px';
+                    minimapNode.style.width = (200 * scale) + 'px';
+                    minimapNode.style.height = (150 * scale) + 'px';
+                    
+                    minimapContent.appendChild(minimapNode);
+                });
+            }
+
+            showNotification(message, type = 'success') {
+                const notification = document.getElementById('notification');
+                notification.textContent = message;
+                notification.className = `notification ${type}`;
+                notification.classList.add('show');
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            }
+
+            testChatbot() {
+                this.showNotification('Testing chatbot...');
+                // Implement test functionality
+            }
+
+            saveChatbot() {
+                const chatbotData = {
+                    nodes: Array.from(this.nodes.values()).map(node => ({
+                        id: node.id,
+                        type: node.type,
+                        x: node.x,
+                        y: node.y,
+                        config: node.config
+                    })),
+                    connections: this.connections
+                };
+                
+                localStorage.setItem('chatbot_flow', JSON.stringify(chatbotData));
+                this.showNotification('Chatbot saved successfully!');
+            }
+
+            deployChatbot() {
+                this.showNotification('Deploying chatbot...', 'info');
+                // Implement deployment functionality
+            }
+
+            exportData() {
+                return {
+                    nodes: Array.from(this.nodes.values()),
+                    connections: this.connections,
+                    metadata: {
+                        created: new Date().toISOString(),
+                        nodeCount: this.nodes.size,
+                        version: '1.0.0'
+                    }
+                };
+            }
+        }
+
+        // Initialize the builder
+        const builder = new ChatbotVisualBuilder();
+    </script>
+</body>
+</html>

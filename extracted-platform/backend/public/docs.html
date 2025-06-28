@@ -873,57 +873,5 @@
             sidebar.classList.toggle('open');
         }
     </script>
-
-    <!-- Smart Co-pilot Integration -->
-    <script src="/js/smart-copilot.js"></script>
-    <script src="/js/smart-copilot-ui.js"></script>
-    <script>
-        // Initialize the Smart BotFlo Co-pilot for documentation
-        document.addEventListener('DOMContentLoaded', function() {
-            const copilot = new SmartBotFloCopilot();
-            const copilotUI = new SmartCopilotUI(copilot);
-            
-            // Set context for documentation page
-            copilot.setContext({
-                page: 'documentation',
-                features: ['guides', 'api', 'tutorials', 'troubleshooting'],
-                userType: 'developer'
-            });
-            
-            // Documentation-specific intents
-            copilot.onIntent = function(intent, message) {
-                if (intent === 'help' && message.toLowerCase().includes('api')) {
-                    copilotUI.addMessage(
-                        "🔧 Looking for API documentation? Here's what's available:\n\n• **REST API**: Create and manage chatbots programmatically\n• **Webhook API**: Receive conversation events\n• **Widget API**: Embed chatbots in your website\n\nCheck the API Reference section in the sidebar!",
-                        'bot'
-                    );
-                    return true;
-                }
-                if (intent === 'help' && message.toLowerCase().includes('integrate')) {
-                    copilotUI.addMessage(
-                        "🔗 Integration guides available:\n\n• **Website Integration**: Add chat widget to your site\n• **CRM Integration**: Connect with Salesforce, HubSpot\n• **Messaging Platforms**: WhatsApp, Facebook Messenger\n• **Custom Integration**: Use our APIs\n\nWhat platform are you integrating with?",
-                        'bot'
-                    );
-                    return true;
-                }
-                if (intent === 'help' && (message.toLowerCase().includes('start') || message.toLowerCase().includes('beginner'))) {
-                    copilotUI.addMessage(
-                        "🚀 New to BotFlo? Start here:\n\n1. **Quick Start Guide**: Build your first chatbot\n2. **Basic Concepts**: Understand flows and nodes\n3. **Templates**: Use pre-built chatbot templates\n4. **Testing**: Learn to test your chatbots\n\nWant me to highlight any of these sections?",
-                        'bot'
-                    );
-                    return true;
-                }
-                return false;
-            };
-            
-            // Show welcome message for docs
-            setTimeout(() => {
-                copilotUI.addMessage(
-                    "📚 Welcome to BotFlo Documentation! I can help you find guides, API references, or troubleshoot issues. What are you looking for?",
-                    'bot'
-                );
-            }, 1000);
-        });
-    </script>
 </body>
 </html>

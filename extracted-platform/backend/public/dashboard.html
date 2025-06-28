@@ -877,50 +877,5 @@
             }
         });
     </script>
-
-    <!-- Smart Co-pilot Integration -->
-    <script src="/js/smart-copilot.js"></script>
-    <script src="/js/smart-copilot-ui.js"></script>
-    <script>
-        // Initialize the Smart BotFlo Co-pilot for dashboard
-        document.addEventListener('DOMContentLoaded', function() {
-            const copilot = new SmartBotFloCopilot();
-            const copilotUI = new SmartCopilotUI(copilot);
-            
-            // Set context for dashboard
-            copilot.setContext({
-                page: 'dashboard',
-                features: ['analytics', 'bots', 'management', 'settings'],
-                userType: 'user'
-            });
-            
-            // Dashboard-specific intents
-            copilot.onIntent = function(intent, message) {
-                if (intent === 'help' && (message.toLowerCase().includes('analytics') || message.toLowerCase().includes('stats'))) {
-                    copilotUI.addMessage(
-                        "📊 Your analytics show how your chatbots are performing! Here you can see:\n• Total conversations\n• User engagement rates\n• Popular conversation paths\n• Response accuracy\n\nClick on any chart for detailed insights!",
-                        'bot'
-                    );
-                    return true;
-                }
-                if (intent === 'help' && message.toLowerCase().includes('create')) {
-                    copilotUI.addMessage(
-                        "🤖 Ready to create a new chatbot? You have several options:\n• Use the Advanced Flow Builder for custom workflows\n• Pick a template from our marketplace\n• Clone an existing bot\n\nWhich approach interests you?",
-                        'bot'
-                    );
-                    return true;
-                }
-                return false;
-            };
-            
-            // Show welcome message for dashboard
-            setTimeout(() => {
-                copilotUI.addMessage(
-                    "📈 Welcome to your Dashboard! Here you can manage your chatbots, view analytics, and track performance. Need help with anything specific?",
-                    'bot'
-                );
-            }, 1000);
-        });
-    </script>
 </body>
 </html>

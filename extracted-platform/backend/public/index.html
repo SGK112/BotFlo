@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 BotFlo Advanced Platform - AI Chatbot Builder 2.0</title>
+    <meta name="description" content="The advanced BotFlo platform with enhanced features, React components, and professional chatbot building tools.">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 800px;
+            text-align: center;
+            animation: fadeInUp 0.8s ease-out;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #fff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .subtitle {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin-bottom: 3rem;
+            line-height: 1.6;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+        .feature {
+            background: rgba(255,255,255,0.1);
+            padding: 2rem;
+            border-radius: 1rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.3s ease;
+        }
+        .feature:hover {
+            transform: translateY(-5px);
+        }
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 3rem;
+        }
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: white;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        .comparison {
+            background: rgba(255,255,255,0.1);
+            padding: 2rem;
+            border-radius: 1rem;
+            margin: 3rem 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .server-info {
+            background: rgba(0,255,0,0.1);
+            border: 1px solid rgba(0,255,0,0.3);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            font-family: monospace;
+        }
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            .buttons { flex-direction: column; }
+            .btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="badge">🚀 ADVANCED PLATFORM v2.0</div>
+        
+        <h1>BotFlo Advanced</h1>
+        
+        <p class="subtitle">
+            Welcome to the enhanced BotFlo platform with React components, 
+            advanced features, and professional chatbot building tools.
+        </p>
+
+        <div class="server-info">
+            <strong>🌐 Advanced Platform Server</strong><br>
+            Running on: <strong>localhost:3002</strong><br>
+            Original Platform: <strong>localhost:3000</strong>
+        </div>
+
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">⚛️</div>
+                <h3>React Components</h3>
+                <p>Advanced UI components built with React for professional chatbot interfaces</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🎨</div>
+                <h3>Enhanced Builder</h3>
+                <p>Visual flow builder with drag-and-drop components and advanced customization</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🔧</div>
+                <h3>API Bridge</h3>
+                <p>Advanced API integration layer for connecting external services and data</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">📊</div>
+                <h3>Analytics</h3>
+                <p>Detailed conversation analytics and performance monitoring tools</p>
+            </div>
+        </div>
+
+        <div class="comparison">
+            <h3>🆚 Platform Comparison</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 1rem; text-align: left;">
+                <div>
+                    <h4>Original Platform (Port 3000)</h4>
+                    <ul style="list-style: none; padding: 0;">
+                        <li>✅ Basic chatbot builder</li>
+                        <li>✅ Simple templates</li>
+                        <li>✅ Core functionality</li>
+                        <li>✅ Standard marketplace</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Advanced Platform (Port 3002)</h4>
+                    <ul style="list-style: none; padding: 0;">
+                        <li>🚀 React-powered UI</li>
+                        <li>🚀 Advanced flow builder</li>
+                        <li>🚀 API integrations</li>
+                        <li>🚀 Enhanced analytics</li>
+                        <li>🚀 Professional features</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <a href="/botflo-marketplace.html" class="btn">
+                🛍️ Advanced Marketplace
+            </a>
+            <a href="/chatbot-builder-pro.html" class="btn">
+                🎨 Pro Builder
+            </a>
+            <a href="/visual-bot-builder-enhanced.html" class="btn">
+                🚀 Visual Builder 2.0
+            </a>
+            <a href="/features-demo.html" class="btn btn-secondary">
+                ✨ Feature Demo
+            </a>
+            <a href="http://localhost:3000" class="btn btn-secondary" target="_blank">
+                📱 Original Platform
+            </a>
+        </div>
+
+        <div style="margin-top: 3rem; opacity: 0.8; font-size: 0.875rem;">
+            <p>🎯 This is the <strong>advanced version</strong> extracted from the zip file</p>
+            <p>Compare with the original at <a href="http://localhost:3000" style="color: #e0e7ff;">localhost:3000</a></p>
+        </div>
+    </div>
+</body>
+</html>

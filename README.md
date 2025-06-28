@@ -1,25 +1,25 @@
-# ChatBot Builder Pro 🤖
+# BotFlo.ai - Advanced No-Code AI Chatbot Builder Platform 🤖
 
-A powerful, no-code chatbot builder with drag-and-drop functionality and real-time customization.
-
-## 🚀 Live Demo
+A powerful, professional-grade chatbot builder with drag-and-drop functionality, AI integration, and real-time customization.
 
 ## 🚀 Live Demo
 
-- **🌐 Main Platform**: [https://sgk112.github.io/chatflo/](https://sgk112.github.io/chatflo/)
-- **📋 Professional Landing**: [https://sgk112.github.io/chatflo/public/chatbot-builder-landing.html](https://sgk112.github.io/chatflo/public/chatbot-builder-landing.html)
-- **🎯 Live Demo**: [https://sgk112.github.io/chatflo/public/demo.html](https://sgk112.github.io/chatflo/public/demo.html)
+### 🌐 Local Development Platform
+- **� Main Platform**: `http://localhost:3000` (when server is running)
+- **📋 Enhanced Designer**: `http://localhost:3000/enhanced-chatbot-designer.html`
+- **🎯 Marketplace**: `http://localhost:3000/botflo-marketplace.html`
 
-### 🛠️ Builder Options
-- **🚀 Pro Builder**: [https://sgk112.github.io/chatflo/public/chatbot-builder-pro.html](https://sgk112.github.io/chatflo/public/chatbot-builder-pro.html)
-- **🔧 Advanced Flow Builder**: [https://sgk112.github.io/chatflo/public/advanced-flow-builder.html](https://sgk112.github.io/chatflo/public/advanced-flow-builder.html)
-- **🎯 Simple Builder**: [https://sgk112.github.io/chatflo/public/chatbot.html](https://sgk112.github.io/chatflo/public/chatbot.html)
-- **📋 Features Overview**: [https://sgk112.github.io/chatflo/public/features-comprehensive.html](https://sgk112.github.io/chatflo/public/features-comprehensive.html)
+### 🛠️ Builder Options (Local)
+- **🚀 Enhanced Designer**: `http://localhost:3000/enhanced-chatbot-designer.html`
+- **🔧 Visual Builder**: `http://localhost:3000/visual-bot-builder-enhanced.html` 
+- **🎯 Bot Marketplace**: `http://localhost:3000/botflo-marketplace.html`
+- **📋 Features Overview**: `http://localhost:3000/features.html`
 
-### Local Development
-- **Local Development**: `http://localhost:3000/public/chatbot-builder-landing.html`
-- **Enhanced Demo**: `http://localhost:3000/demo`
-- **Visual Builder**: `http://localhost:3000/builders/visual`
+### 🆕 New Platform Features (Extracted)
+- **Advanced AI Builder**: `http://localhost:3001` (from extracted platform)
+- **Bot Marketplace**: Ready-to-deploy chatbot templates
+- **Payment Integration**: Stripe integration for bot purchases
+- **File Upload Support**: PDF, CSV, image processing
 
 ## ✨ Features
 
@@ -50,8 +50,8 @@ A powerful, no-code chatbot builder with drag-and-drop functionality and real-ti
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/SGK112/chatflo.com.git
-   cd chatflo.com
+   git clone https://github.com/your-username/BotFlo.git
+   cd BotFlo
    ```
 
 2. **Install dependencies**
@@ -150,18 +150,33 @@ SMTP_PASS=your_app_password
 ## 📁 Project Structure
 
 ```
-chatbot-builder/
+BotFlo/
 ├── public/                 # Static frontend files
-│   ├── chatbot-builder-landing.html
+│   ├── enhanced-chatbot-designer.html
+│   ├── botflo-marketplace.html
+│   ├── visual-bot-builder-enhanced.html
 │   ├── features.html
-│   ├── templates.html
 │   ├── pricing.html
-│   ├── builders/
-│   └── ...
-├── server.js              # Express server
+│   └── css/, js/, flow-builder/
+├── extracted-platform/     # New advanced platform
+│   ├── backend/            # Node.js/Python backend
+│   │   ├── api/           # API endpoints
+│   │   ├── models/        # Data models
+│   │   ├── utils/         # Utilities
+│   │   ├── server.js      # Main server
+│   │   └── package.json
+│   └── frontend/          # React components
+│       ├── components/    # UI components
+│       ├── styles/        # CSS files
+│       └── App.jsx        # Main app
+├── api/                   # Original API files
+├── core/                  # Core bot functionality
+├── middleware/            # Express middleware
+├── models/               # Database models
+├── routes/               # API routes
+├── services/             # External services
+├── server.js             # Main Express server
 ├── package.json
-├── Dockerfile
-├── docker-compose.yml
 └── README.md
 ```
 
@@ -285,19 +300,58 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Support**: [/support](http://localhost:3000/support)
 - **Email**: support@chatbotbuilder.com
 
-## 🎉 Demo
+## 🎉 Demo & Platform Access
 
-**🌐 Live Demo**: [https://sgk112.github.io/chatflo.com/public/chatbot-builder-landing.html](https://sgk112.github.io/chatflo.com/public/chatbot-builder-landing.html)
+### 🌐 Local Development (Original Platform)
+**📍 Main Server**: `http://localhost:3000` (when running `npm start`)
 
-**📁 GitHub Repository**: [https://github.com/SGK112/chatflo.com](https://github.com/SGK112/chatflo.com)
+### 🆕 Advanced Platform (Extracted)
+**📍 Enhanced Server**: `http://localhost:3001` (when running extracted platform)
 
-### 🎯 Quick Links
-- **Professional Landing**: [chatbot-builder-landing.html](https://sgk112.github.io/chatflo.com/public/chatbot-builder-landing.html)
-- **🚀 Pro Builder**: [chatbot-builder-pro.html](https://sgk112.github.io/chatflo.com/public/chatbot-builder-pro.html)
-- **🎯 Simple Builder**: [chatbot.html](https://sgk112.github.io/chatflo.com/public/chatbot.html)
-- **🔧 Advanced Flow Builder**: [advanced-flow-builder.html](https://sgk112.github.io/chatflo.com/public/advanced-flow-builder.html)
-- **📋 Features Overview**: [features-comprehensive.html](https://sgk112.github.io/chatflo.com/public/features-comprehensive.html)
+**📁 GitHub Repository**: Update your repository URL here
+
+### 🎯 Quick Local Access
+- **🏠 Main Marketplace**: `http://localhost:3000/botflo-marketplace.html`
+- **🚀 Enhanced Designer**: `http://localhost:3000/enhanced-chatbot-designer.html` 
+- **🎯 Visual Builder**: `http://localhost:3000/visual-bot-builder-enhanced.html`
+- **🔧 Advanced Platform**: `http://localhost:3001` (new React-based platform)
+- **📋 Features Overview**: `http://localhost:3000/features.html`
 
 ---
 
 Built with ❤️ for the AI chatbot community
+
+## 🔄 Recent Updates & Fixes
+
+### 📝 Documentation Fixed
+- ✅ **Repository References**: Updated all links from old "chatflo" GitHub to "BotFlo"
+- ✅ **URL Corrections**: Fixed local development URLs to reflect actual file structure
+- ✅ **Project Structure**: Updated to show both original and extracted platform architectures
+- ✅ **Branding Consistency**: All references now use "BotFlo.ai" branding
+
+### 🚀 Current Platform Status
+
+#### Original BotFlo Platform (Port 3000)
+- **Status**: ✅ **RUNNING** - `http://localhost:3000`
+- **Features**: Drag-and-drop builder, templates, marketplace
+- **Tech**: Node.js + Express + Static frontend
+
+#### Extracted Advanced Platform (Port 3001) 
+- **Status**: ⚠️ **EXTRACTED** - Contains advanced React-based components
+- **Location**: `/extracted-platform/` directory
+- **Features**: React UI, Python/Node.js APIs, file upload, payment integration
+- **Tech**: React + Node.js + Python + MongoDB/Stripe ready
+
+### 🎯 What Caused the Issue?
+
+1. **Documentation Mismatch**: README was pointing to old "chatflo" repository URLs
+2. **Missing Dependencies**: Original server needed `npm install`
+3. **Platform Confusion**: Two different platforms (original vs extracted) with different URLs
+
+### 🛠️ Resolution Steps Taken
+
+1. ✅ Fixed all repository references in README.md
+2. ✅ Updated URLs to reflect actual local development structure  
+3. ✅ Installed missing dependencies (`npm install`)
+4. ✅ Started original BotFlo server successfully on port 3000
+5. ✅ Documented both platform architectures clearly

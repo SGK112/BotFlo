@@ -960,57 +960,5 @@
             }
         });
     </script>
-
-    <!-- Smart Co-pilot Integration -->
-    <script src="/js/smart-copilot.js"></script>
-    <script src="/js/smart-copilot-ui.js"></script>
-    <script>
-        // Initialize the Smart BotFlo Co-pilot for pricing page
-        document.addEventListener('DOMContentLoaded', function() {
-            const copilot = new SmartBotFloCopilot();
-            const copilotUI = new SmartCopilotUI(copilot);
-            
-            // Set context for pricing page
-            copilot.setContext({
-                page: 'pricing',
-                features: ['plans', 'comparison', 'billing', 'features'],
-                userType: 'prospect'
-            });
-            
-            // Pricing-specific intents
-            copilot.onIntent = function(intent, message) {
-                if (intent === 'help' && (message.toLowerCase().includes('plan') || message.toLowerCase().includes('price'))) {
-                    copilotUI.addMessage(
-                        "💰 I can help you choose the right plan! Here's what we offer:\n\n• **Free**: Perfect for testing (100 conversations/month)\n• **Pro**: For growing businesses (5,000 conversations/month)\n• **Enterprise**: For large organizations (unlimited)\n\nWhat's your expected monthly conversation volume?",
-                        'bot'
-                    );
-                    return true;
-                }
-                if (intent === 'help' && message.toLowerCase().includes('difference')) {
-                    copilotUI.addMessage(
-                        "🔍 Key differences between plans:\n\n• **Free**: Basic chatbots, email support\n• **Pro**: Advanced features, API access, priority support\n• **Enterprise**: White-label, custom integrations, dedicated support\n\nNeed specific feature details?",
-                        'bot'
-                    );
-                    return true;
-                }
-                if (intent === 'help' && message.toLowerCase().includes('trial')) {
-                    copilotUI.addMessage(
-                        "🎉 Great news! You can try BotFlo for free with no credit card required. Our Free plan includes:\n\n• 100 conversations per month\n• Basic chatbot templates\n• Community support\n\nReady to start building? Click 'Get Started' above!",
-                        'bot'
-                    );
-                    return true;
-                }
-                return false;
-            };
-            
-            // Show welcome message for pricing page
-            setTimeout(() => {
-                copilotUI.addMessage(
-                    "💡 Looking for the right plan? I'm here to help! Ask me about features, pricing, or which plan would work best for your needs.",
-                    'bot'
-                );
-            }, 1500);
-        });
-    </script>
 </body>
 </html>

@@ -830,69 +830,17 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-content">
-            <h1>🚀 Build AI Chatbots with Advanced Flow Builder</h1>
-            <p>Create sophisticated AI chatbots using our professional visual flow builder. Drag, drop, and connect nodes to design complex conversation flows - no coding required.</p>
+            <h1>🚀 Build AI Chatbots in Minutes</h1>
+            <p>Create powerful AI chatbots without coding. Choose from our marketplace or build custom bots with our intuitive visual builder.</p>
             
             <div class="cta-buttons">
                 <a href="/builders" class="btn btn-primary">
-                    <i class="fas fa-sitemap"></i>
-                    Advanced Flow Builder
+                    <i class="fas fa-rocket"></i>
+                    Start Building Now
                 </a>
                 <a href="/demo" class="btn btn-secondary">
                     <i class="fas fa-play"></i>
                     Try Free Demo
-                </a>
-            </div>
-            
-            <div style="margin-top: 2rem; padding: 1rem; background: rgba(255,255,255,0.1); border-radius: 8px; border: 1px solid rgba(255,255,255,0.2);">
-                <div style="display: flex; align-items: center; gap: 1rem; font-size: 0.9rem; color: rgba(255,255,255,0.9);">
-                    <span><i class="fas fa-check-circle" style="color: #10b981;"></i> Visual Node Editor</span>
-                    <span><i class="fas fa-check-circle" style="color: #10b981;"></i> Component Library</span>
-                    <span><i class="fas fa-check-circle" style="color: #10b981;"></i> Real-time Preview</span>
-                    <span><i class="fas fa-check-circle" style="color: #10b981;"></i> AI Integration</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Advanced Builder Features Section -->
-    <section style="padding: 4rem 0; background: white;">
-        <div style="max-width: 1200px; margin: 0 auto; padding: 0 2rem;">
-            <div style="text-align: center; margin-bottom: 3rem;">
-                <h2 style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--gray-800);">🎨 Professional Flow Builder</h2>
-                <p style="font-size: 1.2rem; color: var(--gray-600); max-width: 600px; margin: 0 auto;">Design sophisticated chatbot conversations with our advanced visual flow builder featuring drag-and-drop components and real-time testing.</p>
-            </div>
-            
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
-                <div style="text-align: center; padding: 2rem; border-radius: 12px; background: var(--gray-50);">
-                    <div style="width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white; font-size: 1.5rem;">
-                        <i class="fas fa-sitemap"></i>
-                    </div>
-                    <h3 style="margin-bottom: 1rem; color: var(--gray-800);">Visual Node Editor</h3>
-                    <p style="color: var(--gray-600);">Drag and drop conversation nodes to build complex chatbot flows. Connect responses, conditions, and actions visually.</p>
-                </div>
-                
-                <div style="text-align: center; padding: 2rem; border-radius: 12px; background: var(--gray-50);">
-                    <div style="width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white; font-size: 1.5rem;">
-                        <i class="fas fa-layer-group"></i>
-                    </div>
-                    <h3 style="margin-bottom: 1rem; color: var(--gray-800);">Component Library</h3>
-                    <p style="color: var(--gray-600);">Access pre-built components for messages, conditions, API calls, and integrations. Save time with proven patterns.</p>
-                </div>
-                
-                <div style="text-align: center; padding: 2rem; border-radius: 12px; background: var(--gray-50);">
-                    <div style="width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white; font-size: 1.5rem;">
-                        <i class="fas fa-cogs"></i>
-                    </div>
-                    <h3 style="margin-bottom: 1rem; color: var(--gray-800);">Properties Panel</h3>
-                    <p style="color: var(--gray-600);">Configure each component with detailed settings. Set conditions, customize responses, and integrate external services.</p>
-                </div>
-            </div>
-            
-            <div style="text-align: center;">
-                <a href="/builders" style="display: inline-flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 1rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600; box-shadow: var(--shadow-lg); transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                    <i class="fas fa-rocket"></i>
-                    Try Advanced Builder Now
                 </a>
             </div>
         </div>
@@ -1811,33 +1759,6 @@
 
         window.addEventListener('offline', () => {
             showNotification('📱 You\'re offline. Some features may be limited.', 'warning');
-        });
-    </script>
-
-    <!-- Smart Co-pilot Integration -->
-    <script src="/js/smart-copilot.js"></script>
-    <script src="/js/smart-copilot-ui.js"></script>
-    <script>
-        // Initialize the Smart BotFlo Co-pilot
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize the copilot with homepage context
-            const copilot = new SmartBotFloCopilot();
-            const copilotUI = new SmartCopilotUI(copilot);
-            
-            // Set context for homepage
-            copilot.setContext({
-                page: 'homepage',
-                features: ['marketplace', 'builder', 'templates', 'pricing'],
-                userType: 'visitor'
-            });
-            
-            // Show a subtle welcome message after a short delay
-            setTimeout(() => {
-                copilotUI.addMessage(
-                    "👋 Welcome to BotFlo! I'm your AI assistant. I can help you discover features, answer questions, or give you a guided tour. What would you like to explore?",
-                    'bot'
-                );
-            }, 2000);
         });
     </script>
 </body>

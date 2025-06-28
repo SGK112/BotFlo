@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting to ChatFlo Pro Builder...</title>
+    <meta http-equiv="refresh" content="0; url=./chatbot-builder-pro.html">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            padding: 2rem;
+        }
+        .logo {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        .message {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        .btn {
+            background: white;
+            color: #667eea;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .features {
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        .spinner {
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top: 3px solid white;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 1rem auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🚀</div>
+        <h1>Welcome to ChatFlo Pro!</h1>
+        <div class="message">
+            We've upgraded your chatbot building experience! Redirecting you to the new and improved builder...
+        </div>
+        
+        <div class="spinner"></div>
+        
+        <a href="./chatbot-builder-pro.html" class="btn">
+            Go to New Builder →
+        </a>
+        
+        <div class="features">
+            <strong>🎉 What's New:</strong><br>
+            ✅ Real drag & drop functionality<br>
+            ✅ Live chatbot preview & testing<br>
+            ✅ Data integrations (Google Sheets, Excel, PDFs)<br>
+            ✅ Professional templates<br>
+            ✅ No external dependencies = faster loading!
+        </div>
+    </div>
+
+    <script>
+        // Automatic redirect with a short delay to show the message
+        setTimeout(() => {
+            window.location.href = './chatbot-builder-pro.html';
+        }, 3000);
+        
+        // Show loading message
+        console.log('🚀 Redirecting to ChatFlo Pro Builder - the future of chatbot building!');
+    </script>
+</body>
+</html>

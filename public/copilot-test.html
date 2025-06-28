@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Co-pilot Test - BotFlo</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        
+        .test-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .test-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        
+        button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .status {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        
+        .status.success { border-left: 4px solid #10b981; }
+        .status.error { border-left: 4px solid #ef4444; }
+        .status.info { border-left: 4px solid #3b82f6; }
+        
+        .navigation-links {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .navigation-links a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 8px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        .navigation-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 Smart Co-pilot Test Suite</h1>
+        
+        <div class="test-section">
+            <h3>🔍 Co-pilot Status Check</h3>
+            <div class="test-buttons">
+                <button onclick="checkCopilotLoaded()">Check Co-pilot Loaded</button>
+                <button onclick="checkUIInitialized()">Check UI Initialized</button>
+                <button onclick="testContextDetection()">Test Context Detection</button>
+                <button onclick="showCopilotWidget()">Show Co-pilot Widget</button>
+            </div>
+            <div id="status-check" class="status"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>💬 Interaction Tests</h3>
+            <div class="test-buttons">
+                <button onclick="sendTestMessage()">Send Test Message</button>
+                <button onclick="triggerHelp()">Trigger Help Intent</button>
+                <button onclick="triggerTour()">Trigger Tour Intent</button>
+                <button onclick="testQuickActions()">Test Quick Actions</button>
+            </div>
+            <div id="interaction-test" class="status"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>🎯 Context-Aware Tests</h3>
+            <div class="test-buttons">
+                <button onclick="simulatePageContext('homepage')">Simulate Homepage</button>
+                <button onclick="simulatePageContext('builder')">Simulate Builder</button>
+                <button onclick="simulatePageContext('dashboard')">Simulate Dashboard</button>
+                <button onclick="simulatePageContext('pricing')">Simulate Pricing</button>
+            </div>
+            <div id="context-test" class="status"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>🔧 Advanced Features</h3>
+            <div class="test-buttons">
+                <button onclick="testKnowledgeBase()">Test Knowledge Base</button>
+                <button onclick="testIntentAnalysis()">Test Intent Analysis</button>
+                <button onclick="testConversationHistory()">Test Conversation History</button>
+                <button onclick="exportTestReport()">Export Test Report</button>
+            </div>
+            <div id="advanced-test" class="status"></div>
+        </div>
+        
+        <div class="navigation-links">
+            <a href="/">🏠 Homepage</a>
+            <a href="/builders">🛠️ Builder</a>
+            <a href="/dashboard">📊 Dashboard</a>
+            <a href="/pricing">💰 Pricing</a>
+            <a href="/docs">📚 Docs</a>
+        </div>
+    </div>
+
+    <!-- Smart Co-pilot Integration -->
+    <script src="/js/smart-copilot.js"></script>
+    <script src="/js/smart-copilot-ui.js"></script>
+    
+    <script>
+        let testCopilot, testCopilotUI;
+        let testResults = {};
+        
+        // Initialize test environment
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                initializeTestCopilot();
+                updateStatus('status-check', 'Test environment initialized. Co-pilot integration ready for testing.', 'info');
+            }, 1000);
+        });
+        
+        function initializeTestCopilot() {
+            try {
+                testCopilot = new SmartBotFloCopilot();
+                testCopilotUI = new SmartCopilotUI(testCopilot);
+                
+                testCopilot.setContext({
+                    page: 'test-suite',
+                    features: ['testing', 'validation', 'debugging'],
+                    userType: 'tester'
+                });
+                
+                testResults.initialized = true;
+                updateStatus('status-check', 'Co-pilot and UI successfully initialized!', 'success');
+            } catch (error) {
+                testResults.initialized = false;
+                updateStatus('status-check', `Initialization failed: ${error.message}`, 'error');
+            }
+        }
+        
+        function checkCopilotLoaded() {
+            const loaded = typeof SmartBotFloCopilot !== 'undefined';
+            testResults.copilotLoaded = loaded;
+            updateStatus('status-check', 
+                loaded ? '✅ SmartBotFloCopilot class loaded successfully' : '❌ SmartBotFloCopilot class not found',
+                loaded ? 'success' : 'error'
+            );
+        }
+        
+        function checkUIInitialized() {
+            const uiLoaded = typeof SmartCopilotUI !== 'undefined';
+            const widgetExists = document.getElementById('smart-copilot-widget') !== null;
+            const triggerExists = document.getElementById('smart-copilot-trigger') !== null;
+            
+            testResults.uiInitialized = uiLoaded && widgetExists && triggerExists;
+            
+            const status = `
+UI Class Loaded: ${uiLoaded ? '✅' : '❌'}
+Widget Element: ${widgetExists ? '✅' : '❌'}
+Trigger Element: ${triggerExists ? '✅' : '❌'}
+            `.trim();
+            
+            updateStatus('status-check', status, testResults.uiInitialized ? 'success' : 'error');
+        }
+        
+        function testContextDetection() {
+            if (!testCopilot) {
+                updateStatus('status-check', '❌ Co-pilot not initialized', 'error');
+                return;
+            }
+            
+            const context = testCopilot.detectUserContext();
+            testResults.contextDetection = !!context;
+            
+            updateStatus('status-check', 
+                `Context Detection:\nPage: ${context.page || 'unknown'}\nUser Type: ${context.userType || 'unknown'}\nTime: ${context.timeOfDay || 'unknown'}`,
+                'info'
+            );
+        }
+        
+        function showCopilotWidget() {
+            if (!testCopilotUI) {
+                updateStatus('status-check', '❌ Co-pilot UI not initialized', 'error');
+                return;
+            }
+            
+            try {
+                testCopilotUI.open();
+                testResults.widgetShow = true;
+                updateStatus('status-check', '✅ Co-pilot widget opened successfully', 'success');
+            } catch (error) {
+                testResults.widgetShow = false;
+                updateStatus('status-check', `❌ Failed to open widget: ${error.message}`, 'error');
+            }
+        }
+        
+        function sendTestMessage() {
+            if (!testCopilotUI) {
+                updateStatus('interaction-test', '❌ Co-pilot UI not initialized', 'error');
+                return;
+            }
+            
+            try {
+                testCopilotUI.addMessage('This is a test message', 'user');
+                const response = testCopilot.generateResponse('Hello, this is a test');
+                testCopilotUI.addMessage(response, 'bot');
+                
+                testResults.messaging = true;
+                updateStatus('interaction-test', '✅ Test message sent and response generated', 'success');
+            } catch (error) {
+                testResults.messaging = false;
+                updateStatus('interaction-test', `❌ Messaging failed: ${error.message}`, 'error');
+            }
+        }
+        
+        function triggerHelp() {
+            if (!testCopilot) {
+                updateStatus('interaction-test', '❌ Co-pilot not initialized', 'error');
+                return;
+            }
+            
+            const intent = testCopilot.analyzeIntent('I need help with building chatbots');
+            testResults.helpIntent = intent === 'help';
+            
+            updateStatus('interaction-test', 
+                `Help Intent Analysis:\nMessage: "I need help with building chatbots"\nDetected Intent: ${intent}\nSuccess: ${intent === 'help' ? '✅' : '❌'}`,
+                intent === 'help' ? 'success' : 'error'
+            );
+        }
+        
+        function triggerTour() {
+            if (!testCopilot) {
+                updateStatus('interaction-test', '❌ Co-pilot not initialized', 'error');
+                return;
+            }
+            
+            const intent = testCopilot.analyzeIntent('Can you give me a tour?');
+            testResults.tourIntent = intent === 'tour';
+            
+            updateStatus('interaction-test', 
+                `Tour Intent Analysis:\nMessage: "Can you give me a tour?"\nDetected Intent: ${intent}\nSuccess: ${intent === 'tour' ? '✅' : '❌'}`,
+                intent === 'tour' ? 'success' : 'error'
+            );
+        }
+        
+        function testQuickActions() {
+            if (!testCopilotUI) {
+                updateStatus('interaction-test', '❌ Co-pilot UI not initialized', 'error');
+                return;
+            }
+            
+            const quickActions = document.querySelectorAll('.quick-action');
+            testResults.quickActions = quickActions.length > 0;
+            
+            updateStatus('interaction-test', 
+                `Quick Actions Found: ${quickActions.length}\nActions: ${Array.from(quickActions).map(btn => btn.textContent).join(', ')}`,
+                quickActions.length > 0 ? 'success' : 'error'
+            );
+        }
+        
+        function simulatePageContext(page) {
+            if (!testCopilot) {
+                updateStatus('context-test', '❌ Co-pilot not initialized', 'error');
+                return;
+            }
+            
+            const contexts = {
+                homepage: { page: 'homepage', features: ['marketplace', 'hero'], userType: 'visitor' },
+                builder: { page: 'builder', features: ['nodes', 'workspace'], userType: 'builder' },
+                dashboard: { page: 'dashboard', features: ['analytics', 'management'], userType: 'user' },
+                pricing: { page: 'pricing', features: ['plans', 'billing'], userType: 'prospect' }
+            };
+            
+            try {
+                testCopilot.setContext(contexts[page]);
+                const response = testCopilot.generateContextualHelp();
+                
+                testResults[`${page}Context`] = true;
+                updateStatus('context-test', 
+                    `${page.charAt(0).toUpperCase() + page.slice(1)} Context Set:\n${response}`,
+                    'success'
+                );
+            } catch (error) {
+                testResults[`${page}Context`] = false;
+                updateStatus('context-test', `❌ Failed to set ${page} context: ${error.message}`, 'error');
+            }
+        }
+        
+        function testKnowledgeBase() {
+            if (!testCopilot) {
+                updateStatus('advanced-test', '❌ Co-pilot not initialized', 'error');
+                return;
+            }
+            
+            const knowledgeKeys = Object.keys(testCopilot.knowledge);
+            const hasPages = testCopilot.knowledge.pages && Object.keys(testCopilot.knowledge.pages).length > 0;
+            const hasFeatures = testCopilot.knowledge.features && Object.keys(testCopilot.knowledge.features).length > 0;
+            
+            testResults.knowledgeBase = hasPages && hasFeatures;
+            
+            updateStatus('advanced-test', 
+                `Knowledge Base Structure:\nTop-level keys: ${knowledgeKeys.join(', ')}\nPages defined: ${hasPages ? '✅' : '❌'}\nFeatures defined: ${hasFeatures ? '✅' : '❌'}`,
+                testResults.knowledgeBase ? 'success' : 'error'
+            );
+        }
+        
+        function testIntentAnalysis() {
+            if (!testCopilot) {
+                updateStatus('advanced-test', '❌ Co-pilot not initialized', 'error');
+                return;
+            }
+            
+            const testCases = [
+                { message: 'I need help', expected: 'help' },
+                { message: 'Show me around', expected: 'tour' },
+                { message: 'How much does it cost?', expected: 'pricing' },
+                { message: 'Just saying hello', expected: 'greeting' }
+            ];
+            
+            let successCount = 0;
+            const results = testCases.map(test => {
+                const detected = testCopilot.analyzeIntent(test.message);
+                const success = detected === test.expected;
+                if (success) successCount++;
+                return `"${test.message}" → ${detected} (expected: ${test.expected}) ${success ? '✅' : '❌'}`;
+            });
+            
+            testResults.intentAnalysis = successCount === testCases.length;
+            
+            updateStatus('advanced-test', 
+                `Intent Analysis Results (${successCount}/${testCases.length}):\n${results.join('\n')}`,
+                successCount > testCases.length / 2 ? 'success' : 'error'
+            );
+        }
+        
+        function testConversationHistory() {
+            if (!testCopilot) {
+                updateStatus('advanced-test', '❌ Co-pilot not initialized', 'error');
+                return;
+            }
+            
+            const initialLength = testCopilot.conversationHistory.length;
+            testCopilot.addToHistory('user', 'Test message 1');
+            testCopilot.addToHistory('bot', 'Test response 1');
+            const finalLength = testCopilot.conversationHistory.length;
+            
+            testResults.conversationHistory = finalLength > initialLength;
+            
+            updateStatus('advanced-test', 
+                `Conversation History:\nInitial length: ${initialLength}\nAfter adding 2 messages: ${finalLength}\nHistory tracking: ${testResults.conversationHistory ? '✅' : '❌'}`,
+                testResults.conversationHistory ? 'success' : 'error'
+            );
+        }
+        
+        function exportTestReport() {
+            const report = {
+                timestamp: new Date().toISOString(),
+                testResults: testResults,
+                userAgent: navigator.userAgent,
+                url: window.location.href
+            };
+            
+            const reportText = JSON.stringify(report, null, 2);
+            const blob = new Blob([reportText], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `copilot-test-report-${Date.now()}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            updateStatus('advanced-test', '✅ Test report exported successfully', 'success');
+        }
+        
+        function updateStatus(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = `status ${type}`;
+        }
+    </script>
+</body>
+</html>
