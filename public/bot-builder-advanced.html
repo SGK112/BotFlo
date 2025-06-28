@@ -7,9 +7,7 @@
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="alternate icon" href="/favicon.ico">
     <link rel="manifest" href="/site.webmanifest">
     
     <!-- Shared Navigation -->
@@ -18,7 +16,6 @@
     
     <!-- External Dependencies -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/svg.js@3.2.0/dist/svg.min.js"></script>
     
     <!-- Modular CSS -->
     <link rel="stylesheet" href="flow-builder/css/base.css">
@@ -111,6 +108,17 @@
         .builder-toolbar .btn-success:hover {
             background: var(--success-hover, #059669);
         }
+        
+        /* Loading animation */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Hide loading state after initialization */
+        .main-container.loaded #loading-state {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -121,13 +129,13 @@
             <div class="chatbot-name">Advanced Flow Builder</div>
         </div>
         <div class="header-actions">
-            <button class="btn btn-secondary" onclick="flowBuilder.testChatbot()">
+            <button class="btn btn-secondary" onclick="handleBuilderAction('test')">
                 <i class="fas fa-play"></i> Test
             </button>
-            <button class="btn btn-primary" onclick="flowBuilder.saveChatbot()">
+            <button class="btn btn-primary" onclick="handleBuilderAction('save')">
                 <i class="fas fa-save"></i> Save
             </button>
-            <button class="btn btn-success" onclick="flowBuilder.deployChatbot()">
+            <button class="btn btn-success" onclick="handleBuilderAction('deploy')">
                 <i class="fas fa-rocket"></i> Deploy
             </button>
         </div>
@@ -135,6 +143,32 @@
 
     <!-- Main Container -->
     <div class="main-container">
+        <!-- Loading State -->
+        <div id="loading-state" style="
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 1000;
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        ">
+            <div style="
+                width: 40px;
+                height: 40px;
+                border: 4px solid #f3f4f6;
+                border-top: 4px solid #667eea;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+                margin: 0 auto 1rem;
+            "></div>
+            <h3 style="color: #1f2937; margin: 0 0 0.5rem 0; font-size: 1.1rem;">Loading Flow Builder</h3>
+            <p style="color: #6b7280; margin: 0; font-size: 0.9rem;">Initializing workspace components...</p>
+        </div>
+        
         <!-- Left Sidebar - Component Library -->
         <aside class="sidebar" id="component-library">
             <!-- Will be populated by ComponentLibrary module -->
@@ -173,10 +207,52 @@
     
     <!-- Initialize Application -->
     <script type="module">
-        import { FlowBuilder } from './flow-builder/js/FlowBuilder.js';
-        
-        // Initialize the application
-        window.flowBuilder = new FlowBuilder();
+        try {
+            const { FlowBuilder } = await import('./flow-builder/js/FlowBuilder.js');
+            
+            // Initialize the application
+            window.flowBuilder = new FlowBuilder();
+            
+            // Hide loading state
+            const mainContainer = document.querySelector('.main-container');
+            const loadingState = document.getElementById('loading-state');
+            if (mainContainer && loadingState) {
+                mainContainer.classList.add('loaded');
+                setTimeout(() => {
+                    loadingState.style.display = 'none';
+                }, 500);
+            }
+            
+            // Development helpers
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                window.flowBuilderDebug = window.flowBuilder;
+                console.log('FlowBuilder Debug Mode:', window.flowBuilderDebug);
+            }
+            
+            console.log('FlowBuilder initialized successfully');
+        } catch (error) {
+            console.error('Failed to initialize FlowBuilder:', error);
+            
+            // Show user-friendly error message
+            const notification = document.getElementById('notification');
+            if (notification) {
+                notification.style.display = 'block';
+                notification.style.background = '#dc2626';
+                notification.style.color = 'white';
+                notification.style.padding = '1rem';
+                notification.style.borderRadius = '8px';
+                notification.style.position = 'fixed';
+                notification.style.top = '20px';
+                notification.style.right = '20px';
+                notification.style.zIndex = '9999';
+                notification.innerHTML = `
+                    <strong>Builder Error:</strong> Failed to load the flow builder. Please refresh the page.
+                    <button onclick="location.reload()" style="margin-left: 1rem; background: white; color: #dc2626; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">
+                        Refresh
+                    </button>
+                `;
+            }
+        }
         
         // Global error handling
         window.addEventListener('error', (event) => {
@@ -186,10 +262,39 @@
             }
         });
         
-        // Development helpers
-        if (process?.env?.NODE_ENV === 'development') {
-            window.flowBuilderDebug = window.flowBuilder;
-        }
+        // Handle unhandled promise rejections
+        window.addEventListener('unhandledrejection', (event) => {
+            console.error('Unhandled promise rejection:', event.reason);
+            event.preventDefault();
+        });
+        
+        // Safe action handler for builder buttons
+        window.handleBuilderAction = function(action) {
+            if (!window.flowBuilder) {
+                console.error('FlowBuilder not initialized');
+                alert('Builder not ready. Please wait a moment and try again.');
+                return;
+            }
+            
+            try {
+                switch(action) {
+                    case 'test':
+                        window.flowBuilder.testChatbot();
+                        break;
+                    case 'save':
+                        window.flowBuilder.saveChatbot();
+                        break;
+                    case 'deploy':
+                        window.flowBuilder.deployChatbot();
+                        break;
+                    default:
+                        console.error('Unknown action:', action);
+                }
+            } catch (error) {
+                console.error(`Error executing ${action}:`, error);
+                alert(`Error executing ${action}. Please check the console for details.`);
+            }
+        };
     </script>
 
     <!-- BotFlo Co-pilot Integration -->
@@ -199,24 +304,32 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Wait for the main app to initialize
             setTimeout(() => {
-                if (typeof BotFloCopilot !== 'undefined') {
-                    const copilot = new BotFloCopilot();
-                    
-                    // Set context for the advanced builder
-                    copilot.setContext({
-                        page: 'builder',
-                        tool: 'advanced-flow-builder',
-                        features: ['nodes', 'connections', 'properties', 'testing', 'deployment'],
-                        userType: 'builder'
-                    });
-                    
-                    // Show welcome message for builder
-                    setTimeout(() => {
-                        copilot.addMessage(
-                            "🚀 Welcome to the Advanced Flow Builder! I can help you create amazing chatbot flows. Want a quick tour or have questions about any features?",
-                            'bot'
-                        );
-                    }, 1500);
+                try {
+                    if (typeof BotFloCopilot !== 'undefined') {
+                        const copilot = new BotFloCopilot();
+                        
+                        // Set context for the advanced builder
+                        copilot.setContext({
+                            page: 'builder',
+                            tool: 'advanced-flow-builder',
+                            features: ['nodes', 'connections', 'properties', 'testing', 'deployment'],
+                            userType: 'builder'
+                        });
+                        
+                        // Show welcome message for builder
+                        setTimeout(() => {
+                            copilot.addMessage(
+                                "🚀 Welcome to the Advanced Flow Builder! I can help you create amazing chatbot flows. Want a quick tour or have questions about any features?",
+                                'bot'
+                            );
+                        }, 1500);
+                        
+                        console.log('BotFlo Copilot initialized successfully');
+                    } else {
+                        console.warn('BotFlo Copilot not available');
+                    }
+                } catch (error) {
+                    console.error('Failed to initialize BotFlo Copilot:', error);
                 }
             }, 2000);
         });

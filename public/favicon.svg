@@ -1,41 +1,67 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
   <defs>
     <!-- Enhanced gradient for Font Awesome style robot -->
     <linearGradient id="robotGradient" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#667eea"/>
-      <stop offset="50%" stop-color="#764ba2"/>
+      <stop offset="30%" stop-color="#764ba2"/>
+      <stop offset="70%" stop-color="#8b5cf6"/>
       <stop offset="100%" stop-color="#FFD700"/>
+    </linearGradient>
+    
+    <!-- Body gradient -->
+    <linearGradient id="bodyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4f46e5"/>
+      <stop offset="50%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#1e40af"/>
     </linearGradient>
     
     <!-- Shadow filter -->
     <filter id="dropShadow" x="-50%" y="-50%" width="200%" height="200%">
-      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="rgba(102, 126, 234, 0.4)"/>
+      <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="rgba(102, 126, 234, 0.5)"/>
+    </filter>
+    
+    <!-- Glow filter -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
     </filter>
   </defs>
 
-  <!-- Font Awesome Robot style recreation -->
   <!-- Main body/head -->
-  <rect x="8" y="10" width="16" height="18" rx="3" ry="3" fill="url(#robotGradient)" filter="url(#dropShadow)"/>
+  <rect x="14" y="18" width="36" height="40" rx="6" ry="6" fill="url(#bodyGradient)" filter="url(#dropShadow)"/>
   
   <!-- Antenna -->
-  <line x1="16" y1="6" x2="16" y2="10" stroke="url(#robotGradient)" stroke-width="2" stroke-linecap="round"/>
-  <circle cx="16" cy="6" r="2" fill="url(#robotGradient)"/>
+  <line x1="32" y1="8" x2="32" y2="18" stroke="url(#robotGradient)" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="32" cy="8" r="4" fill="url(#robotGradient)" filter="url(#glow)"/>
   
   <!-- Eyes -->
-  <circle cx="12" cy="16" r="2" fill="white"/>
-  <circle cx="20" cy="16" r="2" fill="white"/>
-  <circle cx="12" cy="16" r="1" fill="#1e293b"/>
-  <circle cx="20" cy="16" r="1" fill="#1e293b"/>
+  <circle cx="24" cy="30" r="4" fill="white"/>
+  <circle cx="40" cy="30" r="4" fill="white"/>
+  <circle cx="24" cy="30" r="2.5" fill="#1e293b"/>
+  <circle cx="40" cy="30" r="2.5" fill="#1e293b"/>
+  
+  <!-- Eye highlights -->
+  <circle cx="25" cy="29" r="1" fill="white" opacity="0.8"/>
+  <circle cx="41" cy="29" r="1" fill="white" opacity="0.8"/>
   
   <!-- Mouth -->
-  <rect x="13" y="20" width="6" height="2" rx="1" fill="white"/>
+  <rect x="26" y="40" width="12" height="4" rx="2" fill="white"/>
   
   <!-- Arms -->
-  <rect x="4" y="18" width="4" height="2" rx="1" fill="url(#robotGradient)"/>
-  <rect x="24" y="18" width="4" height="2" rx="1" fill="url(#robotGradient)"/>
+  <rect x="6" y="32" width="8" height="4" rx="2" fill="url(#robotGradient)"/>
+  <rect x="50" y="32" width="8" height="4" rx="2" fill="url(#robotGradient)"/>
+  
+  <!-- Control panel -->
+  <rect x="20" y="48" width="24" height="6" rx="3" fill="rgba(255,255,255,0.2)"/>
   
   <!-- Control panel dots -->
-  <circle cx="14" cy="24" r="1" fill="#FFD700"/>
-  <circle cx="16" cy="24" r="1" fill="#10B981"/>
-  <circle cx="18" cy="24" r="1" fill="#EF4444"/>
+  <circle cx="26" cy="51" r="2" fill="#FFD700"/>
+  <circle cx="32" cy="51" r="2" fill="#10B981"/>
+  <circle cx="38" cy="51" r="2" fill="#EF4444"/>
+  
+  <!-- Additional details -->
+  <rect x="28" y="22" width="8" height="2" rx="1" fill="rgba(255,255,255,0.3)"/>
 </svg>
