@@ -94,10 +94,17 @@ body {
 .botflo-logo i {
     font-size: 1.75rem;
     margin-right: 0.75rem;
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #FFD700 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    filter: drop-shadow(0 2px 4px rgba(102, 126, 234, 0.3));
+    transition: all 0.3s ease;
+}
+
+.botflo-logo:hover i {
+    transform: scale(1.1) rotate(5deg);
+    filter: drop-shadow(0 4px 8px rgba(102, 126, 234, 0.5));
 }
 
 /* Main Navigation Menu */

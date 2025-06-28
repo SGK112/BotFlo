@@ -37,25 +37,7 @@ class BotFloCopilot {
             <div id="botflo-copilot" class="botflo-copilot">
                 <div class="copilot-toggle" id="copilot-toggle">
                     <div class="copilot-avatar">
-                        <svg width="24" height="24" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="7" y="12" width="18" height="16" rx="3" ry="3" fill="#667eea" stroke="#4c63d2" stroke-width="0.5"/>
-                            <rect x="10" y="4" width="12" height="10" rx="2" ry="2" fill="#FFD700" stroke="#E5A503" stroke-width="0.5"/>
-                            <line x1="13" y1="4" x2="13" y2="1" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round"/>
-                            <circle cx="13" cy="1" r="1.5" fill="#FFD700"/>
-                            <line x1="19" y1="4" x2="19" y2="1" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round"/>
-                            <circle cx="19" cy="1" r="1.5" fill="#FFD700"/>
-                            <circle cx="13.5" cy="8" r="2" fill="#60A5FA" stroke="#1E40AF" stroke-width="0.3"/>
-                            <circle cx="18.5" cy="8" r="2" fill="#60A5FA" stroke="#1E40AF" stroke-width="0.3"/>
-                            <circle cx="13.5" cy="8" r="0.8" fill="#1E293B"/>
-                            <circle cx="18.5" cy="8" r="0.8" fill="#1E293B"/>
-                            <circle cx="13.8" cy="7.7" r="0.3" fill="white" opacity="0.8"/>
-                            <circle cx="18.8" cy="7.7" r="0.3" fill="white" opacity="0.8"/>
-                            <rect x="14" y="10.5" width="4" height="1.5" rx="0.75" fill="#374151" stroke="#1F2937" stroke-width="0.2"/>
-                            <rect x="11" y="16" width="10" height="6" rx="1" fill="#4C63D2" stroke="#3B52CC" stroke-width="0.3"/>
-                            <circle cx="13" cy="18" r="0.8" fill="#FFD700"/>
-                            <circle cx="16" cy="18" r="0.8" fill="#10B981"/>
-                            <circle cx="19" cy="18" r="0.8" fill="#EF4444"/>
-                        </svg>
+                        <i class="fas fa-robot"></i>
                         <div class="copilot-pulse"></div>
                     </div>
                     <span class="copilot-label">BotFlo Assistant</span>
@@ -65,14 +47,7 @@ class BotFloCopilot {
                     <div class="copilot-header">
                         <div class="copilot-info">
                             <div class="copilot-avatar-small">
-                                <svg width="20" height="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-                                    <rect x="7" y="12" width="18" height="16" rx="3" ry="3" fill="#667eea"/>
-                                    <rect x="10" y="4" width="12" height="10" rx="2" ry="2" fill="#FFD700"/>
-                                    <circle cx="13.5" cy="8" r="1.5" fill="#60A5FA"/>
-                                    <circle cx="18.5" cy="8" r="1.5" fill="#60A5FA"/>
-                                    <circle cx="13.5" cy="8" r="0.6" fill="#1E293B"/>
-                                    <circle cx="18.5" cy="8" r="0.6" fill="#1E293B"/>
-                                </svg>
+                                <i class="fas fa-robot"></i>
                             </div>
                             <div>
                                 <h4>BotFlo Copilot</h4>
@@ -152,6 +127,20 @@ class BotFloCopilot {
                 font-size: 16px;
             }
 
+            .copilot-avatar i {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #FFD700 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+                transition: all 0.3s ease;
+            }
+
+            .copilot-toggle:hover .copilot-avatar i {
+                transform: scale(1.1) rotate(5deg);
+                filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+            }
+
             .copilot-pulse {
                 position: absolute;
                 top: -2px;
@@ -219,6 +208,14 @@ class BotFloCopilot {
                 align-items: center;
                 justify-content: center;
                 font-size: 12px;
+            }
+
+            .copilot-avatar-small i {
+                background: linear-gradient(135deg, #FFD700 0%, #FFF 50%, #FFD700 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
             }
 
             .copilot-info h4 {

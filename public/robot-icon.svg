@@ -1,86 +1,41 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
   <defs>
-    <!-- Main body gradient - Chatbot Blue -->
-    <linearGradient id="bodyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+    <!-- Enhanced gradient for Font Awesome style robot -->
+    <linearGradient id="robotGradient" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#667eea"/>
-      <stop offset="100%" stop-color="#5a67d8"/>
+      <stop offset="50%" stop-color="#764ba2"/>
+      <stop offset="100%" stop-color="#FFD700"/>
     </linearGradient>
     
-    <!-- Head gradient - Banana Yellow -->
-    <linearGradient id="headGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#FFD700"/>
-      <stop offset="100%" stop-color="#F59E0B"/>
-    </linearGradient>
-    
-    <!-- Eyes gradient - Bright Blue -->
-    <radialGradient id="eyeGradient" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#60A5FA"/>
-      <stop offset="100%" stop-color="#3B82F6"/>
-    </radialGradient>
-    
-    <!-- Antenna gradient -->
-    <linearGradient id="antennaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#F59E0B"/>
-      <stop offset="100%" stop-color="#D97706"/>
-    </linearGradient>
+    <!-- Shadow filter -->
+    <filter id="dropShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="rgba(102, 126, 234, 0.4)"/>
+    </filter>
   </defs>
 
-  <!-- Robot Body -->
-  <rect x="7" y="12" width="18" height="16" rx="3" ry="3" fill="url(#bodyGradient)" stroke="#4c63d2" stroke-width="0.5"/>
+  <!-- Font Awesome Robot style recreation -->
+  <!-- Main body/head -->
+  <rect x="8" y="10" width="16" height="18" rx="3" ry="3" fill="url(#robotGradient)" filter="url(#dropShadow)"/>
   
-  <!-- Robot Head -->
-  <rect x="10" y="4" width="12" height="10" rx="2" ry="2" fill="url(#headGradient)" stroke="#E5A503" stroke-width="0.5"/>
-  
-  <!-- Left Antenna -->
-  <line x1="13" y1="4" x2="13" y2="1" stroke="url(#antennaGradient)" stroke-width="1.5" stroke-linecap="round"/>
-  <circle cx="13" cy="1" r="1.5" fill="#FFD700"/>
-  
-  <!-- Right Antenna -->
-  <line x1="19" y1="4" x2="19" y2="1" stroke="url(#antennaGradient)" stroke-width="1.5" stroke-linecap="round"/>
-  <circle cx="19" cy="1" r="1.5" fill="#FFD700"/>
+  <!-- Antenna -->
+  <line x1="16" y1="6" x2="16" y2="10" stroke="url(#robotGradient)" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="16" cy="6" r="2" fill="url(#robotGradient)"/>
   
   <!-- Eyes -->
-  <circle cx="13.5" cy="8" r="2" fill="url(#eyeGradient)" stroke="#1E40AF" stroke-width="0.3"/>
-  <circle cx="18.5" cy="8" r="2" fill="url(#eyeGradient)" stroke="#1E40AF" stroke-width="0.3"/>
+  <circle cx="12" cy="16" r="2" fill="white"/>
+  <circle cx="20" cy="16" r="2" fill="white"/>
+  <circle cx="12" cy="16" r="1" fill="#1e293b"/>
+  <circle cx="20" cy="16" r="1" fill="#1e293b"/>
   
-  <!-- Eye pupils -->
-  <circle cx="13.5" cy="8" r="0.8" fill="#1E293B"/>
-  <circle cx="18.5" cy="8" r="0.8" fill="#1E293B"/>
-  
-  <!-- Eye highlights -->
-  <circle cx="13.8" cy="7.7" r="0.3" fill="white" opacity="0.8"/>
-  <circle cx="18.8" cy="7.7" r="0.3" fill="white" opacity="0.8"/>
-  
-  <!-- Mouth/Speaker -->
-  <rect x="14" y="10.5" width="4" height="1.5" rx="0.75" fill="#374151" stroke="#1F2937" stroke-width="0.2"/>
-  
-  <!-- Control Panel -->
-  <rect x="11" y="16" width="10" height="6" rx="1" fill="#4C63D2" stroke="#3B52CC" stroke-width="0.3"/>
-  
-  <!-- Buttons -->
-  <circle cx="13" cy="18" r="0.8" fill="#FFD700"/>
-  <circle cx="16" cy="18" r="0.8" fill="#10B981"/>
-  <circle cx="19" cy="18" r="0.8" fill="#EF4444"/>
-  
-  <!-- Screen -->
-  <rect x="12" y="19.5" width="8" height="1.5" rx="0.3" fill="#1E293B" stroke="#374151" stroke-width="0.2"/>
+  <!-- Mouth -->
+  <rect x="13" y="20" width="6" height="2" rx="1" fill="white"/>
   
   <!-- Arms -->
-  <rect x="3" y="15" width="4" height="2" rx="1" fill="url(#bodyGradient)" stroke="#4c63d2" stroke-width="0.3"/>
-  <rect x="25" y="15" width="4" height="2" rx="1" fill="url(#bodyGradient)" stroke="#4c63d2" stroke-width="0.3"/>
+  <rect x="4" y="18" width="4" height="2" rx="1" fill="url(#robotGradient)"/>
+  <rect x="24" y="18" width="4" height="2" rx="1" fill="url(#robotGradient)"/>
   
-  <!-- Hands -->
-  <circle cx="3" cy="16" r="1.2" fill="#FFD700" stroke="#E5A503" stroke-width="0.3"/>
-  <circle cx="29" cy="16" r="1.2" fill="#FFD700" stroke="#E5A503" stroke-width="0.3"/>
-  
-  <!-- Legs -->
-  <rect x="10" y="28" width="3" height="3" rx="0.5" fill="url(#bodyGradient)" stroke="#4c63d2" stroke-width="0.3"/>
-  <rect x="19" y="28" width="3" height="3" rx="0.5" fill="url(#bodyGradient)" stroke="#4c63d2" stroke-width="0.3"/>
-  
-  <!-- Feet -->
-  <ellipse cx="11.5" cy="31" rx="2" ry="0.8" fill="#374151"/>
-  <ellipse cx="20.5" cy="31" rx="2" ry="0.8" fill="#374151"/>
-  
-  <!-- Chest highlight -->
-  <rect x="13" y="14" width="6" height="1" rx="0.5" fill="white" opacity="0.2"/>
+  <!-- Control panel dots -->
+  <circle cx="14" cy="24" r="1" fill="#FFD700"/>
+  <circle cx="16" cy="24" r="1" fill="#10B981"/>
+  <circle cx="18" cy="24" r="1" fill="#EF4444"/>
 </svg>
