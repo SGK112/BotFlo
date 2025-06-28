@@ -19,7 +19,39 @@ class ModernBotFloNavigation {
             <header class="botflo-header" id="botfloHeader">
                 <nav class="botflo-nav-container">
                     <a href="/" class="botflo-logo">
-                        <i class="fas fa-robot"></i>
+                        <svg width="24" height="24" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="bodyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#667eea"/>
+                                    <stop offset="100%" stop-color="#5a67d8"/>
+                                </linearGradient>
+                                <linearGradient id="headGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#FFD700"/>
+                                    <stop offset="100%" stop-color="#F59E0B"/>
+                                </linearGradient>
+                                <radialGradient id="eyeGradient" cx="50%" cy="50%" r="50%">
+                                    <stop offset="0%" stop-color="#60A5FA"/>
+                                    <stop offset="100%" stop-color="#3B82F6"/>
+                                </radialGradient>
+                            </defs>
+                            <rect x="7" y="12" width="18" height="16" rx="3" ry="3" fill="url(#bodyGradient)" stroke="#4c63d2" stroke-width="0.5"/>
+                            <rect x="10" y="4" width="12" height="10" rx="2" ry="2" fill="url(#headGradient)" stroke="#E5A503" stroke-width="0.5"/>
+                            <line x1="13" y1="4" x2="13" y2="1" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round"/>
+                            <circle cx="13" cy="1" r="1.5" fill="#FFD700"/>
+                            <line x1="19" y1="4" x2="19" y2="1" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round"/>
+                            <circle cx="19" cy="1" r="1.5" fill="#FFD700"/>
+                            <circle cx="13.5" cy="8" r="2" fill="url(#eyeGradient)" stroke="#1E40AF" stroke-width="0.3"/>
+                            <circle cx="18.5" cy="8" r="2" fill="url(#eyeGradient)" stroke="#1E40AF" stroke-width="0.3"/>
+                            <circle cx="13.5" cy="8" r="0.8" fill="#1E293B"/>
+                            <circle cx="18.5" cy="8" r="0.8" fill="#1E293B"/>
+                            <circle cx="13.8" cy="7.7" r="0.3" fill="white" opacity="0.8"/>
+                            <circle cx="18.8" cy="7.7" r="0.3" fill="white" opacity="0.8"/>
+                            <rect x="14" y="10.5" width="4" height="1.5" rx="0.75" fill="#374151" stroke="#1F2937" stroke-width="0.2"/>
+                            <rect x="11" y="16" width="10" height="6" rx="1" fill="#4C63D2" stroke="#3B52CC" stroke-width="0.3"/>
+                            <circle cx="13" cy="18" r="0.8" fill="#FFD700"/>
+                            <circle cx="16" cy="18" r="0.8" fill="#10B981"/>
+                            <circle cx="19" cy="18" r="0.8" fill="#EF4444"/>
+                        </svg>
                         BotFlo
                     </a>
                     
