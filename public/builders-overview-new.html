@@ -10,6 +10,10 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="alternate icon" href="/favicon.ico">
     
+    <!-- Shared Navigation -->
+    <link rel="stylesheet" href="/shared-nav-new.css">
+    <script src="/shared-nav-new.js"></script>
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
@@ -102,7 +106,7 @@
             background: var(--gray-50);
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-            padding-top: 80px; /* Account for fixed header */
+            padding-top: 70px; /* Account for shared navigation */
         }
 
         /* Layout Container */
@@ -893,39 +897,7 @@
     </style>
 </head>
 <body>
-    <!-- Modern Navigation Header -->
-    <header class="botflo-header">
-        <div class="botflo-nav-container">
-            <a href="/" class="botflo-logo">
-                <i class="fas fa-robot"></i>
-                BotFlo
-            </a>
-            
-            <nav class="botflo-nav-menu" id="navMenu">
-                <div class="botflo-nav-item">
-                    <a href="/" aria-label="Home">Home</a>
-                </div>
-                <div class="botflo-nav-item">
-                    <a href="/builders" class="active" aria-label="Build Bot">Build Bot</a>
-                </div>
-                <div class="botflo-nav-item">
-                    <a href="/marketplace" aria-label="Marketplace">Marketplace</a>
-                </div>
-                <div class="botflo-nav-item">
-                    <a href="/pricing" aria-label="Pricing">Pricing</a>
-                </div>
-                
-                <div class="botflo-nav-cta">
-                    <a href="/login" class="btn btn-secondary btn-sm">Sign In</a>
-                    <a href="/signup" class="btn btn-primary btn-sm">Get Started</a>
-                </div>
-            </nav>
-            
-            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
-                <i class="fas fa-bars"></i>
-            </button>
-        </div>
-    </header>
+    <!-- Navigation will be inserted by shared-nav-new.js -->
     
     <!-- Breadcrumb Navigation -->
     <section class="breadcrumb">
