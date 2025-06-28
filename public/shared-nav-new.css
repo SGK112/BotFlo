@@ -91,15 +91,13 @@ body {
     transform: translateY(-1px);
 }
 
-.botflo-logo svg {
-    width: 1.75rem;
-    height: 1.75rem;
+.botflo-logo i {
+    font-size: 1.75rem;
     margin-right: 0.75rem;
-    transition: transform 0.2s ease;
-}
-
-.botflo-logo:hover svg {
-    transform: scale(1.1);
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 /* Main Navigation Menu */
