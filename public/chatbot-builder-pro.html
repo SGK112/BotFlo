@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatFlow Pro - Advanced Visual Chatbot Builder</title>
+    <title>BotFlo.ai Pro - Advanced Visual Chatbot Builder</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="./css/shared.css" rel="stylesheet">
@@ -735,8 +735,8 @@
         </div>
     </div>
 
-    <!-- ChatFlow Copilot -->
-    <script src="./js/chatflow-copilot.js"></script>
+    <!-- BotFlo Copilot -->
+    <script src="./js/botflo-copilot.js"></script>
 
     <script>
         // Global state
@@ -863,7 +863,7 @@
 
         function showWelcomeMessage() {
             setTimeout(() => {
-                addChatMessage("Welcome to ChatFlo Pro! 🎉 Start by selecting a template or dragging components to build your chatbot.", 'bot');
+                addChatMessage("Welcome to BotFlo.ai Pro! 🎉 Start by selecting a template or dragging components to build your chatbot.", 'bot');
             }, 1000);
         }
 
@@ -1381,7 +1381,7 @@
                 timestamp: new Date().toISOString()
             };
             
-            localStorage.setItem('chatflo_project', JSON.stringify(projectData));
+            localStorage.setItem('botflo_project', JSON.stringify(projectData));
             addChatMessage("💾 Project saved successfully! You can continue working on it anytime.", 'bot');
             
             // Show success message

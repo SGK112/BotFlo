@@ -441,7 +441,7 @@ app.get('/api/health', (req, res) => {
   const health = {
     status: 'ok',
     timestamp: new Date().toISOString(),
-    server: 'ChatFlo Chatbot Builder',
+    server: 'BotFlo.ai Chatbot Builder',
     version: '2.0.0',
     environment: {
       node: process.version,
