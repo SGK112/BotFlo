@@ -172,7 +172,7 @@ app.get('/', (req, res) => {
 
 // 1. BUILD BOT - Main builder hub (Advanced Flow Builder)
 app.get('/builders', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'bot-builder-advanced.html'));
+  res.sendFile(path.join(__dirname, 'public', 'builders.html'));
 });
 
 // Builder alternatives

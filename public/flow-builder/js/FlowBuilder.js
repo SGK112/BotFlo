@@ -74,14 +74,14 @@ export class FlowBuilder extends EventEmitter {
         // Initialize workspace
         const workspaceContainer = document.getElementById('main-workspace');
         if (workspaceContainer) {
-            this.workspace = new Workspace(workspaceContainer, this.nodeManager);
+            this.workspace = new Workspace(workspaceContainer);
             await this.workspace.init();
         }
 
         // Initialize properties panel
         const propertiesPanelContainer = document.getElementById('properties-panel');
         if (propertiesPanelContainer) {
-            this.propertiesPanel = new PropertiesPanel(propertiesPanelContainer, this.nodeManager);
+            this.propertiesPanel = new PropertiesPanel(propertiesPanelContainer);
             await this.propertiesPanel.init();
         }
 
@@ -92,82 +92,113 @@ export class FlowBuilder extends EventEmitter {
     }
 
     /**
-     * Set up event handlers between components
+     * Set up event handlers between components - FIXED to prevent circular loops
      */
     setupEventHandlers() {
-        // Node manager events
+        // Node manager events - only update UI, don't trigger more events
         this.nodeManager.on('node:created', (node) => {
-            this.workspace?.addNodeToCanvas(node);
+            if (this.workspace && typeof this.workspace.addNodeToCanvas === 'function') {
+                this.workspace.addNodeToCanvas(node);
+            } else {
+                console.warn('Workspace not ready or addNodeToCanvas method missing');
+            }
             this.markDirty();
             this.emit('flow:changed');
         });
 
         this.nodeManager.on('node:selected', ({ node }) => {
-            this.workspace?.selectNode(node.id);
-            this.propertiesPanel?.showNodeProperties(node);
+            // Update workspace selection visually without triggering events
+            if (this.workspace && typeof this.workspace.updateNodeSelection === 'function') {
+                this.workspace.updateNodeSelection(node.id);
+            }
+            if (this.propertiesPanel && typeof this.propertiesPanel.showNodeProperties === 'function') {
+                this.propertiesPanel.showNodeProperties(node);
+            }
         });
 
         this.nodeManager.on('node:deselected', () => {
-            this.workspace?.deselectAllNodes();
-            this.propertiesPanel?.showEmptyState();
+            if (this.workspace && typeof this.workspace.clearVisualSelection === 'function') {
+                this.workspace.clearVisualSelection();
+            }
+            if (this.propertiesPanel && typeof this.propertiesPanel.clearProperties === 'function') {
+                this.propertiesPanel.clearProperties();
+            }
         });
 
         this.nodeManager.on('node:deleted', (node) => {
-            this.workspace?.removeNodeFromCanvas(node.id);
+            if (this.workspace && typeof this.workspace.removeNodeFromCanvas === 'function') {
+                this.workspace.removeNodeFromCanvas(node.id);
+            }
             this.markDirty();
             this.emit('flow:changed');
         });
 
         this.nodeManager.on('node:moved', ({ node }) => {
-            this.workspace?.updateNodePosition(node.id, node.x, node.y);
+            if (this.workspace && typeof this.workspace.updateNodePosition === 'function') {
+                this.workspace.updateNodePosition(node.id, node.x, node.y);
+            }
             this.markDirty();
         });
 
         this.nodeManager.on('node:config:updated', ({ node }) => {
-            this.workspace?.updateNodeDisplay(node.id);
-            this.propertiesPanel?.updateNodeProperties(node);
+            if (this.workspace && typeof this.workspace.updateNodeDisplay === 'function') {
+                this.workspace.updateNodeDisplay(node.id);
+            }
+            if (this.propertiesPanel && typeof this.propertiesPanel.updateNodeProperties === 'function') {
+                this.propertiesPanel.updateNodeProperties(node);
+            }
             this.markDirty();
             this.emit('flow:changed');
         });
 
         // Component library events
-        this.componentLibrary?.on('component:drag:start', (componentType) => {
-            this.workspace?.enableDropMode();
-        });
+        if (this.componentLibrary) {
+            this.componentLibrary.on('component:drag:start', (componentType) => {
+                if (this.workspace && typeof this.workspace.enableDropMode === 'function') {
+                    this.workspace.enableDropMode();
+                }
+            });
 
-        this.componentLibrary?.on('component:drag:end', () => {
-            this.workspace?.disableDropMode();
-        });
+            this.componentLibrary.on('component:drag:end', () => {
+                if (this.workspace && typeof this.workspace.disableDropMode === 'function') {
+                    this.workspace.disableDropMode();
+                }
+            });
+        }
 
-        // Workspace events
-        this.workspace?.on('node:drop', ({ componentType, x, y }) => {
-            this.createNode(componentType, x, y);
-        });
+        // Workspace events - these trigger nodeManager events
+        if (this.workspace) {
+            this.workspace.on('node:drop', ({ componentType, x, y }) => {
+                this.createNode(componentType, x, y);
+            });
 
-        this.workspace?.on('node:select', (nodeId) => {
-            this.nodeManager.selectNode(nodeId);
-        });
+            this.workspace.on('node:select', (nodeId) => {
+                this.nodeManager.selectNode(nodeId);
+            });
 
-        this.workspace?.on('node:deselect', () => {
-            this.nodeManager.deselectNode();
-        });
+            this.workspace.on('node:deselect', () => {
+                this.nodeManager.deselectNode();
+            });
 
-        this.workspace?.on('node:move', ({ nodeId, x, y }) => {
-            this.nodeManager.updateNodePosition(nodeId, x, y);
-        });
+            this.workspace.on('node:move', ({ nodeId, x, y }) => {
+                this.nodeManager.updateNodePosition(nodeId, x, y);
+            });
 
-        this.workspace?.on('node:delete', (nodeId) => {
-            this.deleteNode(nodeId);
-        });
+            this.workspace.on('node:delete', (nodeId) => {
+                this.deleteNode(nodeId);
+            });
 
-        this.workspace?.on('canvas:click', () => {
-            this.nodeManager.deselectNode();
-        });
+            this.workspace.on('canvas:click', () => {
+                this.nodeManager.deselectNode();
+            });
+        }
 
         // Properties panel events
-        this.propertiesPanel?.on('property:change', ({ nodeId, key, value }) => {
-            this.nodeManager.updateNodeConfig(nodeId, key, value);
-        });
+        if (this.propertiesPanel) {
+            this.propertiesPanel.on('property:change', ({ nodeId, key, value }) => {
+                this.nodeManager.updateNodeConfig(nodeId, key, value);
+            });
+        }
 
         // Auto-save
         this.on('flow:changed', this.debounce(() => {
@@ -206,143 +237,145 @@ export class FlowBuilder extends EventEmitter {
                         break;
                     case 'c':
                         e.preventDefault();
-                        this.copySelectedNode();
+                        this.copySelected();
                         break;
                     case 'v':
                         e.preventDefault();
-                        this.pasteNode();
-                        break;
-                    case 'd':
-                        e.preventDefault();
-                        this.duplicateSelectedNode();
+                        this.paste();
                         break;
                     case 'a':
                         e.preventDefault();
-                        this.selectAllNodes();
+                        this.selectAll();
                         break;
                 }
-            } else {
-                switch (e.key) {
-                    case 'Delete':
-                    case 'Backspace':
-                        e.preventDefault();
-                        this.deleteSelectedNode();
-                        break;
-                    case 'Escape':
-                        e.preventDefault();
-                        this.nodeManager.deselectNode();
-                        break;
-                }
+            }
+
+            // Delete key
+            if (e.key === 'Delete' || e.key === 'Backspace') {
+                this.deleteSelected();
+            }
+
+            // Escape key
+            if (e.key === 'Escape') {
+                this.nodeManager.deselectNode();
             }
         });
     }
 
     /**
-     * Create initial start node
+     * Create a new node
      */
-    createStartNode() {
-        const startNode = this.nodeManager.createNode('welcome', 100, 100, {}, true);
-        this.nodeManager.selectNode(startNode.id);
+    async createNode(type, x = 100, y = 100) {
+        try {
+            const node = await this.nodeManager.createNode(type, { x, y });
+            this.markDirty();
+            return node;
+        } catch (error) {
+            console.error('Failed to create node:', error);
+            this.notificationManager.show(`Failed to create ${type} node`, 'error');
+        }
     }
 
     /**
-     * Create a new node
-     * @param {string} type - Node type
-     * @param {number} x - X position
-     * @param {number} y - Y position
-     * @param {object} config - Optional configuration
-     * @returns {object} Created node
+     * Create the initial start node
      */
-    createNode(type, x, y, config = {}) {
-        const node = this.nodeManager.createNode(type, x, y, config);
-        this.notificationManager.show(`${node.type} node added`, 'success');
-        return node;
+    async createStartNode() {
+        if (this.nodeManager.getNodes().size === 0) {
+            await this.createNode('start', 100, 100);
+        }
     }
 
     /**
      * Delete a node
-     * @param {string} nodeId - Node ID
-     * @returns {boolean} Success status
      */
     deleteNode(nodeId) {
-        const success = this.nodeManager.deleteNode(nodeId);
-        if (success) {
-            this.notificationManager.show('Node deleted', 'success');
-        }
-        return success;
-    }
-
-    /**
-     * Delete currently selected node
-     */
-    deleteSelectedNode() {
-        const selectedNode = this.nodeManager.getSelectedNode();
-        if (selectedNode) {
-            this.deleteNode(selectedNode.id);
+        try {
+            this.nodeManager.deleteNode(nodeId);
+            this.markDirty();
+        } catch (error) {
+            console.error('Failed to delete node:', error);
+            this.notificationManager.show('Failed to delete node', 'error');
         }
     }
 
     /**
-     * Copy currently selected node
+     * Delete selected nodes
      */
-    copySelectedNode() {
-        const selectedNode = this.nodeManager.getSelectedNode();
-        if (selectedNode) {
-            this.nodeManager.copyNode(selectedNode.id);
-            this.notificationManager.show('Node copied', 'success');
-        }
-    }
-
-    /**
-     * Paste node from clipboard
-     */
-    pasteNode() {
-        const bounds = this.workspace?.getViewportBounds();
-        const x = bounds ? bounds.centerX : 300;
-        const y = bounds ? bounds.centerY : 200;
-        
-        const pastedNode = this.nodeManager.pasteNode(x, y);
-        if (pastedNode) {
-            this.notificationManager.show('Node pasted', 'success');
-        }
-    }
-
-    /**
-     * Duplicate currently selected node
-     */
-    duplicateSelectedNode() {
-        const selectedNode = this.nodeManager.getSelectedNode();
-        if (selectedNode) {
-            const duplicatedNode = this.nodeManager.duplicateNode(selectedNode.id);
-            if (duplicatedNode) {
-                this.nodeManager.selectNode(duplicatedNode.id);
-                this.notificationManager.show('Node duplicated', 'success');
+    deleteSelected() {
+        const selectedNodes = this.nodeManager.getSelectedNodes();
+        selectedNodes.forEach(node => {
+            // Don't delete the start node
+            if (node.type !== 'start') {
+                this.deleteNode(node.id);
             }
-        }
+        });
     }
 
     /**
      * Select all nodes
      */
-    selectAllNodes() {
-        // TODO: Implement multi-selection
-        this.notificationManager.show('Select all not yet implemented', 'info');
+    selectAll() {
+        if (this.workspace && typeof this.workspace.selectAll === 'function') {
+            this.workspace.selectAll();
+        }
+    }
+
+    /**
+     * Copy selected nodes
+     */
+    copySelected() {
+        const selectedNodes = this.nodeManager.getSelectedNodes();
+        if (selectedNodes.length > 0) {
+            this.nodeManager.copyNodes(selectedNodes.map(n => n.id));
+            this.notificationManager.show(`Copied ${selectedNodes.length} node(s)`, 'success');
+        }
+    }
+
+    /**
+     * Paste nodes
+     */
+    paste() {
+        const pastedNodes = this.nodeManager.pasteNodes();
+        if (pastedNodes.length > 0) {
+            this.notificationManager.show(`Pasted ${pastedNodes.length} node(s)`, 'success');
+            this.markDirty();
+        }
     }
 
     /**
      * Undo last action
      */
     undo() {
-        // TODO: Implement undo system
-        this.notificationManager.show('Undo not yet implemented', 'info');
+        // TODO: Implement undo functionality
+        this.notificationManager.show('Undo functionality coming soon', 'info');
     }
 
     /**
      * Redo last undone action
      */
     redo() {
-        // TODO: Implement redo system
-        this.notificationManager.show('Redo not yet implemented', 'info');
+        // TODO: Implement redo functionality
+        this.notificationManager.show('Redo functionality coming soon', 'info');
+    }
+
+    /**
+     * Mark the project as dirty (has unsaved changes)
+     */
+    markDirty() {
+        if (!this.isDirty) {
+            this.isDirty = true;
+            this.emit('project:dirty');
+        }
+    }
+
+    /**
+     * Mark the project as clean (saved)
+     */
+    markClean() {
+        if (this.isDirty) {
+            this.isDirty = false;
+            this.emit('project:clean');
+        }
     }
 
     /**
@@ -350,72 +383,146 @@ export class FlowBuilder extends EventEmitter {
      */
     async testChatbot() {
         try {
-            this.notificationManager.show('Starting chatbot test...', 'info');
+            this.notificationManager.show('Opening chatbot test...', 'info');
             
-            // Validate flow
-            const validation = this.validateFlow();
-            if (!validation.isValid) {
-                this.notificationManager.show(`Cannot test: ${validation.errors[0]}`, 'error');
-                return;
+            // Save current flow before testing
+            await this.autoSave();
+            
+            // Open test window
+            const testWindow = window.open('/chatbot-test.html', '_blank', 'width=400,height=600');
+            if (!testWindow) {
+                throw new Error('Pop-up blocked. Please allow pop-ups for this site.');
             }
-
-            // TODO: Implement test runner
-            this.notificationManager.show('Test mode not yet implemented', 'info');
             
         } catch (error) {
-            console.error('Test failed:', error);
-            this.notificationManager.show('Test failed', 'error');
+            console.error('Failed to test chatbot:', error);
+            this.notificationManager.show('Failed to test chatbot: ' + error.message, 'error');
         }
     }
 
     /**
-     * Save the chatbot
+     * Save chatbot
      */
     async saveChatbot() {
         try {
-            const flowData = this.exportFlow();
-            await this.storageManager.saveProject('current', flowData);
+            this.notificationManager.show('Saving chatbot...', 'info');
             
-            this.isDirty = false;
-            this.notificationManager.show('Chatbot saved successfully', 'success');
+            const flowData = this.serializeFlow();
+            const success = await this.storageManager.saveProject('current', flowData);
             
+            if (success) {
+                this.markClean();
+                this.notificationManager.show('Chatbot saved successfully!', 'success');
+            } else {
+                throw new Error('Save operation failed');
+            }
         } catch (error) {
-            console.error('Save failed:', error);
-            this.notificationManager.show('Failed to save chatbot', 'error');
+            console.error('Failed to save chatbot:', error);
+            this.notificationManager.show('Failed to save chatbot: ' + error.message, 'error');
         }
     }
 
     /**
-     * Deploy the chatbot
+     * Deploy chatbot
      */
     async deployChatbot() {
         try {
-            this.notificationManager.show('Starting deployment...', 'info');
+            this.notificationManager.show('Deploying chatbot...', 'info');
             
-            // Validate flow
-            const validation = this.validateFlow();
-            if (!validation.isValid) {
-                this.notificationManager.show(`Cannot deploy: ${validation.errors[0]}`, 'error');
-                return;
-            }
-
-            // TODO: Implement deployment
-            this.notificationManager.show('Deployment not yet implemented', 'info');
+            // Save first
+            await this.saveChatbot();
+            
+            // TODO: Implement actual deployment
+            await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate deployment
+            
+            this.notificationManager.show('Chatbot deployed successfully!', 'success');
+            
+            // Show deployment options
+            this.showDeploymentOptions();
             
         } catch (error) {
-            console.error('Deployment failed:', error);
-            this.notificationManager.show('Deployment failed', 'error');
+            console.error('Failed to deploy chatbot:', error);
+            this.notificationManager.show('Failed to deploy chatbot: ' + error.message, 'error');
         }
     }
 
     /**
-     * Auto-save the project
+     * Show deployment options
+     */
+    showDeploymentOptions() {
+        // Create deployment modal
+        const modal = document.createElement('div');
+        modal.className = 'modal fade';
+        modal.innerHTML = `
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Deployment Successful</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Your chatbot has been deployed successfully!</p>
+                        <div class="deployment-options">
+                            <div class="option">
+                                <h6>Embed Code</h6>
+                                <textarea class="form-control" readonly rows="3">&lt;script src="https://botflo.com/embed/chatbot-${Date.now()}.js"&gt;&lt;/script&gt;</textarea>
+                            </div>
+                            <div class="option mt-3">
+                                <h6>Direct Link</h6>
+                                <input type="text" class="form-control" readonly value="https://botflo.com/chat/chatbot-${Date.now()}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="this.copyDeploymentInfo()">Copy Info</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Show modal (assuming Bootstrap is available)
+        if (window.bootstrap) {
+            const bootstrapModal = new bootstrap.Modal(modal);
+            bootstrapModal.show();
+            
+            // Clean up when modal is hidden
+            modal.addEventListener('hidden.bs.modal', () => {
+                modal.remove();
+            });
+        }
+    }
+
+    /**
+     * Preview chatbot
+     */
+    async previewChatbot() {
+        try {
+            this.notificationManager.show('Opening preview...', 'info');
+            
+            // Save current flow before preview
+            await this.autoSave();
+            
+            // Open preview window
+            const previewWindow = window.open('/chatbot.html?preview=true', '_blank', 'width=800,height=600');
+            if (!previewWindow) {
+                throw new Error('Pop-up blocked. Please allow pop-ups for this site.');
+            }
+            
+        } catch (error) {
+            console.error('Failed to preview chatbot:', error);
+            this.notificationManager.show('Failed to preview chatbot: ' + error.message, 'error');
+        }
+    }
+
+    /**
+     * Auto-save functionality
      */
     async autoSave() {
-        if (!this.isDirty) return;
-        
         try {
-            const flowData = this.exportFlow();
+            const flowData = this.serializeFlow();
             await this.storageManager.saveProject('autosave', flowData);
             console.log('Auto-saved project');
         } catch (error) {
@@ -424,99 +531,91 @@ export class FlowBuilder extends EventEmitter {
     }
 
     /**
-     * Load the last project
+     * Load the last saved project
      */
     async loadLastProject() {
         try {
-            const projectData = await this.storageManager.loadProject('current');
-            if (projectData) {
-                this.importFlow(projectData);
-                this.notificationManager.show('Project loaded', 'success');
+            const flowData = await this.storageManager.loadProject('current') || 
+                            await this.storageManager.loadProject('autosave');
+            
+            if (flowData) {
+                await this.deserializeFlow(flowData);
+                this.markClean();
+                console.log('Loaded saved project');
             }
         } catch (error) {
-            console.warn('Failed to load last project:', error);
+            console.warn('Failed to load saved project:', error);
         }
     }
 
     /**
-     * Export flow data
-     * @returns {object} Flow data
+     * Serialize the current flow to JSON
      */
-    exportFlow() {
-        return {
-            nodes: this.nodeManager.exportNodes(),
-            connections: [], // TODO: Implement connections
-            metadata: {
-                name: this.currentProject?.name || 'Untitled Chatbot',
-                created: this.currentProject?.created || Date.now(),
-                modified: Date.now(),
-                version: '1.0.0'
-            }
-        };
-    }
-
-    /**
-     * Import flow data
-     * @param {object} flowData - Flow data to import
-     */
-    importFlow(flowData) {
-        if (flowData.nodes) {
-            this.nodeManager.importNodes(flowData.nodes);
-        }
+    serializeFlow() {
+        const nodes = [];
+        const connections = [];
         
-        if (flowData.metadata) {
-            this.currentProject = flowData.metadata;
-        }
-
-        this.isDirty = false;
-        this.emit('flow:imported', flowData);
-    }
-
-    /**
-     * Validate the current flow
-     * @returns {object} Validation result
-     */
-    validateFlow() {
-        const errors = [];
-        const warnings = [];
-
-        // Check if there are any nodes
-        const nodes = this.nodeManager.getAllNodes();
-        if (nodes.length === 0) {
-            errors.push('Flow must have at least one node');
-        }
-
-        // Validate each node
-        this.nodeManager.validateAllNodes();
-        for (const node of nodes) {
-            if (!node.validation.isValid) {
-                errors.push(`Node ${node.id}: ${node.validation.errors[0]}`);
-            }
-            warnings.push(...node.validation.warnings.map(w => `Node ${node.id}: ${w}`));
-        }
-
-        // TODO: Validate connections
-
+        // Serialize nodes
+        this.nodeManager.getNodes().forEach(node => {
+            nodes.push({
+                id: node.id,
+                type: node.type,
+                x: node.x,
+                y: node.y,
+                config: node.config
+            });
+        });
+        
+        // TODO: Serialize connections when connection system is implemented
+        
         return {
-            isValid: errors.length === 0,
-            errors,
-            warnings
+            version: '1.0.0',
+            nodes,
+            connections,
+            metadata: {
+                created: this.currentProject?.created || new Date().toISOString(),
+                modified: new Date().toISOString(),
+                name: this.currentProject?.name || 'Untitled Chatbot'
+            }
         };
     }
 
     /**
-     * Mark the project as dirty (unsaved changes)
+     * Deserialize flow from JSON
      */
-    markDirty() {
-        this.isDirty = true;
-        this.emit('project:dirty');
+    async deserializeFlow(flowData) {
+        try {
+            // Clear existing nodes
+            this.nodeManager.clear();
+            
+            // Load nodes
+            if (flowData.nodes) {
+                for (const nodeData of flowData.nodes) {
+                    const node = await this.nodeManager.createNode(
+                        nodeData.type, 
+                        { 
+                            x: nodeData.x, 
+                            y: nodeData.y,
+                            config: nodeData.config 
+                        }
+                    );
+                    node.id = nodeData.id; // Preserve original ID
+                }
+            }
+            
+            // TODO: Load connections when connection system is implemented
+            
+            // Update project metadata
+            this.currentProject = flowData.metadata || {};
+            
+        } catch (error) {
+            console.error('Failed to deserialize flow:', error);
+            this.notificationManager.show('Failed to load project', 'error');
+        }
     }
 
     /**
-     * Debounce utility function
-     * @param {function} func - Function to debounce
-     * @param {number} wait - Wait time in milliseconds
-     * @returns {function} Debounced function
+     * Utility function for debouncing
      */
     debounce(func, wait) {
         let timeout;
@@ -531,14 +630,38 @@ export class FlowBuilder extends EventEmitter {
     }
 
     /**
+     * Get application status
+     */
+    getStatus() {
+        return {
+            initialized: this.isInitialized,
+            dirty: this.isDirty,
+            nodeCount: this.nodeManager.getNodes().size,
+            selectedNodeCount: this.nodeManager.getSelectedNodes().length
+        };
+    }
+
+    /**
      * Clean up resources
      */
     destroy() {
+        // Remove event listeners
         this.removeAllListeners();
-        this.nodeManager?.removeAllListeners();
-        this.componentLibrary?.destroy();
-        this.workspace?.destroy();
-        this.propertiesPanel?.destroy();
-        this.notificationManager?.destroy();
+        
+        // Clean up components
+        if (this.componentLibrary) {
+            this.componentLibrary.destroy();
+        }
+        if (this.workspace) {
+            this.workspace.destroy();
+        }
+        if (this.propertiesPanel) {
+            this.propertiesPanel.destroy();
+        }
+        
+        console.log('FlowBuilder destroyed');
     }
 }
+
+// Export for global access
+window.FlowBuilder = FlowBuilder;

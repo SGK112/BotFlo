@@ -8,6 +8,7 @@ export class Workspace extends EventEmitter {
         this.nodes = new Map();
         this.connections = new Map();
         this.selectedElements = new Set();
+        this.isUpdatingSelection = false; // Prevent circular events
         this.init();
     }
 
@@ -87,9 +88,10 @@ export class Workspace extends EventEmitter {
                     y: event.clientY - rect.top
                 };
                 
-                this.emit('nodeDropped', {
+                this.emit('node:drop', {
                     componentType: dropData.componentType,
-                    position: position
+                    x: position.x,
+                    y: position.y
                 });
             }
         } catch (error) {
@@ -103,9 +105,9 @@ export class Workspace extends EventEmitter {
     }
 
     handleCanvasClick(event) {
-        if (event.target === this.canvas) {
+        if (event.target === this.canvas || event.target.closest('#workspace-canvas')) {
             this.clearSelection();
-            this.emit('canvasClicked', {
+            this.emit('canvas:click', {
                 x: event.offsetX,
                 y: event.offsetY
             });
@@ -403,5 +405,295 @@ export class Workspace extends EventEmitter {
         this.connections.clear();
         this.selectedElements.clear();
         this.emit('workspaceCleared');
+    }
+
+    /**
+     * Add a node to the canvas (called by FlowBuilder)
+     * @param {object} node - Node object from NodeManager
+     */
+    addNodeToCanvas(node) {
+        const nodeElement = this.createNodeElement(node);
+        this.nodesContainer.appendChild(nodeElement);
+        
+        this.nodes.set(node.id, {
+            config: node,
+            element: nodeElement
+        });
+        
+        this.emit('nodeAdded', node);
+    }
+
+    /**
+     * Remove a node from the canvas
+     * @param {string} nodeId - Node ID to remove
+     */
+    removeNodeFromCanvas(nodeId) {
+        const nodeData = this.nodes.get(nodeId);
+        if (nodeData) {
+            nodeData.element.remove();
+            this.nodes.delete(nodeId);
+            this.selectedElements.delete(nodeId);
+            this.emit('nodeRemoved', nodeId);
+        }
+    }
+
+    /**
+     * Select a node (called from FlowBuilder)
+     * @param {string} nodeId - Node ID to select
+     */
+    selectNode(nodeId) {        
+        this.clearVisualSelection();
+        this.selectedElements.add(nodeId);
+        const nodeData = this.nodes.get(nodeId);
+        if (nodeData) {
+            nodeData.element.classList.add('selected');
+        }
+        // Don't emit event - this is called in response to NodeManager events
+    }
+
+    /**
+     * Deselect all nodes (called from FlowBuilder)
+     */
+    deselectAllNodes() {
+        this.clearVisualSelection();
+        // Don't emit event - this is called in response to NodeManager events
+    }
+
+    /**
+     * Update node position
+     * @param {string} nodeId - Node ID
+     * @param {number} x - X coordinate
+     * @param {number} y - Y coordinate
+     */
+    updateNodePosition(nodeId, x, y) {
+        const nodeData = this.nodes.get(nodeId);
+        if (nodeData) {
+            nodeData.element.style.left = `${x}px`;
+            nodeData.element.style.top = `${y}px`;
+            nodeData.config.x = x;
+            nodeData.config.y = y;
+        }
+    }
+
+    /**
+     * Update node display (refresh node appearance)
+     * @param {string} nodeId - Node ID
+     */
+    updateNodeDisplay(nodeId) {
+        const nodeData = this.nodes.get(nodeId);
+        if (nodeData) {
+            // Update the node element based on new config
+            const updatedElement = this.createNodeElement(nodeData.config);
+            nodeData.element.replaceWith(updatedElement);
+            this.nodes.set(nodeId, {
+                config: nodeData.config,
+                element: updatedElement
+            });
+        }
+    }
+
+    /**
+     * Enable drop mode for drag and drop
+     */
+    enableDropMode() {
+        this.canvas.classList.add('drop-mode');
+        this.canvas.style.cursor = 'copy';
+    }
+
+    /**
+     * Disable drop mode
+     */
+    disableDropMode() {
+        this.canvas.classList.remove('drop-mode');
+        this.canvas.style.cursor = 'default';
+    }
+
+    /**
+     * Create a visual node element
+     * @param {object} node - Node configuration
+     * @returns {HTMLElement} Node element
+     */
+    createNodeElement(node) {
+        const nodeElement = document.createElement('div');
+        nodeElement.className = 'flow-node';
+        nodeElement.dataset.nodeId = node.id;
+        nodeElement.dataset.nodeType = node.type;
+        
+        // Position the node
+        nodeElement.style.left = `${node.x}px`;
+        nodeElement.style.top = `${node.y}px`;
+        nodeElement.style.width = `${node.width || 200}px`;
+        nodeElement.style.height = `${node.height || 150}px`;
+        
+        // Create node content
+        const nodeConfig = this.getNodeTypeConfig(node.type);
+        const icon = nodeConfig?.icon || '⚙️';
+        const name = nodeConfig?.name || node.type;
+        
+        nodeElement.innerHTML = `
+            <div class="node-header">
+                <span class="node-icon">${icon}</span>
+                <span class="node-title">${name}</span>
+                <div class="node-actions">
+                    <button class="node-delete" onclick="this.closest('.flow-node').dispatchEvent(new CustomEvent('delete-node'))">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="node-content">
+                <div class="node-config">
+                    ${this.renderNodeConfig(node)}
+                </div>
+            </div>
+            <div class="node-ports">
+                <div class="input-port"></div>
+                <div class="output-port"></div>
+            </div>
+        `;
+        
+        // Add event listeners
+        this.setupNodeEventListeners(nodeElement, node);
+        
+        return nodeElement;
+    }
+
+    /**
+     * Get node type configuration
+     * @param {string} type - Node type
+     * @returns {object} Node configuration
+     */
+    getNodeTypeConfig(type) {
+        // Import NODE_CONFIGS if available
+        if (window.NODE_CONFIGS) {
+            return window.NODE_CONFIGS[type];
+        }
+        
+        // Fallback configurations
+        const fallbackConfigs = {
+            welcome: { icon: '👋', name: 'Welcome' },
+            message: { icon: '💬', name: 'Message' },
+            question: { icon: '❓', name: 'Question' },
+            condition: { icon: '🔀', name: 'Condition' },
+            action: { icon: '⚡', name: 'Action' }
+        };
+        
+        return fallbackConfigs[type] || { icon: '⚙️', name: type };
+    }
+
+    /**
+     * Render node configuration display
+     * @param {object} node - Node object
+     * @returns {string} HTML string
+     */
+    renderNodeConfig(node) {
+        if (node.config.message) {
+            const message = node.config.message.length > 50 
+                ? node.config.message.substring(0, 50) + '...'
+                : node.config.message;
+            return `<div class="config-message">${message}</div>`;
+        }
+        
+        if (node.config.question) {
+            const question = node.config.question.length > 50
+                ? node.config.question.substring(0, 50) + '...'
+                : node.config.question;
+            return `<div class="config-question">${question}</div>`;
+        }
+        
+        return '<div class="config-placeholder">Configure this node</div>';
+    }
+
+    /**
+     * Setup event listeners for a node element
+     * @param {HTMLElement} nodeElement - Node DOM element
+     * @param {object} node - Node configuration
+     */
+    setupNodeEventListeners(nodeElement, node) {
+        // Click to select
+        nodeElement.addEventListener('click', (e) => {
+            e.stopPropagation();
+            // Emit directly without going through selectNode to avoid circular calls
+            this.emit('node:select', node.id);
+        });
+        
+        // Delete node
+        nodeElement.addEventListener('delete-node', () => {
+            this.emit('node:delete', node.id);
+        });
+        
+        // Drag to move (basic implementation)
+        let isDragging = false;
+        let dragOffset = { x: 0, y: 0 };
+        
+        nodeElement.addEventListener('mousedown', (e) => {
+            if (e.target.closest('.node-delete') || e.target.closest('.node-port')) {
+                return;
+            }
+            
+            isDragging = true;
+            const rect = nodeElement.getBoundingClientRect();
+            const canvasRect = this.canvas.getBoundingClientRect();
+            
+            dragOffset.x = e.clientX - rect.left;
+            dragOffset.y = e.clientY - rect.top;
+            
+            nodeElement.style.cursor = 'grabbing';
+            e.preventDefault();
+        });
+        
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            
+            const canvasRect = this.canvas.getBoundingClientRect();
+            const x = e.clientX - canvasRect.left - dragOffset.x;
+            const y = e.clientY - canvasRect.top - dragOffset.y;
+            
+            nodeElement.style.left = `${Math.max(0, x)}px`;
+            nodeElement.style.top = `${Math.max(0, y)}px`;
+        });
+        
+        document.addEventListener('mouseup', () => {
+            if (isDragging) {
+                isDragging = false;
+                nodeElement.style.cursor = 'grab';
+                
+                const x = parseInt(nodeElement.style.left);
+                const y = parseInt(nodeElement.style.top);
+                
+                this.emit('node:move', {
+                    nodeId: node.id,
+                    x: x,
+                    y: y
+                });
+            }
+        });
+    }
+
+    /**
+     * Update node selection visually without emitting events (called from FlowBuilder)
+     * @param {string} nodeId - Node ID to select
+     */
+    updateNodeSelection(nodeId) {
+        this.clearVisualSelection();
+        this.selectedElements.add(nodeId);
+        const nodeData = this.nodes.get(nodeId);
+        if (nodeData) {
+            nodeData.element.classList.add('selected');
+        }
+        // Don't emit event - this is called in response to NodeManager events
+    }
+
+    /**
+     * Clear visual selection without emitting events (called from FlowBuilder)
+     */
+    clearVisualSelection() {
+        this.selectedElements.forEach(nodeId => {
+            const nodeData = this.nodes.get(nodeId);
+            if (nodeData) {
+                nodeData.element.classList.remove('selected');
+            }
+        });
+        this.selectedElements.clear();
+        // Don't emit event - this is called in response to NodeManager events
     }
 }

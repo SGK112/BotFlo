@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Advanced Flow Builder - BotFlo.ai</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 2rem; 
+            background: #f5f5f5; 
+        }
+        .test-container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            background: white; 
+            padding: 2rem; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+        }
+        .test-btn { 
+            background: #3b82f6; 
+            color: white; 
+            border: none; 
+            padding: 1rem 2rem; 
+            margin: 0.5rem; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-size: 1rem; 
+        }
+        .test-btn:hover { 
+            background: #2563eb; 
+        }
+        .test-result { 
+            margin: 1rem 0; 
+            padding: 1rem; 
+            border-radius: 6px; 
+            background: #f0f9ff; 
+            border: 1px solid #0ea5e9; 
+        }
+        .error { 
+            background: #fef2f2; 
+            border-color: #dc2626; 
+            color: #dc2626; 
+        }
+        .success { 
+            background: #f0fdf4; 
+            border-color: #10b981; 
+            color: #10b981; 
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Flow Builder Test Suite</h1>
+        <p>Test the Advanced Flow Builder functionality to ensure everything works correctly.</p>
+        
+        <div class="test-buttons">
+            <button class="test-btn" onclick="testBuilderLoad()">Test Builder Load</button>
+            <button class="test-btn" onclick="testButtons()">Test Button Functions</button>
+            <button class="test-btn" onclick="testComponents()">Test Components</button>
+            <button class="test-btn" onclick="runAllTests()">Run All Tests</button>
+        </div>
+        
+        <div id="testResults"></div>
+        
+        <h2>🚀 Quick Access</h2>
+        <div style="margin: 1rem 0;">
+            <a href="/advanced-flow-builder.html" class="test-btn" style="text-decoration: none;">Open Advanced Flow Builder</a>
+            <a href="/builders" class="test-btn" style="text-decoration: none;">Open Builders Page</a>
+        </div>
+    </div>
+
+    <script>
+        function showResult(message, type = 'info') {
+            const resultsDiv = document.getElementById('testResults');
+            const result = document.createElement('div');
+            result.className = `test-result ${type}`;
+            result.innerHTML = `<strong>${new Date().toLocaleTimeString()}</strong>: ${message}`;
+            resultsDiv.appendChild(result);
+            resultsDiv.scrollTop = resultsDiv.scrollHeight;
+        }
+
+        async function testBuilderLoad() {
+            showResult('Testing Advanced Flow Builder page load...', 'info');
+            
+            try {
+                const response = await fetch('/advanced-flow-builder.html');
+                if (response.ok) {
+                    showResult('✅ Advanced Flow Builder loads successfully', 'success');
+                } else {
+                    showResult(`❌ Failed to load: ${response.status} ${response.statusText}`, 'error');
+                }
+            } catch (error) {
+                showResult(`❌ Error loading builder: ${error.message}`, 'error');
+            }
+        }
+
+        async function testButtons() {
+            showResult('Testing button functionality...', 'info');
+            
+            // Test if the page loads and buttons exist
+            try {
+                const iframe = document.createElement('iframe');
+                iframe.style.display = 'none';
+                iframe.src = '/advanced-flow-builder.html';
+                document.body.appendChild(iframe);
+                
+                iframe.onload = () => {
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    const testBtn = iframeDoc.getElementById('testBtn');
+                    const saveBtn = iframeDoc.getElementById('saveBtn');
+                    const deployBtn = iframeDoc.getElementById('deployBtn');
+                    const previewBtn = iframeDoc.getElementById('previewBtn');
+                    
+                    if (testBtn && saveBtn && deployBtn && previewBtn) {
+                        showResult('✅ All buttons exist and are accessible', 'success');
+                    } else {
+                        showResult('❌ Some buttons are missing', 'error');
+                    }
+                    
+                    document.body.removeChild(iframe);
+                };
+                
+            } catch (error) {
+                showResult(`❌ Error testing buttons: ${error.message}`, 'error');
+            }
+        }
+
+        async function testComponents() {
+            showResult('Testing component structure...', 'info');
+            
+            try {
+                // Test CSS files
+                const cssTests = [
+                    '/flow-builder/css/base.css',
+                    '/flow-builder/css/components.css',
+                    '/flow-builder/css/layout.css'
+                ];
+                
+                let cssResults = [];
+                for (const css of cssTests) {
+                    try {
+                        const response = await fetch(css);
+                        cssResults.push(`${css}: ${response.ok ? '✅' : '❌'}`);
+                    } catch (error) {
+                        cssResults.push(`${css}: ❌ (${error.message})`);
+                    }
+                }
+                
+                showResult(`CSS Files: ${cssResults.join(', ')}`, 'info');
+                
+                // Test JS files
+                const jsTests = [
+                    '/flow-builder/js/FlowBuilder.js',
+                    '/flow-builder/js/core/EventEmitter.js',
+                    '/flow-builder/js/components/ComponentLibrary.js'
+                ];
+                
+                let jsResults = [];
+                for (const js of jsTests) {
+                    try {
+                        const response = await fetch(js);
+                        jsResults.push(`${js}: ${response.ok ? '✅' : '❌'}`);
+                    } catch (error) {
+                        jsResults.push(`${js}: ❌ (${error.message})`);
+                    }
+                }
+                
+                showResult(`JS Files: ${jsResults.join(', ')}`, 'info');
+                
+            } catch (error) {
+                showResult(`❌ Error testing components: ${error.message}`, 'error');
+            }
+        }
+
+        async function runAllTests() {
+            showResult('🧪 Running complete test suite...', 'info');
+            document.getElementById('testResults').innerHTML = '';
+            
+            await testBuilderLoad();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            await testButtons();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            await testComponents();
+            
+            showResult('🎉 Test suite completed!', 'success');
+        }
+
+        // Auto-run basic test on load
+        window.addEventListener('load', () => {
+            showResult('Test suite loaded. Click buttons to run tests.', 'info');
+        });
+    </script>
+</body>
+</html>

@@ -611,3 +611,8 @@ export function validateNodeConfig(type, config) {
         warnings
     };
 }
+
+// Make NODE_CONFIGS available globally for components that need it
+if (typeof window !== 'undefined') {
+    window.NODE_CONFIGS = NODE_CONFIGS;
+}

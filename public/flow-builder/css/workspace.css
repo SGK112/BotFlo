@@ -505,3 +505,157 @@
         animation: none;
     }
 }
+
+/* Flow Node Styles */
+.flow-node {
+    position: absolute;
+    background: white;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    min-width: 200px;
+    max-width: 300px;
+    cursor: grab;
+    transition: all var(--transition-normal);
+    user-select: none;
+    z-index: 10;
+    font-family: inherit;
+}
+
+.flow-node:hover {
+    border-color: var(--primary-color);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+}
+
+.flow-node.selected {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2), var(--shadow-lg);
+}
+
+.flow-node:active {
+    cursor: grabbing;
+}
+
+/* Node Header */
+.node-header {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: var(--gray-50);
+    border-bottom: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    gap: var(--spacing-sm);
+}
+
+.node-icon {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.node-title {
+    flex: 1;
+    font-weight: 600;
+    color: var(--gray-800);
+    font-size: 0.875rem;
+}
+
+.node-actions {
+    display: flex;
+    gap: var(--spacing-xs);
+}
+
+.node-delete {
+    background: none;
+    border: none;
+    color: var(--gray-400);
+    cursor: pointer;
+    padding: var(--spacing-xs);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+}
+
+.node-delete:hover {
+    background: var(--danger-color);
+    color: white;
+}
+
+/* Node Content */
+.node-content {
+    padding: var(--spacing-lg);
+}
+
+.node-config {
+    font-size: 0.875rem;
+    color: var(--gray-600);
+    line-height: 1.4;
+}
+
+.config-message,
+.config-question {
+    background: var(--gray-50);
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--gray-200);
+}
+
+.config-placeholder {
+    color: var(--gray-400);
+    font-style: italic;
+}
+
+/* Node Ports */
+.node-ports {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 var(--spacing-lg) var(--spacing-md);
+}
+
+.input-port,
+.output-port {
+    width: 12px;
+    height: 12px;
+    background: var(--gray-300);
+    border: 2px solid white;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.input-port {
+    margin-left: -18px;
+}
+
+.output-port {
+    margin-right: -18px;
+}
+
+.input-port:hover,
+.output-port:hover {
+    background: var(--primary-color);
+    transform: scale(1.2);
+}
+
+/* Drop Mode */
+.workspace-canvas.drop-mode {
+    background-color: rgba(59, 130, 246, 0.05);
+    border: 2px dashed var(--primary-color);
+}
+
+.workspace-canvas.drop-mode::after {
+    content: 'Drop component here';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--primary-color);
+    font-size: 1.125rem;
+    font-weight: 600;
+    pointer-events: none;
+}

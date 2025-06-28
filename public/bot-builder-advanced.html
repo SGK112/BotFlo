@@ -639,34 +639,35 @@
         }
 
         // Initialize the flow builder
-        try {
-            updateStatus('loading', 'Initializing...');
-            
-            const { FlowBuilder } = await import('./flow-builder/js/FlowBuilder.js');
-            
-            // Initialize the application
-            window.flowBuilder = new FlowBuilder();
-            
-            // Update status and hide loading
-            updateStatus('ready', 'Ready');
-            window.builderState.isLoading = false;
-            hideLoadingState();
-            
-            // Development helpers
-            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-                window.flowBuilderDebug = window.flowBuilder;
-                console.log('🚀 FlowBuilder Debug Mode Available:', window.flowBuilderDebug);
-            }
-            
-            console.log('✅ FlowBuilder initialized successfully');
-            
-        } catch (error) {
-            console.error('❌ Failed to initialize FlowBuilder:', error);
-            window.builderState.hasError = true;
-            updateStatus('error', 'Error');
-            
-            // Show user-friendly error message
-            const notification = document.getElementById('notification');
+        (async () => {
+            try {
+                updateStatus('loading', 'Initializing...');
+                
+                const { FlowBuilder } = await import('./flow-builder/js/FlowBuilder.js');
+                
+                // Initialize the application
+                window.flowBuilder = new FlowBuilder();
+                
+                // Update status and hide loading
+                updateStatus('ready', 'Ready');
+                window.builderState.isLoading = false;
+                hideLoadingState();
+                
+                // Development helpers
+                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                    window.flowBuilderDebug = window.flowBuilder;
+                    console.log('🚀 FlowBuilder Debug Mode Available:', window.flowBuilderDebug);
+                }
+                
+                console.log('✅ FlowBuilder initialized successfully');
+                
+            } catch (error) {
+                console.error('❌ Failed to initialize FlowBuilder:', error);
+                window.builderState.hasError = true;
+                updateStatus('error', 'Error');
+                
+                // Show user-friendly error message
+                const notification = document.getElementById('notification');
             if (notification) {
                 notification.style.display = 'block';
                 notification.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
@@ -712,7 +713,7 @@
                     </div>
                 `;
             }
-        }
+        })();
         
         // Enhanced error handling
         window.addEventListener('error', (event) => {
