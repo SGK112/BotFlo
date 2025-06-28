@@ -1817,29 +1817,18 @@
         });
     </script>
 
-    <!-- Smart Co-pilot Integration -->
-    <script src="/js/smart-copilot.js"></script>
-    <script src="/js/smart-copilot-ui.js"></script>
     <script>
-        // Initialize the Smart BotFlo Co-pilot
+        // Additional marketplace-specific functionality can be added here
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize the copilot with homepage context
-            const copilot = new SmartBotFloCopilot();
-            const copilotUI = new SmartCopilotUI(copilot);
-            
-            // Set context for homepage
-            copilot.setContext({
-                page: 'homepage',
-                features: ['marketplace', 'builder', 'templates', 'pricing'],
-                userType: 'visitor'
-            });
-            
-            // Show a subtle welcome message after a short delay
+            // Set context for the BotFlo copilot if it exists
             setTimeout(() => {
-                copilotUI.addMessage(
-                    "👋 Welcome to BotFlo! I'm your AI assistant. I can help you discover features, answer questions, or give you a guided tour. What would you like to explore?",
-                    'bot'
-                );
+                if (window.botfloCopilot && window.botfloCopilot.setContext) {
+                    window.botfloCopilot.setContext({
+                        page: 'marketplace',
+                        features: ['marketplace', 'builder', 'templates', 'pricing'],
+                        userType: 'visitor'
+                    });
+                }
             }, 2000);
         });
     </script>

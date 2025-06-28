@@ -1,11 +1,5 @@
 // BotFlo Copilot - Advanced AI Assistant for BotFlo.ai Builder
-// Helps users learn, build, and t            .botflo-copilot {
-                position: fixed;
-                bottom: 20px;
-                right: 20px;
-                z-index: 10001;
-                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            }hoot their chatbots
+// Helps users learn, build, and troubleshoot their chatbots
 
 class BotFloCopilot {
     constructor() {
@@ -423,14 +417,27 @@ class BotFloCopilot {
         }
     }
 
+    setContext(contextData) {
+        if (contextData && contextData.page) {
+            this.currentContext = contextData.page;
+        }
+        if (contextData && contextData.features) {
+            this.features = contextData.features;
+        }
+        if (contextData && contextData.userType) {
+            this.userType = contextData.userType;
+        }
+    }
+
     showWelcomeMessage() {
         setTimeout(() => {
             const welcomeMessages = {
-                'general': "👋 Hi! I'm your ChatFlow Copilot. I'm here to help you build amazing chatbots. What would you like to create today?",
+                'general': "👋 Hi! I'm your BotFlo Copilot. I'm here to help you build amazing chatbots. What would you like to create today?",
                 'tutorial': "📚 Great! You're in the tutorial section. I can guide you through each step and answer any questions about building chatbots.",
                 'demo': "🎮 Welcome to the demo! Try chatting and see how it works. I can explain any features you're curious about.",
                 'builder': "🛠️ You're in the Easy Builder! I can help you choose templates, add components, or troubleshoot issues.",
-                'pro-builder': "⚡ Welcome to the Pro Builder! I can help you with advanced features like data integration, API connections, and complex flows."
+                'pro-builder': "⚡ Welcome to the Pro Builder! I can help you with advanced features like data integration, API connections, and complex flows.",
+                'marketplace': "🛒 Welcome to the BotFlo marketplace! I can help you discover chatbot templates, explain features, or guide you to the right builder for your needs."
             };
 
             this.addMessage(welcomeMessages[this.currentContext] || welcomeMessages.general, 'bot');
