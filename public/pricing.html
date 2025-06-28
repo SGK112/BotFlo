@@ -1012,5 +1012,245 @@
             }, 1500);
         });
     </script>
+
+    <script>
+        // Purchase Bypass System - Development/Testing Only
+        window.PURCHASE_BYPASS = {
+            enabled: false,
+            codes: ['FREE2025', 'TESTMODE', 'DEVACCESS'],
+            
+            init() {
+                this.checkBypassParams();
+                this.addDevPanel();
+                this.setupPurchaseHandlers();
+            },
+            
+            checkBypassParams() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const bypass = urlParams.get('bypass');
+                const code = urlParams.get('code');
+                
+                if (bypass === 'true' && this.codes.includes(code?.toUpperCase())) {
+                    this.enabled = true;
+                    this.showBypassNotice();
+                }
+            },
+            
+            addDevPanel() {
+                // Only show on localhost/development
+                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                    const devPanel = document.createElement('div');
+                    devPanel.style.cssText = `
+                        position: fixed;
+                        top: 10px;
+                        right: 10px;
+                        background: #1f2937;
+                        color: white;
+                        padding: 1rem;
+                        border-radius: 8px;
+                        z-index: 9999;
+                        font-size: 12px;
+                        max-width: 200px;
+                        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+                    `;
+                    devPanel.innerHTML = `
+                        <strong>🛠️ Dev Panel</strong><br>
+                        <button onclick="window.PURCHASE_BYPASS.enableBypass()" style="
+                            background: #10b981;
+                            color: white;
+                            border: none;
+                            padding: 0.5rem;
+                            border-radius: 4px;
+                            margin-top: 0.5rem;
+                            cursor: pointer;
+                            width: 100%;
+                        ">Enable Free Purchase</button>
+                        <div style="margin-top: 0.5rem; font-size: 10px; opacity: 0.7;">
+                            Current: ${this.enabled ? '✅ Bypass ON' : '❌ Normal Mode'}
+                        </div>
+                    `;
+                    document.body.appendChild(devPanel);
+                }
+            },
+            
+            enableBypass() {
+                this.enabled = true;
+                this.showBypassNotice();
+                location.reload();
+            },
+            
+            showBypassNotice() {
+                const notice = document.createElement('div');
+                notice.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+                    color: white;
+                    padding: 0.75rem;
+                    text-align: center;
+                    z-index: 9998;
+                    font-weight: 600;
+                `;
+                notice.innerHTML = `
+                    🎯 BYPASS MODE ACTIVE - All purchases are FREE for testing
+                    <button onclick="this.parentElement.remove()" style="
+                        background: rgba(255,255,255,0.2);
+                        border: none;
+                        color: white;
+                        padding: 0.25rem 0.5rem;
+                        border-radius: 4px;
+                        margin-left: 1rem;
+                        cursor: pointer;
+                    ">×</button>
+                `;
+                document.body.appendChild(notice);
+                
+                // Adjust body padding for notice
+                document.body.style.paddingTop = '60px';
+            },
+            
+            setupPurchaseHandlers() {
+                document.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('plan-cta')) {
+                        e.preventDefault();
+                        this.handlePurchase(e.target);
+                    }
+                });
+            },
+            
+            handlePurchase(button) {
+                const planCard = button.closest('.plan-card');
+                const planName = planCard.querySelector('.plan-name').textContent;
+                const planPrice = planCard.querySelector('.plan-price').textContent;
+                
+                if (this.enabled) {
+                    this.simulateFreePurchase(planName, planPrice);
+                } else {
+                    this.showPurchaseModal(planName, planPrice);
+                }
+            },
+            
+            simulateFreePurchase(plan, price) {
+                // Show purchase simulation
+                const modal = this.createModal(`
+                    <div style="text-align: center;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🎉</div>
+                        <h2 style="color: #10b981; margin-bottom: 1rem;">Purchase Successful!</h2>
+                        <p style="margin-bottom: 2rem;">
+                            <strong>Plan:</strong> ${plan}<br>
+                            <strong>Price:</strong> ${price} → <span style="color: #10b981;">FREE (Bypass Mode)</span>
+                        </p>
+                        <div style="background: #f3f4f6; padding: 1rem; border-radius: 8px; margin-bottom: 2rem;">
+                            <h4 style="margin-bottom: 0.5rem;">🚀 What happens next:</h4>
+                            <ul style="text-align: left; margin: 0; padding-left: 1.5rem;">
+                                <li>Account upgraded immediately</li>
+                                <li>All Pro features unlocked</li>
+                                <li>Email confirmation sent</li>
+                                <li>Access to advanced flow builder</li>
+                            </ul>
+                        </div>
+                        <button onclick="this.closest('.bypass-modal').remove()" style="
+                            background: #10b981;
+                            color: white;
+                            border: none;
+                            padding: 0.75rem 2rem;
+                            border-radius: 8px;
+                            font-weight: 600;
+                            cursor: pointer;
+                            margin-right: 1rem;
+                        ">Continue to Builder</button>
+                        <button onclick="this.closest('.bypass-modal').remove()" style="
+                            background: #6b7280;
+                            color: white;
+                            border: none;
+                            padding: 0.75rem 1rem;
+                            border-radius: 8px;
+                            cursor: pointer;
+                        ">Close</button>
+                    </div>
+                `);
+                document.body.appendChild(modal);
+                
+                // Simulate Pro mode activation
+                setTimeout(() => {
+                    localStorage.setItem('botflo-pro-access', 'true');
+                    localStorage.setItem('botflo-plan', plan);
+                    localStorage.setItem('botflo-bypass-purchase', 'true');
+                }, 2000);
+            },
+            
+            showPurchaseModal(plan, price) {
+                const modal = this.createModal(`
+                    <div style="text-align: center;">
+                        <h2 style="margin-bottom: 1rem;">Complete Your Purchase</h2>
+                        <p style="margin-bottom: 2rem;">
+                            <strong>Plan:</strong> ${plan}<br>
+                            <strong>Price:</strong> ${price}
+                        </p>
+                        <div style="background: #fef3c7; padding: 1rem; border-radius: 8px; margin-bottom: 2rem;">
+                            <p><strong>💡 For Testing:</strong> Add <code>?bypass=true&code=FREE2025</code> to the URL for free access</p>
+                        </div>
+                        <p style="margin-bottom: 2rem; color: #6b7280;">
+                            Real payment integration would be implemented here with Stripe/PayPal
+                        </p>
+                        <button onclick="this.closest('.bypass-modal').remove()" style="
+                            background: #2563eb;
+                            color: white;
+                            border: none;
+                            padding: 0.75rem 2rem;
+                            border-radius: 8px;
+                            font-weight: 600;
+                            cursor: pointer;
+                            margin-right: 1rem;
+                        ">Proceed to Payment</button>
+                        <button onclick="this.closest('.bypass-modal').remove()" style="
+                            background: #6b7280;
+                            color: white;
+                            border: none;
+                            padding: 0.75rem 1rem;
+                            border-radius: 8px;
+                            cursor: pointer;
+                        ">Cancel</button>
+                    </div>
+                `);
+                document.body.appendChild(modal);
+            },
+            
+            createModal(content) {
+                const modal = document.createElement('div');
+                modal.className = 'bypass-modal';
+                modal.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: rgba(0,0,0,0.5);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 10000;
+                `;
+                modal.innerHTML = `
+                    <div style="
+                        background: white;
+                        padding: 2rem;
+                        border-radius: 12px;
+                        max-width: 500px;
+                        width: 90%;
+                        box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+                    ">
+                        ${content}
+                    </div>
+                `;
+                return modal;
+            }
+        };
+        
+        // Initialize bypass system
+        window.PURCHASE_BYPASS.init();
+    </script>
 </body>
 </html>
