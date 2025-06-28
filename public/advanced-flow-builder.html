@@ -33,17 +33,25 @@
     <!-- Builder specific header -->
     <header class="builder-header" id="app-header">
         <div class="header-left">
-            <div class="chatbot-name">Advanced Flow Builder</div>
+            <div class="chatbot-name">
+                Advanced Flow Builder
+                <span id="demoModeBadge" class="demo-badge" style="display: none;">
+                    🎯 DEMO MODE
+                </span>
+            </div>
         </div>
         <div class="header-actions">
             <button class="btn btn-secondary" id="testBtn" onclick="handleTestChatbot()">
                 <i class="fas fa-play"></i> Test
+                <span class="demo-indicator" id="testDemo" style="display: none;">📱</span>
             </button>
             <button class="btn btn-primary" id="saveBtn" onclick="handleSaveChatbot()">
                 <i class="fas fa-save"></i> Save
+                <span class="demo-indicator" id="saveDemo" style="display: none;">🔒</span>
             </button>
             <button class="btn btn-success" id="deployBtn" onclick="handleDeployChatbot()">
                 <i class="fas fa-rocket"></i> Deploy
+                <span class="demo-indicator" id="deployDemo" style="display: none;">⭐</span>
             </button>
             <button class="btn btn-info" id="previewBtn" onclick="handlePreviewChatbot()">
                 <i class="fas fa-eye"></i> Preview
@@ -262,6 +270,137 @@
     .modal-footer .btn {
         min-width: 120px;
     }
+
+    /* Demo Mode Styling */
+    .demo-badge {
+        background: linear-gradient(45deg, #f59e0b, #d97706);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-left: 1rem;
+        animation: pulse 2s infinite;
+    }
+    
+    .demo-indicator {
+        margin-left: 0.5rem;
+        font-size: 0.8rem;
+        opacity: 0.8;
+    }
+    
+    .feature-comparison {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin: 2rem 0;
+    }
+    
+    .feature-column {
+        padding: 1.5rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        background: #f9fafb;
+    }
+    
+    .pro-column {
+        border-color: #3b82f6;
+        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+        position: relative;
+    }
+    
+    .pro-column::before {
+        content: "⭐ RECOMMENDED";
+        position: absolute;
+        top: -12px;
+        right: 1rem;
+        background: #3b82f6;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    
+    .feature-column h4 {
+        margin: 0 0 1rem 0;
+        color: #1f2937;
+        font-size: 1.1rem;
+    }
+    
+    .feature-column ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .feature-column li {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    
+    .pricing-highlight {
+        text-align: center;
+        margin: 2rem 0;
+        padding: 1.5rem;
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        color: white;
+        border-radius: 12px;
+    }
+    
+    .pricing-highlight .price {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+    
+    .pricing-highlight .price-subtext {
+        opacity: 0.9;
+        font-size: 1rem;
+    }
+    
+    .demo-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin: 2rem 0;
+    }
+    
+    .btn-outline {
+        background: transparent;
+        border: 2px solid #6b7280;
+        color: #6b7280;
+    }
+    
+    .btn-outline:hover {
+        background: #6b7280;
+        color: white;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+    }
+    
+    /* Node limit indicator */
+    .node-limit-warning {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        z-index: 1000;
+        max-width: 300px;
+        animation: slideIn 0.3s ease-out;
+    }
+    
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
     </style>
 
     <!-- Modular JavaScript -->
@@ -355,9 +494,12 @@
             window.flowBuilderDebug = window.flowBuilder;
         }
         
-        // Global handler functions for buttons
+        // Global handler functions for buttons with demo restrictions
         window.handleTestChatbot = () => {
             if (window.flowBuilder && window.flowBuilder.testChatbot) {
+                if (window.DEMO_CONFIG.isDemoMode) {
+                    showMessage('🎯 Demo Test: This will open a limited chatbot preview. Upgrade for full testing capabilities!', 'info');
+                }
                 window.flowBuilder.testChatbot();
             } else {
                 console.warn('FlowBuilder not initialized or testChatbot method not available');
@@ -366,6 +508,12 @@
         };
 
         window.handleSaveChatbot = () => {
+            if (window.DEMO_CONFIG.isDemoMode) {
+                showMessage('💾 Save feature is available in Pro! Your demo will be saved locally only.', 'warning');
+                setTimeout(() => showUpgradeModal(), 2000);
+                return;
+            }
+            
             if (window.flowBuilder && window.flowBuilder.saveChatbot) {
                 window.flowBuilder.saveChatbot();
             } else {
@@ -375,6 +523,16 @@
         };
 
         window.handleDeployChatbot = () => {
+            if (window.DEMO_CONFIG.isDemoMode) {
+                showMessage('🚀 Deploy feature unlocks with Pro! See what real deployment looks like:', 'info');
+                // Show demo deployment preview
+                setTimeout(() => {
+                    showMessage('Pro users get: Custom domains, SSL certificates, unlimited visitors, analytics, and more!', 'success');
+                    setTimeout(() => showUpgradeModal(), 2000);
+                }, 1500);
+                return;
+            }
+            
             if (window.flowBuilder && window.flowBuilder.deployChatbot) {
                 window.flowBuilder.deployChatbot();
             } else {
@@ -385,6 +543,9 @@
 
         window.handlePreviewChatbot = () => {
             if (window.flowBuilder && window.flowBuilder.previewChatbot) {
+                if (window.DEMO_CONFIG.isDemoMode) {
+                    showMessage('👀 Demo Preview: Limited preview available. Pro users get advanced preview features!', 'info');
+                }
                 window.flowBuilder.previewChatbot();
             } else {
                 console.warn('FlowBuilder not initialized or previewChatbot method not available');
@@ -421,16 +582,23 @@
         };
 
         window.startUpgrade = () => {
-            const selectedPlan = document.querySelector('.pricing-option.selected').dataset.plan;
-            const price = selectedPlan === 'monthly' ? '$29/month' : '$290/year';
+            const selectedPlan = document.querySelector('.pricing-option.selected');
+            const plan = selectedPlan ? selectedPlan.dataset.plan : 'monthly';
+            const price = plan === 'monthly' ? '$29/month' : '$290/year';
             
             // Show upgrade process
-            showMessage(`Starting upgrade process for ${price}. Redirecting to payment...`, 'info');
+            showMessage(`🚀 Starting upgrade to ${price}...`, 'info');
             
             // Simulate upgrade process
             setTimeout(() => {
                 closeUpgradeModal();
-                showMessage('Upgrade feature coming soon! Continue building for free.', 'success');
+                // For demo purposes, we'll simulate successful upgrade
+                showMessage('🎉 Upgrade successful! Reloading with Pro features...', 'success');
+                
+                setTimeout(() => {
+                    // Enable pro mode for demo
+                    window.enableProMode();
+                }, 2000);
             }, 2000);
         };
 
@@ -457,6 +625,122 @@
                 closeUpgradeModal();
             }
         });
+        
+        // Demo Mode Configuration
+        window.DEMO_CONFIG = {
+            maxNodes: 3,
+            allowedNodeTypes: ['start', 'message', 'question'],
+            currentNodeCount: 0,
+            isDemoMode: true,
+            showUpgradeAfterDemo: true
+        };
+
+        // Check if user has Pro access (simulate with localStorage)
+        window.checkProAccess = () => {
+            return localStorage.getItem('botflo-pro-access') === 'true';
+        };
+
+        // Enable Pro mode (for testing)
+        window.enableProMode = () => {
+            localStorage.setItem('botflo-pro-access', 'true');
+            window.DEMO_CONFIG.isDemoMode = false;
+            location.reload();
+        };
+
+        // Disable Pro mode (back to demo)
+        window.enableDemoMode = () => {
+            localStorage.removeItem('botflo-pro-access');
+            window.DEMO_CONFIG.isDemoMode = true;
+            location.reload();
+        };
+
+        // Update demo mode based on Pro access
+        if (window.checkProAccess()) {
+            window.DEMO_CONFIG.isDemoMode = false;
+            window.DEMO_CONFIG.maxNodes = 999;
+            window.DEMO_CONFIG.allowedNodeTypes = ['start', 'message', 'question', 'condition', 'api', 'webhook', 'delay', 'redirect'];
+        }
+
+        // Initialize demo mode indicators
+        if (window.DEMO_CONFIG.isDemoMode) {
+            // Show demo badge
+            const demoBadge = document.getElementById('demoModeBadge');
+            if (demoBadge) demoBadge.style.display = 'inline';
+            
+            // Show demo indicators on buttons
+            const indicators = ['testDemo', 'saveDemo', 'deployDemo'];
+            indicators.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) element.style.display = 'inline';
+            });
+            
+            // Show welcome message
+            setTimeout(() => {
+                showMessage('🎯 Welcome to BotFlo Demo! Try dragging components to build your first chatbot. You can create up to 3 nodes.', 'info');
+            }, 2000);
+        }
+
+        // Node creation tracking for demo mode
+        window.trackNodeCreation = () => {
+            if (window.DEMO_CONFIG.isDemoMode) {
+                window.DEMO_CONFIG.currentNodeCount++;
+                
+                if (window.DEMO_CONFIG.currentNodeCount >= window.DEMO_CONFIG.maxNodes) {
+                    // Show upgrade prompt when limit reached
+                    setTimeout(() => {
+                        showNodeLimitWarning();
+                    }, 1000);
+                }
+            }
+        };
+
+        // Show node limit warning
+        window.showNodeLimitWarning = () => {
+            const warning = document.createElement('div');
+            warning.className = 'node-limit-warning';
+            warning.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                    <span style="font-size: 1.5rem;">🎯</span>
+                    <strong>Demo Limit Reached!</strong>
+                </div>
+                <p style="margin: 0 0 1rem 0; line-height: 1.4;">
+                    You've created ${window.DEMO_CONFIG.maxNodes} nodes. Upgrade to Pro for unlimited nodes and advanced features!
+                </p>
+                <div style="display: flex; gap: 0.75rem;">
+                    <button onclick="this.parentElement.parentElement.remove()" style="
+                        background: rgba(255,255,255,0.2);
+                        color: white;
+                        border: 1px solid rgba(255,255,255,0.3);
+                        padding: 0.5rem 1rem;
+                        border-radius: 6px;
+                        cursor: pointer;
+                    ">Continue Demo</button>
+                    <button onclick="showUpgradeModal(); this.parentElement.parentElement.remove();" style="
+                        background: white;
+                        color: #d97706;
+                        border: none;
+                        padding: 0.5rem 1rem;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        font-weight: 600;
+                    ">Upgrade Now</button>
+                </div>
+            `;
+            document.body.appendChild(warning);
+            
+            // Auto-remove after 10 seconds
+            setTimeout(() => {
+                if (warning.parentElement) {
+                    warning.remove();
+                }
+            }, 10000);
+        };
+
+        // Free trial continuation
+        window.startFreeTrial = () => {
+            closeUpgradeModal();
+            showMessage('🎯 Continue exploring! Remember, Pro users get unlimited everything.', 'info');
+        };
     </script>
 </body>
 </html>
