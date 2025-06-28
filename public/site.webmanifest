@@ -1,8 +1,8 @@
 {
-  "name": "BotFlo - AI Chatbot Builder",
-  "short_name": "BotFlo",
-  "description": "Professional AI chatbot builder and marketplace",
-  "theme_color": "#6366f1",
+  "name": "BotFlo.ai - AI Chatbot Builder & Marketplace",
+  "short_name": "BotFlo.ai",
+  "description": "Build powerful AI chatbots without coding. Professional chatbot builder and marketplace with templates, integrations, and advanced features.",
+  "theme_color": "#667eea",
   "background_color": "#ffffff",
   "display": "standalone",
   "scope": "/",
@@ -13,6 +13,12 @@
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon-static.svg",
+      "sizes": "32x32",
+      "type": "image/svg+xml",
+      "purpose": "any"
     },
     {
       "src": "/robot-icon.svg",

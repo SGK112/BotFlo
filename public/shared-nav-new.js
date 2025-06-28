@@ -96,10 +96,21 @@ class ModernBotFloNavigation {
                                 Build powerful AI chatbots without coding. The easiest way to create, customize, and deploy intelligent conversational assistants.
                             </p>
                             <div class="footer-social">
-                                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                                <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
-                                <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
-                                <a href="#" aria-label="Discord"><i class="fab fa-discord"></i></a>
+                                <a href="https://twitter.com/botflo_ai" target="_blank" rel="noopener noreferrer" aria-label="Follow BotFlo on Twitter">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="https://linkedin.com/company/botflo" target="_blank" rel="noopener noreferrer" aria-label="Connect with BotFlo on LinkedIn">
+                                    <i class="fab fa-linkedin"></i>
+                                </a>
+                                <a href="https://github.com/BotFlo" target="_blank" rel="noopener noreferrer" aria-label="View BotFlo on GitHub">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                                <a href="https://discord.gg/botflo" target="_blank" rel="noopener noreferrer" aria-label="Join BotFlo Discord Community">
+                                    <i class="fab fa-discord"></i>
+                                </a>
+                                <a href="https://youtube.com/@botflo" target="_blank" rel="noopener noreferrer" aria-label="Watch BotFlo on YouTube">
+                                    <i class="fab fa-youtube"></i>
+                                </a>
                             </div>
                         </div>
 

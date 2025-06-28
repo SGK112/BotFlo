@@ -11,16 +11,53 @@ class BotFloCopilot {
     }
 
     init() {
-        this.createCopilotUI();
-        this.bindEvents();
-        this.detectPageContext();
-        this.showWelcomeMessage();
+        // Ensure proper initialization on mobile
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                this.createCopilotUI();
+                this.bindEvents();
+                this.detectPageContext();
+                this.showWelcomeMessage();
+            });
+        } else {
+            this.createCopilotUI();
+            this.bindEvents();
+            this.detectPageContext();
+            this.showWelcomeMessage();
+        }
         
         // Set up periodic cleanup of conflicting widgets
         setInterval(() => {
             this.removeConflictingWidgets();
         }, 3000);
-   }
+        
+        // Handle orientation changes on mobile
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => {
+                this.adjustForMobile();
+            }, 300);
+        });
+        
+        // Handle viewport changes
+        window.addEventListener('resize', () => {
+            this.adjustForMobile();
+        });
+    }
+    
+    adjustForMobile() {
+        const copilot = document.getElementById('botflo-copilot');
+        const copilotWindow = document.getElementById('copilot-window');
+        
+        if (copilot && window.innerWidth <= 768) {
+            // Ensure copilot is visible and properly positioned on mobile
+            copilot.style.zIndex = '999999';
+            copilot.style.position = 'fixed';
+            
+            if (copilotWindow && this.isVisible) {
+                copilotWindow.style.height = `${window.innerHeight - 120}px`;
+            }
+        }
+    }
 
     createCopilotUI() {
         // Remove any existing copilot instances
@@ -438,39 +475,95 @@ class BotFloCopilot {
             /* Mobile responsiveness for copilot */
             @media (max-width: 768px) {
                 .botflo-copilot {
-                    right: 10px;
-                    bottom: 10px;
-                }
-                
-                .copilot-window {
-                    width: calc(100vw - 20px);
-                    right: 10px;
-                    bottom: 70px;
+                    right: 15px;
+                    bottom: 15px;
+                    z-index: 999999 !important;
                 }
                 
                 .copilot-toggle {
-                    padding: 10px 16px;
-                    gap: 10px;
+                    padding: 12px 16px;
+                    gap: 8px;
+                    border-radius: 50px;
+                    min-height: 56px;
+                    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
                 }
                 
                 .copilot-label {
-                    display: none;
-                }
-            }
-
-            @media (max-width: 768px) {
-                .copilot-window {
-                    width: calc(100vw - 40px);
-                    right: 20px;
-                    left: 20px;
-                    height: 60vh;
+                    font-size: 13px;
+                    font-weight: 600;
                 }
                 
-                .copilot-toggle {
-                    position: fixed;
-                    bottom: 20px;
-                    right: 20px;
+                .copilot-window {
+                    position: fixed !important;
+                    top: 20px;
+                    left: 15px;
+                    right: 15px;
+                    bottom: 90px;
+                    width: auto !important;
+                    height: auto !important;
+                    border-radius: 16px;
+                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
                 }
+                
+                .copilot-window.visible {
+                    animation: slideUpMobile 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+                }
+                
+                .copilot-messages {
+                    flex: 1;
+                    overflow-y: auto;
+                    -webkit-overflow-scrolling: touch;
+                }
+                
+                .copilot-header {
+                    padding: 16px 20px;
+                }
+                
+                .copilot-input-area {
+                    padding: 16px 20px;
+                }
+                
+                .copilot-quick-actions {
+                    padding: 0 20px 16px;
+                    gap: 8px;
+                }
+                
+                .quick-action {
+                    font-size: 12px;
+                    padding: 8px 12px;
+                }
+            }
+            
+            @keyframes slideUpMobile {
+                0% { 
+                    opacity: 0; 
+                    transform: translateY(100%);
+                }
+                100% { 
+                    opacity: 1; 
+                    transform: translateY(0);
+                }
+            }
+            
+            /* Tablet responsiveness */
+            @media (min-width: 769px) and (max-width: 1024px) {
+                .copilot-window {
+                    width: 380px;
+                    height: 500px;
+                }
+            }
+            
+            /* Ensure copilot is always on top and clickable */
+            .botflo-copilot * {
+                pointer-events: auto;
+                touch-action: manipulation;
+            }
+            
+            /* Prevent conflicts with other floating elements */
+            .copilot-toggle:focus,
+            .copilot-toggle:active {
+                outline: none;
+                box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.4);
             }
             </style>
         `;
@@ -484,18 +577,60 @@ class BotFloCopilot {
         const input = document.getElementById('copilot-input');
         const quickActions = document.querySelectorAll('.quick-action');
 
-        toggle.addEventListener('click', () => this.toggleCopilot());
-        close.addEventListener('click', () => this.hideCopilot());
-        send.addEventListener('click', () => this.sendMessage());
+        // Enhanced mobile touch handling
+        const addMobileEvents = (element, callback) => {
+            element.addEventListener('click', callback);
+            element.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                callback();
+            });
+        };
+
+        addMobileEvents(toggle, () => this.toggleCopilot());
+        addMobileEvents(close, () => this.hideCopilot());
+        addMobileEvents(send, () => this.sendMessage());
+        
         input.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') this.sendMessage();
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                this.sendMessage();
+            }
+        });
+
+        // Mobile-friendly input focus
+        input.addEventListener('focus', () => {
+            if (window.innerWidth <= 768) {
+                setTimeout(() => {
+                    input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 300);
+            }
         });
 
         quickActions.forEach(action => {
-            action.addEventListener('click', () => {
+            addMobileEvents(action, () => {
                 this.handleQuickAction(action.dataset.action);
             });
         });
+
+        // Prevent body scroll when copilot is open on mobile
+        const preventBodyScroll = (isOpen) => {
+            if (window.innerWidth <= 768) {
+                document.body.style.overflow = isOpen ? 'hidden' : '';
+            }
+        };
+
+        // Add to toggle and close methods
+        this.originalToggleCopilot = this.toggleCopilot;
+        this.toggleCopilot = () => {
+            this.originalToggleCopilot();
+            preventBodyScroll(this.isVisible);
+        };
+
+        this.originalHideCopilot = this.hideCopilot;
+        this.hideCopilot = () => {
+            this.originalHideCopilot();
+            preventBodyScroll(false);
+        };
     }
 
     toggleCopilot() {
