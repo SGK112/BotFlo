@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Try BotFlo Demo - Free Chatbot Builder</title>
+    <meta name="description" content="Try our free chatbot demo and see how easy it is to build AI chatbots with BotFlo's visual builder.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="alternate icon" href="/favicon.ico">
+    
+    <!-- Shared Navigation -->
+    <link rel="stylesheet" href="/shared-nav-new.css">
+    <script src="/shared-nav-new.js"></script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5a6fd8;
+            --secondary: #764ba2;
+            --accent: #f093fb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--gray-800);
+            background: var(--gray-50);
+            padding-top: 80px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .demo-hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+        }
+        
+        .demo-hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+        
+        .demo-hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .demo-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            padding: 4rem 0;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .demo-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .demo-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--gray-800);
+        }
+        
+        .chatbot-demo {
+            height: 500px;
+            border: 2px solid var(--gray-200);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .chat-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .chat-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .message {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            animation: slideUp 0.3s ease-out;
+        }
+        
+        .message.user {
+            flex-direction: row-reverse;
+        }
+        
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+        
+        .message-avatar.bot {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .message-avatar.user {
+            background: var(--gray-400);
+            color: white;
+        }
+        
+        .message-content {
+            background: white;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            max-width: 280px;
+            font-size: 0.875rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .message.user .message-content {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .quick-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+        
+        .quick-action {
+            padding: 0.25rem 0.75rem;
+            background: var(--gray-100);
+            border: 1px solid var(--gray-300);
+            border-radius: 16px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .quick-action:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .chat-input {
+            padding: 1rem;
+            background: white;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+        
+        .chat-input input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 24px;
+            outline: none;
+            font-size: 0.875rem;
+        }
+        
+        .chat-input input:focus {
+            border-color: var(--primary);
+        }
+        
+        .send-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .send-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+        
+        .builder-preview {
+            border: 2px solid var(--gray-200);
+            border-radius: 12px;
+            height: 500px;
+            background: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .builder-header {
+            background: var(--gray-100);
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+        
+        .builder-content {
+            flex: 1;
+            padding: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .flow-node {
+            background: white;
+            border: 2px solid var(--gray-300);
+            border-radius: 8px;
+            padding: 1rem;
+            width: 160px;
+            position: absolute;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .flow-node:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.2);
+        }
+        
+        .flow-node.active {
+            border-color: var(--primary);
+            background: #f0f9ff;
+        }
+        
+        .node-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--gray-700);
+        }
+        
+        .node-content {
+            font-size: 0.75rem;
+            color: var(--gray-600);
+        }
+        
+        .connection-line {
+            position: absolute;
+            z-index: 1;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: var(--gray-200);
+            color: var(--gray-700);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--gray-300);
+        }
+        
+        .cta-section {
+            text-align: center;
+            padding: 4rem 0;
+            background: white;
+        }
+        
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--gray-800);
+        }
+        
+        .cta-section p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: var(--gray-600);
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .demo-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .demo-hero h1 {
+                font-size: 2rem;
+            }
+            
+            .demo-hero p {
+                font-size: 1rem;
+            }
+            
+            .cta-section h2 {
+                font-size: 2rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="demo-hero">
+        <div class="container">
+            <h1>🚀 Try BotFlo for Free</h1>
+            <p>Experience our powerful chatbot builder and see how easy it is to create AI assistants</p>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section>
+        <div class="demo-container">
+            <!-- Live Chatbot Demo -->
+            <div class="demo-section">
+                <h3><i class="fas fa-comments"></i> Live Chatbot Demo</h3>
+                <p style="margin-bottom: 1.5rem; color: var(--gray-600);">Chat with our AI assistant to see what your customers will experience.</p>
+                
+                <div class="chatbot-demo">
+                    <div class="chat-header">
+                        <div class="chat-avatar">🤖</div>
+                        <div>
+                            <div style="font-weight: 600;">BotFlo Assistant</div>
+                            <div style="font-size: 0.875rem; opacity: 0.9;">
+                                <span style="display: inline-block; width: 8px; height: 8px; background: #10b981; border-radius: 50%; margin-right: 0.5rem;"></span>
+                                Online
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="message">
+                            <div class="message-avatar bot">🤖</div>
+                            <div>
+                                <div class="message-content">
+                                    👋 Welcome! I'm your AI assistant. I can help you learn about BotFlo and answer questions about building chatbots.
+                                </div>
+                                <div class="quick-actions">
+                                    <div class="quick-action" onclick="sendMessage('How does BotFlo work?')">How does BotFlo work?</div>
+                                    <div class="quick-action" onclick="sendMessage('Show me pricing')">Show me pricing</div>
+                                    <div class="quick-action" onclick="sendMessage('Can I try it free?')">Can I try it free?</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-input">
+                        <input type="text" id="messageInput" placeholder="Type your message..." onkeypress="handleKeyPress(event)">
+                        <button class="send-btn" onclick="sendUserMessage()">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visual Builder Demo -->
+            <div class="demo-section">
+                <h3><i class="fas fa-sitemap"></i> Visual Builder Preview</h3>
+                <p style="margin-bottom: 1.5rem; color: var(--gray-600);">See how easy it is to build conversation flows with our drag-and-drop builder.</p>
+                
+                <div class="builder-preview">
+                    <div class="builder-header">
+                        <h4 style="margin: 0; color: var(--gray-700);">Flow Builder</h4>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem;" onclick="highlightNode(1)">
+                                <i class="fas fa-play"></i> Test
+                            </button>
+                            <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;" onclick="highlightNode(2)">
+                                <i class="fas fa-save"></i> Save
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="builder-content" id="builderContent">
+                        <div class="flow-node" style="top: 20px; left: 20px;" data-node="1">
+                            <div class="node-header">
+                                <i class="fas fa-play" style="color: var(--success);"></i>
+                                Start
+                            </div>
+                            <div class="node-content">Welcome message</div>
+                        </div>
+                        
+                        <div class="flow-node" style="top: 120px; left: 200px;" data-node="2">
+                            <div class="node-header">
+                                <i class="fas fa-question-circle" style="color: var(--primary);"></i>
+                                Question
+                            </div>
+                            <div class="node-content">Ask how to help</div>
+                        </div>
+                        
+                        <div class="flow-node" style="top: 220px; left: 380px;" data-node="3">
+                            <div class="node-header">
+                                <i class="fas fa-code-branch" style="color: var(--warning);"></i>
+                                Condition
+                            </div>
+                            <div class="node-content">Route by intent</div>
+                        </div>
+                        
+                        <svg width="100%" height="100%" style="position: absolute; top: 0; left: 0; pointer-events: none;">
+                            <line x1="120" y1="50" x2="200" y2="150" stroke="#667eea" stroke-width="2" marker-end="url(#arrowhead)"/>
+                            <line x1="280" y1="150" x2="380" y2="250" stroke="#667eea" stroke-width="2" marker-end="url(#arrowhead)"/>
+                            <defs>
+                                <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+                                    <polygon points="0 0, 10 3.5, 0 7" fill="#667eea"/>
+                                </marker>
+                            </defs>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to Build Your Own Chatbot?</h2>
+            <p>Join thousands of businesses already using BotFlo to automate their customer conversations</p>
+            <div class="cta-buttons">
+                <a href="/builders" class="btn btn-primary" style="font-size: 1.1rem; padding: 1rem 2rem;">
+                    <i class="fas fa-rocket"></i> Start Building for Free
+                </a>
+                <a href="/marketplace" class="btn btn-secondary" style="font-size: 1.1rem; padding: 1rem 2rem;">
+                    <i class="fas fa-store"></i> Browse Templates
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        const botResponses = {
+            'how does botflo work': "BotFlo is a visual chatbot builder! 🎨 You drag and drop components to create conversation flows, connect them together, and deploy your bot anywhere. No coding required! Want to see the builder in action?",
+            'show me pricing': "Great question! 💰 We offer:\n• Free tier: 1 bot, 100 messages/month\n• Pro: $29/month - Unlimited bots & messages\n• Enterprise: Custom pricing with advanced features\n\nWant to start with the free plan?",
+            'can i try it free': "Absolutely! 🎉 You can:\n• Try our demo (you're doing it now!)\n• Sign up for free - no credit card needed\n• Build your first bot in minutes\n• Upgrade only when you're ready\n\nReady to get started?",
+            'default': "I'd be happy to help! I can tell you about:\n• How BotFlo works\n• Pricing and plans\n• Getting started for free\n• Building your first bot\n\nWhat would you like to know?"
+        };
+
+        function sendMessage(message) {
+            addUserMessage(message);
+            setTimeout(() => {
+                const response = findBotResponse(message);
+                addBotMessage(response);
+            }, 1000);
+        }
+
+        function sendUserMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            if (message) {
+                sendMessage(message);
+                input.value = '';
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendUserMessage();
+            }
+        }
+
+        function addUserMessage(message) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message user';
+            messageDiv.innerHTML = `
+                <div class="message-avatar user">👤</div>
+                <div class="message-content">${message}</div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function addBotMessage(message) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message';
+            messageDiv.innerHTML = `
+                <div class="message-avatar bot">🤖</div>
+                <div class="message-content">${message}</div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function findBotResponse(message) {
+            const lowerMessage = message.toLowerCase();
+            for (const [key, response] of Object.entries(botResponses)) {
+                if (lowerMessage.includes(key)) {
+                    return response;
+                }
+            }
+            return botResponses.default;
+        }
+
+        function highlightNode(nodeNumber) {
+            // Remove all active classes
+            document.querySelectorAll('.flow-node').forEach(node => {
+                node.classList.remove('active');
+            });
+            
+            // Add active class to selected node
+            const targetNode = document.querySelector(`[data-node="${nodeNumber}"]`);
+            if (targetNode) {
+                targetNode.classList.add('active');
+            }
+            
+            // Remove highlight after 2 seconds
+            setTimeout(() => {
+                if (targetNode) {
+                    targetNode.classList.remove('active');
+                }
+            }, 2000);
+        }
+
+        // Add click handlers to flow nodes
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.flow-node').forEach((node, index) => {
+                node.addEventListener('click', () => highlightNode(index + 1));
+            });
+        });
+    </script>
+</body>
+</html>

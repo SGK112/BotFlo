@@ -13,6 +13,11 @@ class ModernBotFloNavigation {
     }
 
     createNavigation() {
+        // Check if navigation already exists to prevent duplicates
+        if (document.querySelector('.botflo-header')) {
+            return;
+        }
+        
         const currentPath = window.location.pathname;
         
         const navigationHTML = `
@@ -82,6 +87,11 @@ class ModernBotFloNavigation {
     }
 
     createFooter() {
+        // Check if footer already exists to prevent duplicates
+        if (document.querySelector('.botflo-footer')) {
+            return;
+        }
+        
         const footerHTML = `
             <footer class="botflo-footer">
                 <div class="footer-container">
@@ -130,7 +140,7 @@ class ModernBotFloNavigation {
                             <h4>Resources</h4>
                             <ul>
                                 <li><a href="/docs">Documentation</a></li>
-                                <li><a href="/tutorials">Tutorials</a></li>
+                                <li><a href="/tutorial">Tutorials</a></li>
                                 <li><a href="/blog">Blog</a></li>
                                 <li><a href="/community">Community</a></li>
                             </ul>
@@ -140,10 +150,10 @@ class ModernBotFloNavigation {
                         <div class="footer-section">
                             <h4>Company</h4>
                             <ul>
-                                <li><a href="/#about">About</a></li>
+                                <li><a href="/about">About</a></li>
                                 <li><a href="/contact">Contact</a></li>
                                 <li><a href="/support">Support</a></li>
-                                <li><a href="/careers">Careers</a></li>
+                                <li><a href="/contact">Careers</a></li>
                             </ul>
                         </div>
 
@@ -153,8 +163,8 @@ class ModernBotFloNavigation {
                             <ul>
                                 <li><a href="/privacy">Privacy Policy</a></li>
                                 <li><a href="/terms">Terms of Service</a></li>
-                                <li><a href="/cookies">Cookie Policy</a></li>
-                                <li><a href="/security">Security</a></li>
+                                <li><a href="/privacy">Cookie Policy</a></li>
+                                <li><a href="/contact">Security</a></li>
                             </ul>
                         </div>
                     </div>
@@ -165,8 +175,8 @@ class ModernBotFloNavigation {
                             <p>&copy; ${new Date().getFullYear()} BotFlo. All rights reserved.</p>
                             <div class="footer-bottom-links">
                                 <a href="/status">Status</a>
-                                <a href="/api">API</a>
-                                <a href="/changelog">Changelog</a>
+                                <a href="/docs">API Docs</a>
+                                <a href="/blog">Updates</a>
                             </div>
                         </div>
                     </div>

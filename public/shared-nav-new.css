@@ -345,6 +345,10 @@ body {
     background: var(--gray-900);
     color: var(--gray-300);
     margin-top: 5rem;
+    border-top: 2px solid var(--primary);
+    position: relative;
+    z-index: 10;
+    min-height: 350px;
 }
 
 .footer-container {
@@ -403,13 +407,20 @@ body {
     width: 44px;
     height: 44px;
     background: var(--gray-800);
-    color: var(--gray-400);
+    color: var(--gray-300);
     border-radius: 12px;
     text-decoration: none;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     font-size: 18px;
     position: relative;
     overflow: hidden;
+    border: 1px solid var(--gray-700);
+}
+
+.footer-social a i {
+    font-size: 18px;
+    z-index: 2;
+    position: relative;
 }
 
 .footer-social a::before {

@@ -175,36 +175,36 @@ app.get('/builders', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'builders.html'));
 });
 
-// Builder alternatives
+// Builder alternatives - redirect to main builders page
 app.get('/builders/overview', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'builders-overview-new.html'));
+  res.redirect('/builders');
 });
 
-// Builder sub-routes
+// Builder sub-routes - use existing files
 app.get('/builders/visual', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'visual-bot-builder-enhanced.html'));
+  res.sendFile(path.join(__dirname, 'public', 'advanced-flow-builder.html'));
 });
 
 app.get('/builders/enhanced', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'enhanced-chatbot-designer.html'));
+  res.sendFile(path.join(__dirname, 'public', 'advanced-flow-builder.html'));
 });
 
 app.get('/builders/simple', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'easy-chatbot-builder.html'));
+  res.sendFile(path.join(__dirname, 'public', 'test-builder.html'));
 });
 
-// Pro builder route (as mentioned in the URL)
+// Pro builder route
 app.get('/builders/chatbot-builder-pro.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'chatbot-builder-pro.html'));
+  res.sendFile(path.join(__dirname, 'public', 'advanced-flow-builder.html'));
 });
 
 app.get('/builders/pro', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'chatbot-builder-pro.html'));
+  res.sendFile(path.join(__dirname, 'public', 'advanced-flow-builder.html'));
 });
 
-// Demo route - direct to enhanced builder
+// Demo route - direct to advanced flow builder
 app.get('/demo', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'enhanced-chatbot-designer.html'));
+  res.sendFile(path.join(__dirname, 'public', 'advanced-flow-builder.html'));
 });
 
 // 2. MARKETPLACE - Pre-built chatbots
@@ -225,22 +225,22 @@ app.get('/pricing', (req, res) => {
 app.get('/home', (req, res) => res.redirect('/'));
 app.get('/index', (req, res) => res.redirect('/'));
 
-// Redirect secondary pages to main navigation or homepage sections
-app.get('/about', (req, res) => res.redirect('/#about'));
-app.get('/features', (req, res) => res.redirect('/#features'));
+// Redirect secondary pages to main navigation or existing pages
+app.get('/about', (req, res) => res.sendFile(path.join(__dirname, 'public', 'about.html')));
+app.get('/features', (req, res) => res.sendFile(path.join(__dirname, 'public', 'features.html')));
 app.get('/templates', (req, res) => res.redirect('/marketplace'));
-app.get('/contact', (req, res) => res.redirect('/#contact'));
+app.get('/contact', (req, res) => res.sendFile(path.join(__dirname, 'public', 'contact.html')));
 
-// Support & docs redirect to homepage or builders
-app.get('/docs', (req, res) => res.redirect('/builders'));
-app.get('/tutorial', (req, res) => res.redirect('/builders'));
-app.get('/tutorials', (req, res) => res.redirect('/builders'));
-app.get('/support', (req, res) => res.redirect('/#support'));
-app.get('/blog', (req, res) => res.redirect('/#blog'));
-app.get('/community', (req, res) => res.redirect('/#community'));
+// Support & docs redirect to existing pages
+app.get('/docs', (req, res) => res.sendFile(path.join(__dirname, 'public', 'docs.html')));
+app.get('/tutorial', (req, res) => res.sendFile(path.join(__dirname, 'public', 'tutorial.html')));
+app.get('/tutorials', (req, res) => res.sendFile(path.join(__dirname, 'public', 'tutorials.html')));
+app.get('/support', (req, res) => res.sendFile(path.join(__dirname, 'public', 'support.html')));
+app.get('/blog', (req, res) => res.sendFile(path.join(__dirname, 'public', 'blog.html')));
+app.get('/community', (req, res) => res.sendFile(path.join(__dirname, 'public', 'community.html')));
 
-// Integrations redirect to builders (where integrations are handled)
-app.get('/integrations', (req, res) => res.redirect('/builders'));
+// Integrations redirect to integrations page
+app.get('/integrations', (req, res) => res.sendFile(path.join(__dirname, 'public', 'integrations.html')));
 
 // ============================================================================
 // LEGAL & AUTH PAGES (Keep but don't feature in main nav)
@@ -269,12 +269,6 @@ app.get('/dashboard', (req, res) => {
 // ============================================================================
 // LEGACY COMPATIBILITY (For existing links)
 // ============================================================================
-
-// Direct HTML file access (for backward compatibility)
-app.get('/enhanced-chatbot-designer.html', (req, res) => res.redirect('/demo'));
-app.get('/chatbot-visual-builder.html', (req, res) => res.redirect('/builders/visual'));
-app.get('/chatbot-test.html', (req, res) => res.redirect('/demo'));
-app.get('/old-builder', (req, res) => res.redirect('/builders'));
 
 // Legacy routes
 app.get('/surprise-granite', (req, res) => {
@@ -1912,21 +1906,24 @@ app.get('/status', (req, res) => {
   res.json({ status: 'All systems operational', timestamp: new Date().toISOString() });
 });
 
-app.get('/api', (req, res) => {
-  res.redirect('/docs'); // Redirect to documentation
+// API documentation page
+app.get('/api$', (req, res) => {
+  res.redirect('/docs');
 });
 
-app.get('/changelog', (req, res) => {
-  res.redirect('/blog'); // Redirect to blog for now
-});
+// Changelog redirect
+app.get('/changelog', (req, res) => res.redirect('/blog'));
 
-app.get('/cookies', (req, res) => {
-  res.redirect('/privacy'); // Redirect to privacy policy
-});
+// Additional legal pages - redirect if they don't exist
+app.get('/cookies', (req, res) => res.redirect('/privacy'));
+app.get('/security', (req, res) => res.redirect('/contact'));
+app.get('/careers', (req, res) => res.redirect('/contact'));
 
-app.get('/security', (req, res) => {
-  res.redirect('/docs'); // Redirect to documentation
-});
+// Legacy compatibility routes
+app.get('/enhanced-chatbot-designer.html', (req, res) => res.redirect('/demo'));
+app.get('/chatbot-visual-builder.html', (req, res) => res.redirect('/builders/visual'));
+app.get('/chatbot-test.html', (req, res) => res.redirect('/demo'));
+app.get('/old-builder', (req, res) => res.redirect('/builders'));
 
 // Start the server
 app.listen(port, () => {

@@ -25,6 +25,24 @@
     <link rel="stylesheet" href="flow-builder/css/workspace.css">
     <link rel="stylesheet" href="flow-builder/css/properties.css">
     <link rel="stylesheet" href="flow-builder/css/animations.css">
+    
+    <!-- Flow Builder as ES6 Module -->
+    <script type="module">
+        import { FlowBuilder } from './flow-builder/js/FlowBuilder.js';
+        
+        // Initialize FlowBuilder when DOM is ready
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                console.log('🚀 Initializing FlowBuilder...');
+                window.flowBuilder = new FlowBuilder();
+                console.log('✅ FlowBuilder initialized successfully');
+            } catch (error) {
+                console.warn('❌ FlowBuilder failed to initialize:', error);
+                console.log('🔧 Falling back to demo interface...');
+                // Fallback handled by the main script below
+            }
+        });
+    </script>
 </head>
 <body>
     <!-- Navigation will be injected here -->
@@ -741,6 +759,452 @@
             closeUpgradeModal();
             showMessage('🎯 Continue exploring! Remember, Pro users get unlimited everything.', 'info');
         };
+        
+        // Initialize Flow Builder when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check for template parameters
+            checkForTemplate();
+            
+            // Give the ES6 module a chance to load first
+            setTimeout(() => {
+                if (!window.flowBuilder) {
+                    console.log('🔧 Initializing demo flow builder interface...');
+                    initializeDemoBuilder();
+                } else {
+                    console.log('✅ Using full FlowBuilder implementation');
+                }
+            }, 1000);
+        });
+        
+        // Fallback demo builder interface
+        function initializeDemoBuilder() {
+            const componentLibrary = document.getElementById('component-library');
+            const workspace = document.getElementById('main-workspace');
+            const propertiesPanel = document.getElementById('properties-panel');
+            
+            if (componentLibrary) {
+                componentLibrary.innerHTML = `
+                    <div class="component-header">
+                        <h3><i class="fas fa-puzzle-piece"></i> Components</h3>
+                        <p>Drag components to the workspace</p>
+                    </div>
+                    <div class="component-category">
+                        <h4>Messages</h4>
+                        <div class="component-item" draggable="true" data-type="message">
+                            <i class="fas fa-comment"></i>
+                            <span>Text Message</span>
+                        </div>
+                        <div class="component-item" draggable="true" data-type="question">
+                            <i class="fas fa-question-circle"></i>
+                            <span>Question</span>
+                        </div>
+                    </div>
+                    <div class="component-category">
+                        <h4>Logic</h4>
+                        <div class="component-item" draggable="true" data-type="condition">
+                            <i class="fas fa-code-branch"></i>
+                            <span>Condition</span>
+                        </div>
+                        <div class="component-item" draggable="true" data-type="action">
+                            <i class="fas fa-bolt"></i>
+                            <span>Action</span>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            if (workspace) {
+                workspace.innerHTML = `
+                    <div class="workspace-header">
+                        <h3>Visual Flow Builder</h3>
+                        <p>Drag components from the left panel to build your chatbot flow</p>
+                    </div>
+                    <div class="canvas-container" id="canvas-container">
+                        <div class="demo-node" style="position: absolute; top: 50px; left: 100px;">
+                            <div class="node-header">
+                                <i class="fas fa-play"></i>
+                                <span>Start</span>
+                            </div>
+                            <div class="node-content">
+                                <p>Welcome to our chatbot!</p>
+                            </div>
+                        </div>
+                        <div class="demo-node" style="position: absolute; top: 180px; left: 300px;">
+                            <div class="node-header">
+                                <i class="fas fa-question-circle"></i>
+                                <span>Question</span>
+                            </div>
+                            <div class="node-content">
+                                <p>How can I help you today?</p>
+                                <div class="node-options">
+                                    <span class="option">Support</span>
+                                    <span class="option">Sales</span>
+                                </div>
+                            </div>
+                        </div>
+                        <svg class="connection-line" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;">
+                            <line x1="200" y1="100" x2="300" y2="200" stroke="#667eea" stroke-width="2" marker-end="url(#arrowhead)"/>
+                            <defs>
+                                <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+                                    <polygon points="0 0, 10 3.5, 0 7" fill="#667eea"/>
+                                </marker>
+                            </defs>
+                        </svg>
+                    </div>
+                `;
+            }
+            
+            if (propertiesPanel) {
+                propertiesPanel.innerHTML = `
+                    <div class="properties-header">
+                        <h3><i class="fas fa-cog"></i> Properties</h3>
+                        <p>Select a node to edit its properties</p>
+                    </div>
+                    <div class="properties-content">
+                        <div class="demo-message">
+                            <h4>🎯 Demo Mode</h4>
+                            <p>This is a demonstration of our Visual Flow Builder. In the full version, you can:</p>
+                            <ul>
+                                <li>✅ Drag and drop components</li>
+                                <li>✅ Connect nodes with visual flows</li>
+                                <li>✅ Edit properties in real-time</li>
+                                <li>✅ Test your bot instantly</li>
+                                <li>✅ Export and deploy</li>
+                            </ul>
+                            <button class="btn btn-primary" onclick="showUpgradeModal()" style="width: 100%; margin-top: 1rem;">
+                                <i class="fas fa-rocket"></i> Unlock Full Builder
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Add basic interactivity
+            document.querySelectorAll('.demo-node').forEach(node => {
+                node.addEventListener('click', function() {
+                    document.querySelectorAll('.demo-node').forEach(n => n.classList.remove('selected'));
+                    this.classList.add('selected');
+                    
+                    const propertiesContent = document.querySelector('.properties-content');
+                    if (propertiesContent) {
+                        const nodeType = this.querySelector('.node-header span').textContent;
+                        propertiesContent.innerHTML = `
+                            <div class="property-group">
+                                <h4>Selected: ${nodeType}</h4>
+                                <div class="property-field">
+                                    <label>Node Type</label>
+                                    <input type="text" value="${nodeType}" disabled>
+                                </div>
+                                <div class="property-field">
+                                    <label>Message Text</label>
+                                    <textarea placeholder="Enter your message...">${this.querySelector('.node-content p').textContent}</textarea>
+                                </div>
+                                <div class="demo-notice">
+                                    <p><i class="fas fa-info-circle"></i> Upgrade to edit properties and save changes</p>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+            });
+        }
+        
+        // Check for template parameter from URL
+        function checkForTemplate() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const template = urlParams.get('template');
+            const customize = urlParams.get('customize');
+            
+            if (template && customize === 'true') {
+                // Show customization welcome message
+                setTimeout(() => {
+                    showCustomizationWelcome(template);
+                }, 2000);
+            }
+        }
+        
+        function showCustomizationWelcome(template) {
+            const templateNames = {
+                'restaurant': 'Restaurant Assistant',
+                'support': 'Customer Support',
+                'realestate': 'Real Estate Agent',
+                'ecommerce': 'E-commerce Helper',
+                'healthcare': 'Healthcare Assistant'
+            };
+            
+            const templateName = templateNames[template] || 'Chatbot Template';
+            
+            // Create welcome modal
+            const modalHTML = `
+                <div id="customizationWelcome" class="modal-overlay" style="display: flex; z-index: 1100;">
+                    <div class="modal-content" style="max-width: 700px; width: 90%;">
+                        <div class="modal-header">
+                            <h2>🎨 Welcome to Customization!</h2>
+                            <button class="modal-close" onclick="closeCustomizationWelcome()">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div style="text-align: center; margin-bottom: 2rem;">
+                                <div style="font-size: 4rem; margin-bottom: 1rem;">🚀</div>
+                                <h3>You're customizing: ${templateName}</h3>
+                                <p style="color: var(--gray-600); margin-top: 0.5rem;">
+                                    This template has been loaded into the flow builder. You can now modify every aspect to match your needs.
+                                </p>
+                            </div>
+                            
+                            <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
+                                <h4 style="margin-bottom: 1rem; color: var(--primary);">🛠️ What you can customize:</h4>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                    <ul style="margin: 0; padding-left: 1.5rem;">
+                                        <li>Welcome messages</li>
+                                        <li>Conversation flows</li>
+                                        <li>Response options</li>
+                                        <li>Integration settings</li>
+                                    </ul>
+                                    <ul style="margin: 0; padding-left: 1.5rem;">
+                                        <li>Bot personality</li>
+                                        <li>Visual appearance</li>
+                                        <li>Business logic</li>
+                                        <li>Action triggers</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div style="background: linear-gradient(45deg, #f0f9ff, #e0f2fe); padding: 1.5rem; border-radius: 12px; border-left: 4px solid var(--primary);">
+                                <h4 style="margin-bottom: 0.5rem; color: var(--primary);">💡 Pro Tip</h4>
+                                <p style="margin: 0; color: var(--gray-700);">
+                                    Start by clicking on any node in the workspace to edit its properties. Use the component library on the left to add new conversation elements.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" onclick="window.location.href='/marketplace'">
+                                <i class="fas fa-arrow-left"></i> Back to Marketplace
+                            </button>
+                            <button class="btn btn-primary" onclick="closeCustomizationWelcome()">
+                                <i class="fas fa-magic"></i> Start Customizing
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+        
+        function closeCustomizationWelcome() {
+            const modal = document.getElementById('customizationWelcome');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // Check for template parameter on page load
+        window.addEventListener('load', () => {
+            checkForTemplate();
+        });
+    </script>
+    
+    <style>
+    /* Demo Builder Styles */
+    .component-header, .workspace-header, .properties-header {
+        padding: 1rem;
+        border-bottom: 1px solid #e5e7eb;
+        background: #f9fafb;
+    }
+    
+    .component-header h3, .workspace-header h3, .properties-header h3 {
+        margin: 0 0 0.5rem 0;
+        font-size: 1rem;
+        color: #374151;
+    }
+    
+    .component-header p, .workspace-header p, .properties-header p {
+        margin: 0;
+        font-size: 0.875rem;
+        color: #6b7280;
+    }
+    
+    .component-category {
+        padding: 1rem;
+    }
+    
+    .component-category h4 {
+        margin: 0 0 0.75rem 0;
+        font-size: 0.875rem;
+        color: #374151;
+        font-weight: 600;
+    }
+    
+    .component-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        margin-bottom: 0.5rem;
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        cursor: grab;
+        transition: all 0.2s;
+    }
+    
+    .component-item:hover {
+        border-color: #667eea;
+        box-shadow: 0 2px 4px rgba(102, 126, 234, 0.1);
+    }
+    
+    .component-item i {
+        color: #667eea;
+        width: 16px;
+    }
+    
+    .canvas-container {
+        position: relative;
+        height: calc(100vh - 200px);
+        background: #f9fafb;
+        overflow: hidden;
+    }
+    
+    .demo-node {
+        width: 180px;
+        background: white;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .demo-node:hover {
+        border-color: #667eea;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+    }
+    
+    .demo-node.selected {
+        border-color: #667eea;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+    
+    .node-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem;
+        background: #667eea;
+        color: white;
+        border-radius: 10px 10px 0 0;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+    
+    .node-content {
+        padding: 1rem;
+    }
+    
+    .node-content p {
+        margin: 0 0 0.5rem 0;
+        font-size: 0.875rem;
+        color: #374151;
+    }
+    
+    .node-options {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+    
+    .node-options .option {
+        padding: 0.25rem 0.5rem;
+        background: #f3f4f6;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        color: #6b7280;
+    }
+    
+    .properties-content {
+        padding: 1rem;
+    }
+    
+    .demo-message {
+        background: #f0f9ff;
+        border: 1px solid #0ea5e9;
+        border-radius: 8px;
+        padding: 1rem;
+    }
+    
+    .demo-message h4 {
+        margin: 0 0 0.75rem 0;
+        color: #0369a1;
+    }
+    
+    .demo-message p {
+        margin: 0 0 0.75rem 0;
+        font-size: 0.875rem;
+        color: #0369a1;
+    }
+    
+    .demo-message ul {
+        margin: 0 0 1rem 0;
+        padding-left: 1.25rem;
+    }
+    
+    .demo-message li {
+        font-size: 0.875rem;
+        color: #0369a1;
+        margin-bottom: 0.25rem;
+    }
+    
+    .property-group {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 1rem;
+    }
+    
+    .property-group h4 {
+        margin: 0 0 1rem 0;
+        color: #374151;
+    }
+    
+    .property-field {
+        margin-bottom: 1rem;
+    }
+    
+    .property-field label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #374151;
+    }
+    
+    .property-field input, .property-field textarea {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 0.875rem;
+    }
+    
+    .property-field textarea {
+        height: 80px;
+        resize: vertical;
+    }
+    
+    .demo-notice {
+        background: #fef3c7;
+        border: 1px solid #f59e0b;
+        border-radius: 6px;
+        padding: 0.75rem;
+        margin-top: 1rem;
+    }
+    
+    .demo-notice p {
+        margin: 0;
+        font-size: 0.875rem;
+        color: #92400e;
+    }
+    </style>
     </script>
 </body>
 </html>
