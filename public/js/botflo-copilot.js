@@ -15,7 +15,12 @@ class BotFloCopilot {
         this.bindEvents();
         this.detectPageContext();
         this.showWelcomeMessage();
-    }
+        
+        // Set up periodic cleanup of conflicting widgets
+        setInterval(() => {
+            this.removeConflictingWidgets();
+        }, 3000);
+   }
 
     createCopilotUI() {
         // Remove any existing copilot instances
@@ -23,6 +28,10 @@ class BotFloCopilot {
         if (existingCopilot) {
             existingCopilot.remove();
         }
+        
+        // Remove any conflicting chat widgets
+        const conflictingWidgets = document.querySelectorAll('#smart-copilot-widget, #smart-copilot-trigger, .chatflow-copilot, #chatflow-copilot');
+        conflictingWidgets.forEach(widget => widget.remove());
         
         const copilotHTML = `
             <div id="botflo-copilot" class="botflo-copilot">
@@ -105,8 +114,8 @@ class BotFloCopilot {
             .botflo-copilot {
                 position: fixed;
                 bottom: 20px;
-                right: 90px;
-                z-index: 10000;
+                right: 20px;
+                z-index: 99999;
                 font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             }
 
@@ -340,6 +349,29 @@ class BotFloCopilot {
                 transform: scale(1.05);
             }
 
+            /* Mobile responsiveness for copilot */
+            @media (max-width: 768px) {
+                .botflo-copilot {
+                    right: 10px;
+                    bottom: 10px;
+                }
+                
+                .copilot-window {
+                    width: calc(100vw - 20px);
+                    right: 10px;
+                    bottom: 70px;
+                }
+                
+                .copilot-toggle {
+                    padding: 10px 16px;
+                    gap: 10px;
+                }
+                
+                .copilot-label {
+                    display: none;
+                }
+            }
+
             @media (max-width: 768px) {
                 .copilot-window {
                     width: calc(100vw - 40px);
@@ -551,6 +583,16 @@ class BotFloCopilot {
 
     saveProgress() {
         localStorage.setItem('botflo-progress', JSON.stringify(this.userProgress));
+    }
+
+    removeConflictingWidgets() {
+        // Remove any conflicting chat widgets that might be added dynamically
+        const conflictingWidgets = document.querySelectorAll('#smart-copilot-widget, #smart-copilot-trigger, .chatflow-copilot, #chatflow-copilot, .smart-copilot-trigger');
+        conflictingWidgets.forEach(widget => {
+            if (widget && widget.parentNode) {
+                widget.remove();
+            }
+        });
     }
 }
 

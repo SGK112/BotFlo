@@ -510,7 +510,7 @@
         .fab {
             position: fixed;
             bottom: 2rem;
-            right: 6rem;
+            right: 2rem;
             width: 56px;
             height: 56px;
             border-radius: 50%;
@@ -524,7 +524,9 @@
             justify-content: center;
             font-size: 1.5rem;
             transition: all 0.3s ease;
-            z-index: 100;
+            z-index: 50;
+            opacity: 0;
+            transform: scale(0.9);
         }
 
         .fab:hover {
@@ -612,7 +614,7 @@
 
             .fab {
                 bottom: 1rem;
-                right: 4rem;
+                right: 1rem;
             }
         }
 
@@ -1747,14 +1749,16 @@
                 });
             });
             
-            // FAB visibility
+            // FAB visibility and positioning
             const fab = document.querySelector('.fab');
             const debouncedScroll = debounce(() => {
                 if (window.scrollY > 500) {
                     fab.style.opacity = '1';
                     fab.style.transform = 'scale(1)';
+                    // Move FAB away from copilot area
+                    fab.style.right = window.innerWidth <= 768 ? '1rem' : '120px';
                 } else {
-                    fab.style.opacity = '0.7';
+                    fab.style.opacity = '0';
                     fab.style.transform = 'scale(0.9)';
                 }
             }, 10);
