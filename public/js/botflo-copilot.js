@@ -88,43 +88,90 @@ class BotFloCopilot {
             <style>
             .botflo-copilot {
                 position: fixed;
-                bottom: 20px;
-                right: 20px;
+                bottom: 30px;
+                right: 30px;
                 z-index: 99999;
                 font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            }
+
+            /* Responsive positioning to avoid conflicts */
+            @media (max-width: 768px) {
+                .botflo-copilot {
+                    bottom: 20px;
+                    right: 20px;
+                }
+            }
+
+            /* Ensure copilot stays above other floating elements */
+            .botflo-copilot {
+                z-index: 99999 !important;
+            }
+
+            /* Defensive positioning against FAB or scroll-top buttons */
+            .fab, .scroll-top, .back-to-top {
+                right: 140px !important; /* Move other floating buttons away */
+            }
+
+            @media (max-width: 768px) {
+                .fab, .scroll-top, .back-to-top {
+                    right: 90px !important;
+                }
             }
 
             .copilot-toggle {
                 display: flex;
                 align-items: center;
                 gap: 12px;
-                background: linear-gradient(135deg, #667eea, #764ba2);
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 color: white;
-                padding: 12px 20px;
-                border-radius: 50px;
+                padding: 14px 24px;
+                border-radius: 60px;
                 cursor: pointer;
-                box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-                transition: all 0.3s ease;
+                box-shadow: 0 10px 30px rgba(102, 126, 234, 0.25);
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 border: none;
                 font-size: 14px;
-                font-weight: 500;
+                font-weight: 600;
+                backdrop-filter: blur(10px);
+                position: relative;
+                overflow: hidden;
+            }
+
+            .copilot-toggle::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+                transition: left 0.5s;
+            }
+
+            .copilot-toggle:hover::before {
+                left: 100%;
             }
 
             .copilot-toggle:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+                transform: translateY(-3px) scale(1.02);
+                box-shadow: 0 15px 40px rgba(102, 126, 234, 0.35);
+            }
+
+            .copilot-toggle:active {
+                transform: translateY(-1px) scale(0.98);
             }
 
             .copilot-avatar {
                 position: relative;
-                width: 32px;
-                height: 32px;
-                background: rgba(255, 255, 255, 0.2);
+                width: 36px;
+                height: 36px;
+                background: rgba(255, 255, 255, 0.15);
                 border-radius: 50%;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                font-size: 16px;
+                font-size: 18px;
+                border: 2px solid rgba(255, 255, 255, 0.2);
             }
 
             .copilot-avatar i {
@@ -160,54 +207,84 @@ class BotFloCopilot {
 
             .copilot-window {
                 position: absolute;
-                bottom: 70px;
+                bottom: 80px;
                 right: 0;
-                width: 380px;
-                height: 500px;
+                width: 400px;
+                height: 520px;
                 background: white;
-                border-radius: 16px;
-                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+                border-radius: 20px;
+                box-shadow: 0 25px 70px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(102, 126, 234, 0.1);
                 display: none;
                 flex-direction: column;
                 overflow: hidden;
-                border: 1px solid #e5e7eb;
+                backdrop-filter: blur(20px);
+                transform: scale(0.95) translateY(20px);
+                opacity: 0;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             }
 
             .copilot-window.visible {
                 display: flex;
-                animation: slideUp 0.3s ease-out;
+                transform: scale(1) translateY(0);
+                opacity: 1;
+                animation: slideUpBounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             }
 
-            @keyframes slideUp {
-                from { opacity: 0; transform: translateY(20px); }
-                to { opacity: 1; transform: translateY(0); }
+            @keyframes slideUpBounce {
+                0% { 
+                    opacity: 0; 
+                    transform: scale(0.8) translateY(40px); 
+                }
+                60% { 
+                    opacity: 1; 
+                    transform: scale(1.02) translateY(-5px); 
+                }
+                100% { 
+                    opacity: 1; 
+                    transform: scale(1) translateY(0); 
+                }
             }
 
             .copilot-header {
-                padding: 16px 20px;
-                border-bottom: 1px solid #e5e7eb;
+                padding: 20px 24px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                background: linear-gradient(135deg, #667eea, #764ba2);
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 color: white;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .copilot-header::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%, rgba(255,255,255,0.05) 100%);
+                pointer-events: none;
             }
 
             .copilot-info {
                 display: flex;
                 align-items: center;
                 gap: 12px;
+                z-index: 1;
             }
 
             .copilot-avatar-small {
-                width: 24px;
-                height: 24px;
+                width: 28px;
+                height: 28px;
                 background: rgba(255, 255, 255, 0.2);
                 border-radius: 50%;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                font-size: 12px;
+                font-size: 14px;
+                border: 1px solid rgba(255, 255, 255, 0.3);
             }
 
             .copilot-avatar-small i {
@@ -230,18 +307,30 @@ class BotFloCopilot {
             }
 
             .copilot-close {
-                background: none;
+                background: rgba(255, 255, 255, 0.1);
                 border: none;
                 color: white;
                 cursor: pointer;
-                padding: 4px;
-                border-radius: 4px;
-                opacity: 0.7;
-                transition: opacity 0.2s;
+                padding: 8px;
+                border-radius: 8px;
+                opacity: 0.8;
+                transition: all 0.2s ease;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 32px;
+                height: 32px;
+                z-index: 1;
             }
 
             .copilot-close:hover {
                 opacity: 1;
+                background: rgba(255, 255, 255, 0.2);
+                transform: scale(1.1);
+            }
+
+            .copilot-close:active {
+                transform: scale(0.95);
             }
 
             .copilot-messages {
@@ -420,15 +509,32 @@ class BotFloCopilot {
 
     showCopilot() {
         const window = document.getElementById('copilot-window');
-        window.classList.add('visible');
-        this.isVisible = true;
-        document.getElementById('copilot-input').focus();
+        window.style.display = 'flex';
+        
+        // Use requestAnimationFrame for smooth animation
+        requestAnimationFrame(() => {
+            window.classList.add('visible');
+            this.isVisible = true;
+            
+            // Auto-focus input after animation
+            setTimeout(() => {
+                const input = document.getElementById('copilot-input');
+                if (input) input.focus();
+            }, 200);
+        });
     }
 
     hideCopilot() {
         const window = document.getElementById('copilot-window');
         window.classList.remove('visible');
         this.isVisible = false;
+        
+        // Hide after animation completes
+        setTimeout(() => {
+            if (!this.isVisible) {
+                window.style.display = 'none';
+            }
+        }, 300);
     }
 
     detectPageContext() {
