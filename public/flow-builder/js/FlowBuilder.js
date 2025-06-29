@@ -75,7 +75,8 @@ export class FlowBuilder extends EventEmitter {
         const workspaceContainer = document.getElementById('main-workspace');
         if (workspaceContainer) {
             this.workspace = new Workspace(workspaceContainer);
-            await this.workspace.init();
+            // Workspace init is not async, but we call it explicitly
+            this.workspace.init();
         }
 
         // Initialize properties panel
@@ -89,6 +90,12 @@ export class FlowBuilder extends EventEmitter {
         if (!this.componentLibrary || !this.workspace || !this.propertiesPanel) {
             throw new Error('Failed to initialize one or more UI components');
         }
+        
+        console.log('All components initialized:', {
+            componentLibrary: !!this.componentLibrary,
+            workspace: !!this.workspace,
+            propertiesPanel: !!this.propertiesPanel
+        });
     }
 
     /**
@@ -168,7 +175,10 @@ export class FlowBuilder extends EventEmitter {
 
         // Workspace events - these trigger nodeManager events
         if (this.workspace) {
+            console.log('Setting up workspace events'); // Debug
+            
             this.workspace.on('node:drop', ({ componentType, x, y }) => {
+                console.log('FlowBuilder received node:drop event', { componentType, x, y }); // Debug
                 this.createNode(componentType, x, y);
             });
 
@@ -267,7 +277,9 @@ export class FlowBuilder extends EventEmitter {
      */
     async createNode(type, x = 100, y = 100) {
         try {
-            const node = await this.nodeManager.createNode(type, { x, y });
+            console.log('FlowBuilder.createNode called with:', { type, x, y }); // Debug
+            const node = this.nodeManager.createNode(type, x, y);
+            console.log('Node created successfully:', node); // Debug
             this.markDirty();
             return node;
         } catch (error) {
@@ -280,7 +292,7 @@ export class FlowBuilder extends EventEmitter {
      * Create the initial start node
      */
     async createStartNode() {
-        if (this.nodeManager.getNodes().size === 0) {
+        if (this.nodeManager.getAllNodes().length === 0) {
             await this.createNode('start', 100, 100);
         }
     }
@@ -591,13 +603,11 @@ export class FlowBuilder extends EventEmitter {
             // Load nodes
             if (flowData.nodes) {
                 for (const nodeData of flowData.nodes) {
-                    const node = await this.nodeManager.createNode(
+                    const node = this.nodeManager.createNode(
                         nodeData.type, 
-                        { 
-                            x: nodeData.x, 
-                            y: nodeData.y,
-                            config: nodeData.config 
-                        }
+                        nodeData.x, 
+                        nodeData.y,
+                        nodeData.config || {}
                     );
                     node.id = nodeData.id; // Preserve original ID
                 }

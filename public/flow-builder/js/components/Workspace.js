@@ -1,4 +1,5 @@
 import { EventEmitter } from '../core/EventEmitter.js';
+import { NODE_CONFIGS } from '../utils/NodeConfigs.js';
 
 export class Workspace extends EventEmitter {
     constructor(containerElement) {
@@ -35,8 +36,14 @@ export class Workspace extends EventEmitter {
                 </div>
             </div>
             <div class="workspace-canvas" id="workspace-canvas">
-                <canvas id="flow-canvas"></canvas>
+                <canvas id="flow-canvas" width="2000" height="1500"></canvas>
                 <div class="nodes-container" id="nodes-container"></div>
+                <div class="drop-hint" id="drop-hint" style="display: none;">
+                    <div class="drop-hint-content">
+                        <i class="fas fa-plus-circle"></i>
+                        <p>Drop component here to add to flow</p>
+                    </div>
+                </div>
             </div>
             <div class="workspace-minimap" id="workspace-minimap" style="display: none;">
                 <canvas id="minimap-canvas"></canvas>
@@ -45,6 +52,10 @@ export class Workspace extends EventEmitter {
 
         this.canvas = this.container.querySelector('#flow-canvas');
         this.nodesContainer = this.container.querySelector('#nodes-container');
+        this.dropHint = this.container.querySelector('#drop-hint');
+        
+        // Set canvas dimensions properly
+        this.resizeCanvas();
     }
 
     setupEventListeners() {
@@ -65,6 +76,15 @@ export class Workspace extends EventEmitter {
             this.emit('fitToView');
         });
 
+        // Canvas events - set up drop zone properly
+        const workspaceCanvas = this.container.querySelector('#workspace-canvas');
+        
+        // Make the entire workspace area a drop zone
+        workspaceCanvas.addEventListener('drop', this.handleDrop.bind(this));
+        workspaceCanvas.addEventListener('dragover', this.handleDragOver.bind(this));
+        workspaceCanvas.addEventListener('dragenter', this.handleDragEnter.bind(this));
+        workspaceCanvas.addEventListener('dragleave', this.handleDragLeave.bind(this));
+        
         // Canvas events
         this.canvas.addEventListener('drop', this.handleDrop.bind(this));
         this.canvas.addEventListener('dragover', this.handleDragOver.bind(this));
@@ -77,16 +97,30 @@ export class Workspace extends EventEmitter {
 
     handleDrop(event) {
         event.preventDefault();
-        const data = event.dataTransfer.getData('text/plain');
+        console.log('Drop event received'); // Debug log
+        
+        let data = event.dataTransfer.getData('application/json');
+        if (!data) {
+            data = event.dataTransfer.getData('text/plain');
+        }
+        
+        console.log('Drop data:', data); // Debug log
         
         try {
             const dropData = JSON.parse(data);
+            console.log('Parsed drop data:', dropData); // Debug log
+            
             if (dropData.type === 'component') {
                 const rect = this.canvas.getBoundingClientRect();
                 const position = {
                     x: event.clientX - rect.left,
                     y: event.clientY - rect.top
                 };
+                
+                console.log('Emitting node:drop event', {
+                    componentType: dropData.componentType,
+                    position
+                }); // Debug log
                 
                 this.emit('node:drop', {
                     componentType: dropData.componentType,
@@ -96,12 +130,44 @@ export class Workspace extends EventEmitter {
             }
         } catch (error) {
             console.warn('Invalid drop data:', error);
+            console.log('Raw data:', data);
         }
     }
 
     handleDragOver(event) {
         event.preventDefault();
         event.dataTransfer.dropEffect = 'copy';
+    }
+
+    handleDragEnter(event) {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'copy';
+        
+        // Add visual feedback for drop zone
+        const canvas = this.container.querySelector('#workspace-canvas');
+        canvas.classList.add('drag-over');
+        
+        // Show drop hint
+        if (this.dropHint) {
+            this.dropHint.style.display = 'flex';
+        }
+        
+        console.log('Drag entered workspace'); // Debug
+    }
+
+    handleDragLeave(event) {
+        // Only remove highlight if we're actually leaving the drop zone
+        const canvas = this.container.querySelector('#workspace-canvas');
+        if (!canvas.contains(event.relatedTarget)) {
+            canvas.classList.remove('drag-over');
+            
+            // Hide drop hint
+            if (this.dropHint) {
+                this.dropHint.style.display = 'none';
+            }
+            
+            console.log('Drag left workspace'); // Debug
+        }
     }
 
     handleCanvasClick(event) {
@@ -496,16 +562,24 @@ export class Workspace extends EventEmitter {
      * Enable drop mode for drag and drop
      */
     enableDropMode() {
-        this.canvas.classList.add('drop-mode');
-        this.canvas.style.cursor = 'copy';
+        const canvas = this.container.querySelector('#workspace-canvas');
+        canvas.classList.add('drop-mode-active');
+        console.log('Drop mode enabled'); // Debug
     }
 
     /**
      * Disable drop mode
      */
     disableDropMode() {
-        this.canvas.classList.remove('drop-mode');
-        this.canvas.style.cursor = 'default';
+        const canvas = this.container.querySelector('#workspace-canvas');
+        canvas.classList.remove('drop-mode-active', 'drag-over');
+        
+        // Hide drop hint
+        if (this.dropHint) {
+            this.dropHint.style.display = 'none';
+        }
+        
+        console.log('Drop mode disabled'); // Debug
     }
 
     /**
@@ -563,21 +637,7 @@ export class Workspace extends EventEmitter {
      * @returns {object} Node configuration
      */
     getNodeTypeConfig(type) {
-        // Import NODE_CONFIGS if available
-        if (window.NODE_CONFIGS) {
-            return window.NODE_CONFIGS[type];
-        }
-        
-        // Fallback configurations
-        const fallbackConfigs = {
-            welcome: { icon: '👋', name: 'Welcome' },
-            message: { icon: '💬', name: 'Message' },
-            question: { icon: '❓', name: 'Question' },
-            condition: { icon: '🔀', name: 'Condition' },
-            action: { icon: '⚡', name: 'Action' }
-        };
-        
-        return fallbackConfigs[type] || { icon: '⚙️', name: type };
+        return NODE_CONFIGS[type] || { icon: '⚙️', name: type };
     }
 
     /**
@@ -695,5 +755,20 @@ export class Workspace extends EventEmitter {
         });
         this.selectedElements.clear();
         // Don't emit event - this is called in response to NodeManager events
+    }
+
+    resizeCanvas() {
+        if (this.canvas) {
+            const container = this.container.querySelector('#workspace-canvas');
+            const rect = container.getBoundingClientRect();
+            
+            // Set canvas size to container size
+            this.canvas.width = rect.width || 1200;
+            this.canvas.height = rect.height || 800;
+            
+            // Set CSS size to match
+            this.canvas.style.width = this.canvas.width + 'px';
+            this.canvas.style.height = this.canvas.height + 'px';
+        }
     }
 }

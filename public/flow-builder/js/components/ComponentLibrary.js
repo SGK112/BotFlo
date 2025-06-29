@@ -169,12 +169,15 @@ export class ComponentLibrary extends EventEmitter {
                 const componentType = item.dataset.component;
                 const componentName = item.dataset.name;
                 
-                // Set drag data
-                e.dataTransfer.setData('text/plain', componentType);
-                e.dataTransfer.setData('application/json', JSON.stringify({
-                    type: componentType,
+                // Set drag data in consistent format
+                const dragData = {
+                    type: 'component',
+                    componentType: componentType,
                     name: componentName
-                }));
+                };
+                
+                e.dataTransfer.setData('text/plain', JSON.stringify(dragData));
+                e.dataTransfer.setData('application/json', JSON.stringify(dragData));
                 e.dataTransfer.effectAllowed = 'copy';
                 
                 // Add visual feedback

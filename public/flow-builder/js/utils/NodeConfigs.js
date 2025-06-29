@@ -3,6 +3,24 @@
  */
 
 export const NODE_CONFIGS = {
+    // Start Node
+    start: {
+        name: 'Start',
+        icon: '🚀',
+        iconClass: 'icon-start',
+        category: 'flow',
+        description: 'Starting point of the conversation flow',
+        config: {
+            message: 'Welcome! This is the beginning of your chatbot flow.',
+            autoStart: true
+        },
+        validation: {},
+        inputs: [],
+        outputs: ['general'],
+        maxInputs: 0,
+        maxOutputs: 1
+    },
+
     // Interaction Nodes
     welcome: {
         name: 'Welcome Message',
@@ -478,6 +496,11 @@ export const NODE_CONFIGS = {
 };
 
 export const NODE_CATEGORIES = {
+    flow: {
+        name: 'Flow Control',
+        icon: 'fas fa-play-circle',
+        description: 'Flow start and control nodes'
+    },
     interaction: {
         name: 'Interaction',
         icon: 'fas fa-comments',
