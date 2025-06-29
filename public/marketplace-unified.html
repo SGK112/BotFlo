@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BotFlo Marketplace - Buy Ready-Made Chatbots</title>
+    <meta name="description" content="Purchase and customize professional chatbots for your business. Add your website content and deploy instantly.">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="BotFlo">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="alternate icon" href="/favicon.ico">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/favicon.svg">
+    
+    <!-- Global App Styles -->
+    <link rel="stylesheet" href="app-global.css">
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Marketplace Specific Styles */
+        .marketplace-hero {
+            background: var(--gradient-primary);
+            color: white;
+            padding: var(--space-12) 0 var(--space-8);
+            text-align: center;
+        }
+
+        .search-section {
+            padding: var(--space-6) 0;
+            max-width: 1200px;
+            margin: 0 auto var(--space-6);
+        }
+
+        .search-container {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 var(--space-4);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: var(--space-4) var(--space-4) var(--space-4) var(--space-12);
+            border: 2px solid var(--gray-200);
+            border-radius: var(--border-radius-full);
+            font-size: var(--font-size-base);
+            background: var(--gray-50);
+            transition: all var(--transition-base);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: var(--space-4);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-500);
+            font-size: var(--font-size-lg);
+        }
+
+        .filters {
+            display: flex;
+            gap: var(--space-3);
+            margin: 0 auto var(--space-8);
+            overflow-x: auto;
+            padding: 0 var(--space-4) var(--space-2);
+            max-width: 1200px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 768px) {
+            .filters {
+                justify-content: flex-start;
+                flex-wrap: nowrap;
+            }
+        }
+
+        .filter-btn {
+            padding: var(--space-2) var(--space-4);
+            border: 2px solid var(--gray-300);
+            background: white;
+            border-radius: var(--border-radius-full);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            color: var(--gray-600);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            white-space: nowrap;
+            min-width: fit-content;
+        }
+
+        .filter-btn.active,
+        .filter-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--space-6);
+        }
+
+        .product-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: var(--font-size-4xl);
+            margin-bottom: var(--space-4);
+            border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: var(--space-4);
+            right: var(--space-4);
+            background: var(--success);
+            color: white;
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--border-radius-full);
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            z-index: 1;
+        }
+
+        .product-price {
+            font-size: var(--font-size-2xl);
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: var(--space-4);
+        }
+
+        .product-features {
+            list-style: none;
+            margin-bottom: var(--space-6);
+        }
+
+        .product-features li {
+            padding: var(--space-1) 0;
+            color: var(--gray-600);
+            font-size: var(--font-size-sm);
+        }
+
+        .product-features li:before {
+            content: '✓';
+            color: var(--success);
+            font-weight: bold;
+            margin-right: var(--space-2);
+        }
+
+        .cart-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-4);
+        }
+
+        .cart-modal {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            max-width: 500px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .cart-header {
+            padding: var(--space-6);
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-4);
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-total {
+            padding: var(--space-6);
+            border-top: 2px solid var(--gray-200);
+            background: var(--gray-50);
+        }
+
+        .checkout-form {
+            display: none;
+            padding: var(--space-6);
+        }
+
+        @media (max-width: 768px) {
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filters {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation will be injected by app-navigation.js -->
+
+    <!-- Marketplace Hero -->
+    <section class="marketplace-hero">
+        <div class="app-main">
+            <h1>🛒 Professional Chatbot Store</h1>
+            <p class="text-lead">Choose from industry-specific chatbots designed to boost your business revenue</p>
+        </div>
+    </section>
+
+    <!-- Search Section -->
+    <section class="search-section">
+        <div class="app-main">
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" placeholder="Search chatbots..." id="searchInput">
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="app-main">
+        <!-- Filters -->
+        <div class="filters">
+            <button class="filter-btn active" data-category="all">All Bots</button>
+            <button class="filter-btn" data-category="business">Business</button>
+            <button class="filter-btn" data-category="ecommerce">E-commerce</button>
+            <button class="filter-btn" data-category="support">Support</button>
+            <button class="filter-btn" data-category="lead-gen">Lead Gen</button>
+            <button class="filter-btn" data-category="healthcare">Healthcare</button>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="products-grid" id="productsGrid">
+            <!-- Products will be populated by JavaScript -->
+        </div>
+    </main>
+
+    <!-- Cart Overlay -->
+    <div class="cart-overlay" id="cartOverlay">
+        <div class="cart-modal">
+            <div class="cart-header">
+                <h3>Shopping Cart</h3>
+                <button class="btn btn-ghost btn-sm" onclick="closeCart()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="cart-body" id="cartItems">
+                <!-- Cart items will be populated here -->
+            </div>
+            <div class="cart-total" id="cartTotal">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="h4">Total: $0</span>
+                </div>
+                <button class="btn btn-primary btn-full" onclick="proceedToCheckout()">
+                    <i class="fas fa-credit-card"></i>
+                    Proceed to Checkout
+                </button>
+            </div>
+            
+            <!-- Checkout Form -->
+            <div class="checkout-form" id="checkoutForm">
+                <h4 class="mb-4">Complete Your Purchase</h4>
+                <form id="purchaseForm">
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" class="form-input" required placeholder="your@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-input" required placeholder="Your full name">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Payment Method</label>
+                        <select class="form-input form-select" required>
+                            <option value="">Select payment method</option>
+                            <option value="card">Credit/Debit Card</option>
+                            <option value="paypal">PayPal</option>
+                        </select>
+                    </div>
+                    <div class="flex gap-4">
+                        <button type="button" class="btn btn-ghost btn-full" onclick="backToCart()">Back</button>
+                        <button type="submit" class="btn btn-primary btn-full">
+                            <i class="fas fa-lock"></i>
+                            Complete Purchase
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- App Navigation and Footer will be injected here -->
+    
+    <script src="app-navigation.js"></script>
+    <script>
+        // Marketplace Data
+        const chatbots = [
+            {
+                id: 'customer-support-pro',
+                name: 'Customer Support Pro',
+                price: 35,
+                originalPrice: 49,
+                category: 'support',
+                emoji: '🎧',
+                description: 'Advanced customer service chatbot with ticket management and FAQ automation',
+                features: ['24/7 Support', 'Ticket Management', 'FAQ Automation', 'Multi-language'],
+                badge: 'Popular',
+                roi: '250%'
+            },
+            {
+                id: 'ecommerce-assistant',
+                name: 'E-commerce Assistant',
+                price: 45,
+                originalPrice: 65,
+                category: 'ecommerce',
+                emoji: '🛒',
+                description: 'Complete shopping assistant with product recommendations and order tracking',
+                features: ['Product Search', 'Order Tracking', 'Recommendations', 'Cart Recovery'],
+                badge: 'Best Seller',
+                roi: '300%'
+            },
+            {
+                id: 'lead-generator-pro',
+                name: 'Lead Generator Pro',
+                price: 39,
+                originalPrice: 55,
+                category: 'lead-gen',
+                emoji: '🎯',
+                description: 'Powerful lead qualification and nurturing system with CRM integration',
+                features: ['Lead Scoring', 'CRM Integration', 'Email Capture', 'Follow-up Automation'],
+                badge: 'High ROI',
+                roi: '400%'
+            },
+            {
+                id: 'appointment-booking',
+                name: 'Appointment Booking',
+                price: 29,
+                originalPrice: 40,
+                category: 'business',
+                emoji: '📅',
+                description: 'Smart scheduling assistant with calendar integration and reminders',
+                features: ['Calendar Sync', 'Auto Reminders', 'Rescheduling', 'Time Zone Support'],
+                badge: 'Time Saver',
+                roi: '200%'
+            },
+            {
+                id: 'healthcare-assistant',
+                name: 'Healthcare Assistant',
+                price: 55,
+                originalPrice: 75,
+                category: 'healthcare',
+                emoji: '🏥',
+                description: 'HIPAA-compliant healthcare chatbot for patient engagement and scheduling',
+                features: ['HIPAA Compliant', 'Symptom Assessment', 'Appointment Booking', 'Prescription Reminders'],
+                badge: 'Certified',
+                roi: '180%'
+            },
+            {
+                id: 'real-estate-agent',
+                name: 'Real Estate Agent',
+                price: 42,
+                originalPrice: 60,
+                category: 'business',
+                emoji: '🏠',
+                description: 'Property showcase and lead capture bot for real estate professionals',
+                features: ['Property Listings', 'Virtual Tours', 'Lead Capture', 'Market Analysis'],
+                badge: 'New',
+                roi: '350%'
+            }
+        ];
+
+        let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        let currentFilter = 'all';
+
+        // Initialize marketplace
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProducts();
+            updateCartUI();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            // Search functionality
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                searchProducts(e.target.value);
+            });
+
+            // Filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    currentFilter = e.target.dataset.category;
+                    renderProducts();
+                });
+            });
+
+            // Cart form submission
+            document.getElementById('purchaseForm').addEventListener('submit', handlePurchase);
+        }
+
+        function renderProducts(filteredProducts = null) {
+            const products = filteredProducts || chatbots.filter(bot => 
+                currentFilter === 'all' || bot.category === currentFilter
+            );
+            
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = products.map(product => `
+                <div class="card product-card" data-category="${product.category}">
+                    ${product.badge ? `<div class="product-badge">${product.badge}</div>` : ''}
+                    <div class="product-image">
+                        ${product.emoji}
+                    </div>
+                    <div class="card-body">
+                        <h3>${product.name}</h3>
+                        <p class="text-muted mb-4">${product.description}</p>
+                        
+                        <div class="product-price">
+                            ${product.originalPrice ? `<span style="text-decoration: line-through; color: var(--gray-400); font-size: var(--font-size-lg); margin-right: var(--space-2);">$${product.originalPrice}</span>` : ''}
+                            $${product.price}
+                        </div>
+                        
+                        <ul class="product-features">
+                            ${product.features.map(feature => `<li>${feature}</li>`).join('')}
+                        </ul>
+                        
+                        <div class="alert alert-success mb-4">
+                            <strong>Average ROI: ${product.roi}</strong> in first month
+                        </div>
+                        
+                        <div class="flex gap-3">
+                            <button class="btn btn-secondary btn-sm flex-1" onclick="previewBot('${product.id}')">
+                                <i class="fas fa-eye"></i> Preview
+                            </button>
+                            <button class="btn btn-primary btn-sm flex-1" onclick="addToCart('${product.id}')">
+                                <i class="fas fa-cart-plus"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function searchProducts(query) {
+            if (!query.trim()) {
+                renderProducts();
+                return;
+            }
+            
+            const filtered = chatbots.filter(bot =>
+                bot.name.toLowerCase().includes(query.toLowerCase()) ||
+                bot.description.toLowerCase().includes(query.toLowerCase()) ||
+                bot.features.some(feature => feature.toLowerCase().includes(query.toLowerCase()))
+            );
+            
+            renderProducts(filtered);
+        }
+
+        function addToCart(productId) {
+            const product = chatbots.find(bot => bot.id === productId);
+            if (!product) return;
+
+            const existingItem = cart.find(item => item.id === productId);
+            if (existingItem) {
+                botFloApp.showNotification('Already in cart!', 'info');
+                return;
+            }
+
+            cart.push(product);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartUI();
+            botFloApp.showNotification('Added to cart!', 'success');
+            botFloApp.updateCartCount();
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartUI();
+            botFloApp.updateCartCount();
+        }
+
+        function updateCartUI() {
+            const cartItems = document.getElementById('cartItems');
+            const cartTotal = document.getElementById('cartTotal');
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = `
+                    <div class="p-6 text-center text-muted">
+                        <i class="fas fa-shopping-cart" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                        <p>Your cart is empty</p>
+                        <button class="btn btn-primary mt-4" onclick="closeCart()">Continue Shopping</button>
+                    </div>
+                `;
+                cartTotal.style.display = 'none';
+                return;
+            }
+
+            cartItems.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <div>
+                        <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-1);">
+                            <span style="font-size: var(--font-size-xl);">${item.emoji}</span>
+                            <strong>${item.name}</strong>
+                        </div>
+                        <p class="text-small text-muted">${item.description}</p>
+                    </div>
+                    <div style="text-align: right;">
+                        <div class="product-price" style="margin-bottom: var(--space-2);">$${item.price}</div>
+                        <button class="btn btn-ghost btn-sm" onclick="removeFromCart('${item.id}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            cartTotal.querySelector('.h4').textContent = `Total: $${total}`;
+            cartTotal.style.display = 'block';
+        }
+
+        function openCart() {
+            document.getElementById('cartOverlay').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCart() {
+            document.getElementById('cartOverlay').style.display = 'none';
+            document.getElementById('checkoutForm').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function proceedToCheckout() {
+            if (cart.length === 0) {
+                botFloApp.showNotification('Your cart is empty', 'error');
+                return;
+            }
+            document.getElementById('checkoutForm').style.display = 'block';
+        }
+
+        function backToCart() {
+            document.getElementById('checkoutForm').style.display = 'none';
+        }
+
+        function handlePurchase(e) {
+            e.preventDefault();
+            
+            // Simulate purchase process
+            const formData = new FormData(e.target);
+            const email = formData.get('email');
+            const name = formData.get('name');
+            
+            botFloApp.showNotification('Processing payment...', 'info');
+            
+            // Simulate API call
+            setTimeout(() => {
+                botFloApp.showNotification('Purchase successful! Check your email for download links.', 'success');
+                
+                // Clear cart and redirect
+                cart = [];
+                localStorage.setItem('cart', JSON.stringify(cart));
+                botFloApp.updateCartCount();
+                closeCart();
+                
+                // Redirect to customize page after purchase
+                setTimeout(() => {
+                    window.location.href = '/customize.html';
+                }, 2000);
+            }, 2000);
+        }
+
+        function previewBot(productId) {
+            const product = chatbots.find(bot => bot.id === productId);
+            botFloApp.showNotification(`Preview of ${product.name} - Feature coming soon!`, 'info');
+        }
+
+        // Click outside to close cart
+        document.getElementById('cartOverlay').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                closeCart();
+            }
+        });
+
+        // Global cart function for header
+        window.openCart = openCart;
+    </script>
+</body>
+</html>

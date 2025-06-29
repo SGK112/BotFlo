@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - BotFlo</title>
+    <meta name="description" content="Manage your account, subscription, and settings">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="BotFlo">
+    
+    <!-- Icons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="alternate icon" href="/favicon.ico">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/favicon.svg">
+    
+    <!-- Global App Styles -->
+    <link rel="stylesheet" href="app-global.css">
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #06b6d4;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --error: #ef4444;
+            --white: #ffffff;
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --gray-900: #0f172a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: var(--gray-800);
+            background: var(--gray-50);
+            padding-bottom: 80px;
+        }
+
+        /* Mobile Header */
+        .mobile-header {
+            background: var(--white);
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .settings-btn {
+            background: none;
+            border: none;
+            color: var(--gray-600);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .settings-btn:hover {
+            background: var(--gray-100);
+        }
+
+        /* Profile Section */
+        .profile-section {
+            padding: 2rem 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .profile-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 1px solid var(--gray-200);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0 auto 1rem;
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-email {
+            color: var(--gray-600);
+            margin-bottom: 1rem;
+        }
+
+        .profile-plan {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        /* Menu Items */
+        .menu-section {
+            margin-bottom: 2rem;
+        }
+
+        .menu-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 1rem;
+            padding: 0 1rem;
+        }
+
+        .menu-item {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            margin-bottom: 0.5rem;
+            text-decoration: none;
+            color: var(--gray-800);
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .menu-item:hover {
+            background: var(--gray-50);
+            transform: translateY(-1px);
+        }
+
+        .menu-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .menu-icon.account { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); }
+        .menu-icon.billing { background: linear-gradient(135deg, var(--accent), #e67e22); }
+        .menu-icon.security { background: linear-gradient(135deg, var(--success), #16a085); }
+        .menu-icon.notifications { background: linear-gradient(135deg, var(--secondary), #2980b9); }
+        .menu-icon.support { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .menu-icon.logout { background: linear-gradient(135deg, var(--gray-600), var(--gray-700)); }
+
+        .menu-content {
+            flex: 1;
+        }
+
+        .menu-label {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .menu-description {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+
+        .menu-arrow {
+            color: var(--gray-400);
+            font-size: 1rem;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 1rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border: 1px solid var(--gray-200);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: var(--gray-600);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            border-top: 1px solid var(--gray-200);
+            padding: 0.75rem 0;
+            z-index: 1000;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+
+        .bottom-nav-content {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            text-decoration: none;
+            color: var(--gray-500);
+            transition: all 0.3s ease;
+            padding: 0.5rem;
+            border-radius: 8px;
+            min-width: 60px;
+        }
+
+        .nav-item.active,
+        .nav-item:hover {
+            color: var(--primary);
+            background: var(--gray-50);
+        }
+
+        .nav-item i {
+            font-size: 1.25rem;
+        }
+
+        .nav-item span {
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+        <div class="header-content">
+            <div class="header-title">
+                <i class="fas fa-user"></i>
+                Profile
+            </div>
+            <button class="settings-btn" onclick="openSettings()">
+                <i class="fas fa-cog"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Profile Section -->
+    <div class="profile-section">
+        <div class="profile-card">
+            <div class="profile-avatar">JD</div>
+            <div class="profile-name">John Doe</div>
+            <div class="profile-email">john.doe@email.com</div>
+            <div class="profile-plan">Pro Plan - $29/month</div>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">3</div>
+                <div class="stat-label">Active Bots</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">14</div>
+                <div class="stat-label">Days Left</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">1.2k</div>
+                <div class="stat-label">Messages</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">$89</div>
+                <div class="stat-label">Revenue</div>
+            </div>
+        </div>
+
+        <!-- Account Menu -->
+        <div class="menu-section">
+            <h3 class="menu-title">Account</h3>
+            <a href="#" class="menu-item" onclick="editProfile()">
+                <div class="menu-icon account">
+                    <i class="fas fa-user-edit"></i>
+                </div>
+                <div class="menu-content">
+                    <div class="menu-label">Edit Profile</div>
+                    <div class="menu-description">Update your personal information</div>
+                </div>
+                <i class="fas fa-chevron-right menu-arrow"></i>
+            </a>
+            <a href="#" class="menu-item" onclick="manageBilling()">
+                <div class="menu-icon billing">
+                    <i class="fas fa-credit-card"></i>
+                </div>
+                <div class="menu-content">
+                    <div class="menu-label">Billing & Subscription</div>
+                    <div class="menu-description">Manage your plan and payment methods</div>
+                </div>
+                <i class="fas fa-chevron-right menu-arrow"></i>
+            </a>
+        </div>
+
+        <!-- Privacy & Security -->
+        <div class="menu-section">
+            <h3 class="menu-title">Privacy & Security</h3>
+            <a href="#" class="menu-item" onclick="changePassword()">
+                <div class="menu-icon security">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <div class="menu-content">
+                    <div class="menu-label">Change Password</div>
+                    <div class="menu-description">Update your account password</div>
+                </div>
+                <i class="fas fa-chevron-right menu-arrow"></i>
+            </a>
+            <a href="#" class="menu-item" onclick="manageNotifications()">
+                <div class="menu-icon notifications">
+                    <i class="fas fa-bell"></i>
+                </div>
+                <div class="menu-content">
+                    <div class="menu-label">Notifications</div>
+                    <div class="menu-description">Configure email and push notifications</div>
+                </div>
+                <i class="fas fa-chevron-right menu-arrow"></i>
+            </a>
+        </div>
+
+        <!-- Support -->
+        <div class="menu-section">
+            <h3 class="menu-title">Support</h3>
+            <a href="#" class="menu-item" onclick="contactSupport()">
+                <div class="menu-icon support">
+                    <i class="fas fa-question-circle"></i>
+                </div>
+                <div class="menu-content">
+                    <div class="menu-label">Help & Support</div>
+                    <div class="menu-description">Get help or contact our support team</div>
+                </div>
+                <i class="fas fa-chevron-right menu-arrow"></i>
+            </a>
+            <a href="#" class="menu-item" onclick="logout()">
+                <div class="menu-icon logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                </div>
+                <div class="menu-content">
+                    <div class="menu-label">Sign Out</div>
+                    <div class="menu-description">Sign out of your account</div>
+                </div>
+                <i class="fas fa-chevron-right menu-arrow"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <div class="bottom-nav-content">
+            <a href="/" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="/marketplace-unified.html" class="nav-item">
+                <i class="fas fa-store"></i>
+                <span>Store</span>
+            </a>
+            <a href="/dashboard.html" class="nav-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="/builders.html" class="nav-item">
+                <i class="fas fa-wrench"></i>
+                <span>Build</span>
+            </a>
+            <a href="/profile.html" class="nav-item active">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </a>
+        </div>
+    </nav>
+
+    <script>
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then((registration) => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch((registrationError) => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+
+        function openSettings() {
+            alert('Settings panel would open here with app preferences, theme, language, etc.');
+        }
+
+        function editProfile() {
+            alert('Profile editing form would open here to update name, email, avatar, etc.');
+        }
+
+        function manageBilling() {
+            alert('Billing management page would open here with subscription details, payment methods, and invoices.');
+        }
+
+        function changePassword() {
+            alert('Password change form would open here with current password and new password fields.');
+        }
+
+        function manageNotifications() {
+            alert('Notification preferences would open here to configure email, push, and in-app notifications.');
+        }
+
+        function contactSupport() {
+            alert('Support page would open here with help articles, chat support, and contact options.');
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to sign out?')) {
+                alert('User would be logged out and redirected to the login page.');
+                // window.location.href = '/login.html';
+            }
+        }
+
+        // Add smooth scrolling for better mobile experience
+        document.addEventListener('DOMContentLoaded', function() {
+            // Smooth scroll behavior
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

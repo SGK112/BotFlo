@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BotFlo.ai - Revenue-Ready Chatbot Store</title>
+    <meta name="description" content="Purchase professional chatbots, customize with your content, and start generating revenue instantly. Mobile-first chatbot marketplace.">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="BotFlo">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="alternate icon" href="/favicon.ico">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/favicon.svg">
+    
+    <!-- Global App Styles -->
+    <link rel="stylesheet" href="app-global.css">
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Homepage Specific Styles */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            background: var(--gradient-primary);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255,255,255,0.1) 0%, transparent 50%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            width: 100%;
+        }
+
+        .hero h1 {
+            font-size: var(--font-size-5xl);
+            font-weight: 900;
+            margin-bottom: var(--space-6);
+            background: linear-gradient(45deg, #fff, #e2e8f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+        }
+
+        .hero .subtitle {
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--space-8);
+            opacity: 0.9;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .revenue-badge {
+            background: var(--accent);
+            color: var(--dark);
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--border-radius-full);
+            font-weight: 700;
+            font-size: var(--font-size-base);
+            margin-bottom: var(--space-8);
+            display: inline-block;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .user-journey {
+            margin: var(--space-12) 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-6);
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .journey-step {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--border-radius-lg);
+            padding: var(--space-6);
+            text-align: center;
+            transition: all var(--transition-base);
+        }
+
+        .journey-step:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .journey-step .icon {
+            font-size: var(--font-size-4xl);
+            margin-bottom: var(--space-4);
+            display: block;
+        }
+
+        .journey-step h3 {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin-bottom: var(--space-2);
+        }
+
+        .journey-step p {
+            font-size: var(--font-size-sm);
+            opacity: 0.8;
+        }
+
+        .features {
+            padding: var(--space-24) 0;
+            background: var(--gray-50);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: var(--space-16);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--space-8);
+        }
+
+        .feature-card {
+            position: relative;
+        }
+
+        .feature-card .icon {
+            width: 4rem;
+            height: 4rem;
+            background: var(--gradient-primary);
+            border-radius: var(--border-radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--space-6);
+            color: white;
+            font-size: var(--font-size-2xl);
+        }
+
+        .price-tag {
+            position: absolute;
+            top: var(--space-4);
+            right: var(--space-4);
+            background: var(--success);
+            color: white;
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--border-radius-full);
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+        }
+
+        .quick-start {
+            padding: var(--space-24) 0;
+            background: var(--white);
+        }
+
+        .quick-start-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-16);
+            align-items: center;
+        }
+
+        .quick-start-demo {
+            background: var(--gray-50);
+            border-radius: var(--border-radius-lg);
+            padding: var(--space-8);
+            border: 2px dashed var(--gray-300);
+            text-align: center;
+        }
+
+        .demo-products {
+            text-align: left;
+            margin-bottom: var(--space-6);
+        }
+
+        .demo-product {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-3) 0;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .demo-product:last-child {
+            border-bottom: none;
+        }
+
+        .product-info {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+
+        .product-price {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: var(--font-size-3xl);
+            }
+            
+            .hero .subtitle {
+                font-size: var(--font-size-lg);
+            }
+            
+            .user-journey {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-start-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space-8);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation and mobile nav will be injected by app-navigation.js -->
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="app-main">
+            <div class="hero-content">
+                <div class="revenue-badge">💰 Start Making Money Today</div>
+                <h1>🤖 Professional Chatbots<br>Ready to Buy</h1>
+                <p class="subtitle">Purchase industry-specific chatbots, customize with your content, and start generating revenue instantly. No coding required.</p>
+                
+                <!-- User Journey Steps -->
+                <div class="user-journey">
+                    <div class="journey-step fade-in">
+                        <span class="icon">🛒</span>
+                        <h3>1. Purchase</h3>
+                        <p>Buy a professional chatbot from our store</p>
+                    </div>
+                    <div class="journey-step fade-in">
+                        <span class="icon">🌐</span>
+                        <h3>2. Train</h3>
+                        <p>Add your website URLs to train the bot</p>
+                    </div>
+                    <div class="journey-step fade-in">
+                        <span class="icon">🎨</span>
+                        <h3>3. Customize</h3>
+                        <p>Personalize appearance and behavior</p>
+                    </div>
+                    <div class="journey-step fade-in">
+                        <span class="icon">📱</span>
+                        <h3>4. Deploy</h3>
+                        <p>Download and install on your website</p>
+                    </div>
+                    <div class="journey-step fade-in">
+                        <span class="icon">💵</span>
+                        <h3>5. Profit</h3>
+                        <p>Watch your revenue grow</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-4 justify-center">
+                    <a href="/marketplace-unified.html" class="btn btn-primary btn-lg">
+                        <i class="fas fa-store"></i>
+                        Browse Chatbot Store
+                    </a>
+                    <a href="/dashboard.html" class="btn btn-secondary btn-lg">
+                        <i class="fas fa-mobile-alt"></i>
+                        Get Mobile App
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features app-section">
+        <div class="app-main">
+            <div class="section-header">
+                <h2>Revenue-Ready Solutions</h2>
+                <p class="text-lead">Professional chatbots designed to make money for your business - purchase, customize, and deploy in minutes.</p>
+            </div>
+            
+            <div class="features-grid">
+                <!-- Ready-Made Chatbots -->
+                <div class="card feature-card">
+                    <div class="price-tag">From $25</div>
+                    <div class="card-body">
+                        <div class="icon">
+                            <i class="fas fa-store"></i>
+                        </div>
+                        <h3>Professional Chatbots</h3>
+                        <p>Industry-specific chatbots designed by experts. Customer support, e-commerce, lead generation, and more.</p>
+                        <a href="/marketplace-new.html" class="btn btn-primary btn-sm">Browse Store</a>
+                    </div>
+                </div>
+
+                <!-- Website Training -->
+                <div class="card feature-card">
+                    <div class="card-body">
+                        <div class="icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3>Smart Training</h3>
+                        <p>Upload your website URLs and our AI automatically creates training data from your content, products, and services.</p>
+                        <a href="/customize.html" class="btn btn-primary btn-sm">Train Bot</a>
+                    </div>
+                </div>
+
+                <!-- Mobile App Experience -->
+                <div class="card feature-card">
+                    <div class="card-body">
+                        <div class="icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3>Mobile App Experience</h3>
+                        <p>Install our PWA for a native mobile app experience. Manage chatbots, view analytics, and monitor revenue on the go.</p>
+                        <a href="/dashboard.html" class="btn btn-primary btn-sm">Get App</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Start Demo -->
+    <section class="quick-start app-section">
+        <div class="app-main">
+            <div class="quick-start-grid">
+                <div class="quick-start-content">
+                    <h2>Start Generating Revenue</h2>
+                    <p class="text-lead">Choose from our selection of proven, revenue-generating chatbots. Each one is designed for specific business needs and ready to customize with your content.</p>
+                    <div class="flex gap-4">
+                        <a href="/marketplace-new.html" class="btn btn-primary btn-lg">
+                            <i class="fas fa-store"></i>
+                            View Chatbot Store
+                        </a>
+                    </div>
+                </div>
+                <div class="quick-start-demo">
+                    <h3>🔥 Popular Revenue Makers</h3>
+                    <div class="demo-products">
+                        <div class="demo-product">
+                            <div class="product-info">
+                                <span>🎧</span>
+                                <span>Customer Support Pro</span>
+                            </div>
+                            <div class="product-price">$35</div>
+                        </div>
+                        <div class="demo-product">
+                            <div class="product-info">
+                                <span>🛒</span>
+                                <span>E-commerce Assistant</span>
+                            </div>
+                            <div class="product-price">$45</div>
+                        </div>
+                        <div class="demo-product">
+                            <div class="product-info">
+                                <span>🎯</span>
+                                <span>Lead Generator Pro</span>
+                            </div>
+                            <div class="product-price">$39</div>
+                        </div>
+                        <div class="demo-product">
+                            <div class="product-info">
+                                <span>📅</span>
+                                <span>Appointment Booking</span>
+                            </div>
+                            <div class="product-price">$29</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-success btn-full" onclick="window.location.href='/marketplace-new.html'">
+                        <i class="fas fa-rocket"></i>
+                        Shop All Chatbots
+                    </button>
+                    <p class="text-small text-muted mt-4">
+                        💡 Average customer ROI: 300% in first month
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- App Navigation and Footer will be injected here -->
+    
+    <script src="app-navigation.js"></script>
+    <script>
+        // Homepage specific functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            // Animate elements on scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in');
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all feature cards and journey steps
+            document.querySelectorAll('.feature-card, .journey-step').forEach(el => {
+                observer.observe(el);
+            });
+
+            // Revenue ticker animation
+            function animateRevenue() {
+                const revenueElements = document.querySelectorAll('.product-price');
+                revenueElements.forEach(el => {
+                    el.style.color = 'var(--success)';
+                    setTimeout(() => {
+                        el.style.color = 'var(--primary)';
+                    }, 200);
+                });
+            }
+
+            setInterval(animateRevenue, 8000);
+        });
+    </script>
+</body>
+</html>

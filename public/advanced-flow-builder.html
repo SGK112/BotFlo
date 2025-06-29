@@ -48,14 +48,89 @@
     <!-- Navigation will be injected here -->
     <div id="navigation-placeholder"></div>
     
+    <!-- Onboarding Welcome Modal -->
+    <div id="welcomeModal" class="modal" style="display: block;">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3>🚀 Welcome to Advanced Flow Builder</h3>
+            </div>
+            <div class="modal-body">
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">🤖</div>
+                    <h4>Ready to build something amazing?</h4>
+                    <p style="color: var(--gray-600); margin-bottom: 2rem;">
+                        This is your professional drag-and-drop builder for creating sophisticated AI chatbots. 
+                        Let's get you started with a quick tour!
+                    </p>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                    <div style="text-align: center; padding: 1rem; background: var(--gray-50); border-radius: 0.5rem;">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">📦</div>
+                        <h5>Components</h5>
+                        <p style="font-size: 0.8rem; color: var(--gray-600);">Drag from left panel</p>
+                    </div>
+                    <div style="text-align: center; padding: 1rem; background: var(--gray-50); border-radius: 0.5rem;">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎨</div>
+                        <h5>Canvas</h5>
+                        <p style="font-size: 0.8rem; color: var(--gray-600);">Drop here to build</p>
+                    </div>
+                    <div style="text-align: center; padding: 1rem; background: var(--gray-50); border-radius: 0.5rem;">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">⚙️</div>
+                        <h5>Properties</h5>
+                        <p style="font-size: 0.8rem; color: var(--gray-600);">Configure on right</p>
+                    </div>
+                </div>
+
+                <div id="welcomeOptions">
+                    <h5 style="margin-bottom: 1rem;">How would you like to start?</h5>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <button class="btn btn-primary" onclick="startFromScratch()">
+                            <i class="fas fa-plus"></i>
+                            Start from Scratch
+                        </button>
+                        <button class="btn btn-secondary" onclick="startWithTemplate()">
+                            <i class="fas fa-magic"></i>
+                            Use Template
+                        </button>
+                        <button class="btn btn-info" onclick="takeTour()">
+                            <i class="fas fa-route"></i>
+                            Take a Tour
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Builder specific header -->
     <header class="builder-header" id="app-header">
         <div class="header-left">
             <div class="chatbot-name">
+                <i class="fas fa-project-diagram"></i>
                 Advanced Flow Builder
                 <span id="demoModeBadge" class="demo-badge" style="display: none;">
-                    🎯 DEMO MODE
+                    🎯 DEMO MODE - 3 nodes remaining
                 </span>
+            </div>
+        </div>
+        <div class="header-center">
+            <div class="quick-actions">
+                <button class="quick-btn" onclick="undoAction()" title="Undo">
+                    <i class="fas fa-undo"></i>
+                </button>
+                <button class="quick-btn" onclick="redoAction()" title="Redo">
+                    <i class="fas fa-redo"></i>
+                </button>
+                <button class="quick-btn" onclick="zoomIn()" title="Zoom In">
+                    <i class="fas fa-search-plus"></i>
+                </button>
+                <button class="quick-btn" onclick="zoomOut()" title="Zoom Out">
+                    <i class="fas fa-search-minus"></i>
+                </button>
+                <button class="quick-btn" onclick="fitToScreen()" title="Fit to Screen">
+                    <i class="fas fa-expand-arrows-alt"></i>
+                </button>
             </div>
         </div>
         <div class="header-actions">
@@ -80,20 +155,69 @@
         </div>
     </header>
 
+    <!-- Progress Indicator -->
+    <div class="progress-indicator" id="progressIndicator" style="display: none;">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-text" id="progressText">Building your chatbot...</div>
+    </div>
+
     <!-- Main Container -->
     <div class="main-container">
         <!-- Left Sidebar - Component Library -->
         <aside class="sidebar" id="component-library">
+            <div class="sidebar-header">
+                <h3><i class="fas fa-cube"></i> Components</h3>
+                <div class="search-box">
+                    <input type="text" placeholder="Search components..." id="componentSearch">
+                    <i class="fas fa-search"></i>
+                </div>
+            </div>
             <!-- Will be populated by ComponentLibrary module -->
         </aside>
 
         <!-- Workspace -->
         <main class="workspace" id="main-workspace">
+            <div class="workspace-header">
+                <div class="workspace-title">
+                    <i class="fas fa-drafting-compass"></i>
+                    Conversation Flow
+                </div>
+                <div class="workspace-info">
+                    <span id="nodeCount">0 nodes</span> • 
+                    <span id="connectionCount">0 connections</span>
+                </div>
+            </div>
+            <div class="workspace-canvas" id="workspace-canvas">
+                <!-- Empty state message -->
+                <div class="empty-state" id="emptyState">
+                    <div class="empty-state-icon">🎯</div>
+                    <h3>Ready to Build</h3>
+                    <p>Drag components from the left panel to start building your chatbot flow</p>
+                    <div class="empty-state-tips">
+                        <div class="tip">💡 Start with a <strong>Welcome Message</strong></div>
+                        <div class="tip">💡 Connect nodes to create conversation paths</div>
+                        <div class="tip">💡 Use the <strong>Test</strong> button to try your flow</div>
+                    </div>
+                </div>
+            </div>
             <!-- Will be populated by Workspace module -->
         </main>
 
         <!-- Right Panel - Properties -->
         <aside class="properties-panel" id="properties-panel">
+            <div class="panel-header">
+                <h3><i class="fas fa-cogs"></i> Properties</h3>
+            </div>
+            <div class="panel-content" id="panelContent">
+                <div class="no-selection">
+                    <div style="text-align: center; padding: 2rem; color: var(--gray-500);">
+                        <i class="fas fa-mouse-pointer" style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
+                        <p>Select a component to edit its properties</p>
+                    </div>
+                </div>
+            </div>
             <!-- Will be populated by PropertiesPanel module -->
         </aside>
     </div>

@@ -86,7 +86,7 @@
         }
 
         .hero h1 {
-            font-size: 3.5rem;
+            font-size: 3rem;
             font-weight: 800;
             margin-bottom: 1.5rem;
             background: linear-gradient(45deg, #fff, #e2e8f0);
@@ -96,12 +96,34 @@
         }
 
         .hero p {
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             margin-bottom: 2rem;
             opacity: 0.9;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
+        }
+
+        .user-journey {
+            margin: 2rem 0;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .journey-step {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            text-align: center;
+            min-width: 120px;
+            font-size: 0.9rem;
+        }
+
+        .journey-step .icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            display: block;
         }
 
         .hero-cta {
@@ -422,17 +444,41 @@
     <section class="hero">
         <div class="container">
             <div class="hero-content">
-                <h1>Advanced Flow Builder</h1>
-                <p>Create powerful AI chatbots with our visual flow builder. Drag, drop, and connect components to build sophisticated conversational experiences without coding.</p>
+                <h1>🤖 Choose Your Builder</h1>
+                <p>Three powerful ways to create AI chatbots - from instant website scraping to advanced custom flows. Pick the method that fits your needs.</p>
+                
+                <!-- User Journey -->
+                <div class="user-journey">
+                    <div class="journey-step">
+                        <span class="icon">👀</span>
+                        <h4>View</h4>
+                    </div>
+                    <div class="journey-step">
+                        <span class="icon">🎮</span>
+                        <h4>Demo</h4>
+                    </div>
+                    <div class="journey-step">
+                        <span class="icon">💳</span>
+                        <h4>Buy</h4>
+                    </div>
+                    <div class="journey-step">
+                        <span class="icon">🎨</span>
+                        <h4>Customize</h4>
+                    </div>
+                    <div class="journey-step">
+                        <span class="icon">🚀</span>
+                        <h4>Deploy</h4>
+                    </div>
+                </div>
                 
                 <div class="hero-cta">
-                    <a href="/advanced-flow-builder.html" class="btn btn-primary">
+                    <a href="/website-scraper.html" class="btn btn-primary">
                         <i class="fas fa-rocket"></i>
-                        Start Building Now
+                        Start with Website Scraper
                     </a>
-                    <a href="#demo" class="btn btn-secondary">
-                        <i class="fas fa-play"></i>
-                        Watch Demo
+                    <a href="#builders" class="btn btn-secondary">
+                        <i class="fas fa-eye"></i>
+                        Compare Options
                     </a>
                 </div>
 
@@ -443,70 +489,81 @@
         </div>
     </section>
 
-    <!-- Builder Showcase -->
-    <section class="builder-showcase" id="demo">
+    <!-- Builder Options -->
+    <section class="builder-showcase" id="builders">
         <div class="container">
-            <div class="showcase-grid">
-                <div class="showcase-content animate-on-scroll">
-                    <h2>Professional Chatbot Builder</h2>
-                    <p>Our Advanced Flow Builder gives you everything you need to create sophisticated chatbots that can handle complex conversations, integrate with APIs, and provide personalized experiences.</p>
-                    
-                    <ul class="feature-list">
-                        <li><i class="fas fa-check-circle"></i> Visual drag-and-drop interface</li>
-                        <li><i class="fas fa-check-circle"></i> AI-powered responses</li>
-                        <li><i class="fas fa-check-circle"></i> API integrations</li>
-                        <li><i class="fas fa-check-circle"></i> Advanced flow control</li>
-                        <li><i class="fas fa-check-circle"></i> Real-time testing</li>
-                        <li><i class="fas fa-check-circle"></i> One-click deployment</li>
-                    </ul>
+            <div style="text-align: center; margin-bottom: 4rem;">
+                <h2 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; color: var(--gray-900);">Three Ways to Build</h2>
+                <p style="font-size: 1.2rem; color: var(--gray-600); max-width: 600px; margin: 0 auto;">
+                    Choose the method that works best for your needs - from instant generation to professional-grade customization.
+                </p>
+            </div>
 
-                    <a href="/advanced-flow-builder.html" class="btn btn-primary">
-                        <i class="fas fa-tools"></i>
-                        Open Advanced Builder
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; margin-bottom: 4rem;">
+                <!-- Website Scraper -->
+                <div style="background: white; border-radius: 1rem; padding: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: 2px solid transparent; transition: all 0.3s ease;" 
+                     onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='var(--primary)'" 
+                     onmouseout="this.style.transform=''; this.style.borderColor='transparent'">
+                    <div style="width: 4rem; height: 4rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 1rem; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; color: white; font-size: 1.5rem;">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem; color: var(--gray-900);">Website Scraper Bot</h3>
+                    <p style="color: var(--gray-600); margin-bottom: 1.5rem;">
+                        Enter any website URL and we'll automatically create a chatbot with your site's content. Perfect for customer support and lead generation.
+                    </p>
+                    <div style="margin-bottom: 1.5rem; font-size: 0.9rem; color: var(--gray-500);">
+                        <div>⚡ <strong>Speed:</strong> 30 seconds</div>
+                        <div>🎯 <strong>Best for:</strong> Quick deployment</div>
+                        <div>💡 <strong>Skill level:</strong> Beginner</div>
+                    </div>
+                    <a href="/website-scraper.html" style="padding: 0.75rem 1.5rem; font-size: 0.9rem; background: var(--primary); color: white; text-decoration: none; border-radius: 0.5rem; font-weight: 500; transition: all 0.3s ease; display: inline-block;">
+                        Try Website Scraper
                     </a>
                 </div>
 
-                <div class="showcase-demo animate-on-scroll">
-                    <div class="demo-header">
-                        <div class="demo-title">
-                            <i class="fas fa-robot"></i>
-                            Advanced Flow Builder
-                        </div>
-                        <div class="demo-controls">
-                            <button class="demo-btn" onclick="testDemo()">
-                                <i class="fas fa-play"></i> Test
-                            </button>
-                            <button class="demo-btn" onclick="saveDemo()">
-                                <i class="fas fa-save"></i> Save
-                            </button>
-                        </div>
+                <!-- Character Creator -->
+                <div style="background: white; border-radius: 1rem; padding: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: 2px solid var(--accent); transition: all 0.3s ease; position: relative;" 
+                     onmouseover="this.style.transform='translateY(-5px)'" 
+                     onmouseout="this.style.transform=''">
+                    <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--accent); color: white; padding: 0.5rem 1rem; border-radius: 1rem; font-size: 0.875rem; font-weight: 600;">
+                        Most Fun!
                     </div>
-                    
-                    <div class="demo-workspace" id="demoWorkspace">
-                        <div class="demo-placeholder">
-                            <i class="fas fa-mouse-pointer" style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
-                            Drag components here to build your flow
-                        </div>
-                        
-                        <div class="demo-nodes" id="demoNodes" style="display: none;">
-                            <div class="demo-node">
-                                <i class="fas fa-play"></i>
-                                Start
-                            </div>
-                            <div class="demo-node">
-                                <i class="fas fa-comment"></i>
-                                Welcome Message
-                            </div>
-                            <div class="demo-node">
-                                <i class="fas fa-question"></i>
-                                User Input
-                            </div>
-                            <div class="demo-node">
-                                <i class="fas fa-brain"></i>
-                                AI Response
-                            </div>
-                        </div>
+                    <div style="width: 4rem; height: 4rem; background: linear-gradient(135deg, var(--accent), #ec4899); border-radius: 1rem; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; color: white; font-size: 1.5rem;">
+                        <i class="fas fa-user-plus"></i>
                     </div>
+                    <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem; color: var(--gray-900);">Character Creator</h3>
+                    <p style="color: var(--gray-600); margin-bottom: 1.5rem;">
+                        Design your chatbot like a game character - choose personality, appearance, abilities, and watch it evolve with XP and achievements.
+                    </p>
+                    <div style="margin-bottom: 1.5rem; font-size: 0.9rem; color: var(--gray-500);">
+                        <div>🎮 <strong>Speed:</strong> 5-10 minutes</div>
+                        <div>🎯 <strong>Best for:</strong> Engagement & fun</div>
+                        <div>💡 <strong>Skill level:</strong> Any</div>
+                    </div>
+                    <a href="/character-creator.html" style="padding: 0.75rem 1.5rem; font-size: 0.9rem; background: var(--accent); color: white; text-decoration: none; border-radius: 0.5rem; font-weight: 500; transition: all 0.3s ease; display: inline-block;">
+                        Create Character
+                    </a>
+                </div>
+
+                <!-- Advanced Builder -->
+                <div style="background: white; border-radius: 1rem; padding: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: 2px solid transparent; transition: all 0.3s ease;" 
+                     onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='var(--secondary)'" 
+                     onmouseout="this.style.transform=''; this.style.borderColor='transparent'">
+                    <div style="width: 4rem; height: 4rem; background: linear-gradient(135deg, var(--secondary), #0891b2); border-radius: 1rem; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; color: white; font-size: 1.5rem;">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem; color: var(--gray-900);">Advanced Flow Builder</h3>
+                    <p style="color: var(--gray-600); margin-bottom: 1.5rem;">
+                        Professional drag-and-drop interface for complex conversation flows. Perfect for enterprise use cases and advanced integrations.
+                    </p>
+                    <div style="margin-bottom: 1.5rem; font-size: 0.9rem; color: var(--gray-500);">
+                        <div>🔧 <strong>Speed:</strong> 15-30 minutes</div>
+                        <div>🎯 <strong>Best for:</strong> Complex workflows</div>
+                        <div>💡 <strong>Skill level:</strong> Intermediate</div>
+                    </div>
+                    <a href="/advanced-flow-builder.html" style="padding: 0.75rem 1.5rem; font-size: 0.9rem; background: var(--secondary); color: white; text-decoration: none; border-radius: 0.5rem; font-weight: 500; transition: all 0.3s ease; display: inline-block;">
+                        Open Advanced Builder
+                    </a>
                 </div>
             </div>
         </div>

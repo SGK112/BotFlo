@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Scraper Bot Builder - BotFlo.ai</title>
+    <meta name="description" content="Enter any website URL and automatically generate a smart chatbot with your site's content. Perfect for customer support and lead generation.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="alternate icon" href="/favicon.ico">
+    
+    <!-- Shared Navigation -->
+    <link rel="stylesheet" href="shared-nav-new.css">
+    <script src="shared-nav-new.js"></script>
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --secondary: #06b6d4;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --white: #ffffff;
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --gray-900: #0f172a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: var(--gray-800);
+            background: var(--gray-50);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+            margin-top: 80px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 3rem 0;
+        }
+
+        .builder-container {
+            background: var(--white);
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        /* Steps */
+        .steps {
+            display: flex;
+            background: var(--gray-100);
+            padding: 1rem;
+            gap: 1rem;
+            overflow-x: auto;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            white-space: nowrap;
+            min-width: fit-content;
+            transition: all 0.3s ease;
+        }
+
+        .step.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .step.completed {
+            background: var(--success);
+            color: white;
+        }
+
+        .step:not(.active):not(.completed) {
+            background: var(--gray-200);
+            color: var(--gray-600);
+        }
+
+        /* Step Content */
+        .step-content {
+            padding: 3rem;
+            min-height: 500px;
+        }
+
+        .step-content h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--gray-900);
+        }
+
+        .step-content p {
+            color: var(--gray-600);
+            margin-bottom: 2rem;
+        }
+
+        /* URL Input Step */
+        .url-input-group {
+            margin-bottom: 2rem;
+        }
+
+        .url-input-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--gray-800);
+        }
+
+        .url-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--gray-300);
+            border-radius: 0.75rem;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .url-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .url-examples {
+            background: var(--gray-50);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .url-examples h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 0.5rem;
+        }
+
+        .url-examples ul {
+            list-style: none;
+            font-size: 0.9rem;
+            color: var(--gray-600);
+        }
+
+        .url-examples li {
+            margin-bottom: 0.25rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .url-examples li:hover {
+            color: var(--primary);
+        }
+
+        /* Progress */
+        .progress-container {
+            margin: 2rem 0;
+        }
+
+        .progress-bar {
+            background: var(--gray-200);
+            border-radius: 1rem;
+            height: 0.5rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--gray-600);
+        }
+
+        /* Scraped Content */
+        .scraped-content {
+            display: none;
+            margin-top: 2rem;
+        }
+
+        .content-preview {
+            background: var(--gray-50);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            border: 1px solid var(--gray-200);
+        }
+
+        .content-item {
+            background: var(--white);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--gray-200);
+        }
+
+        .content-item h4 {
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+
+        .content-item p {
+            color: var(--gray-600);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        /* Contact Info */
+        .contact-info {
+            display: none;
+            margin-top: 2rem;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .contact-field {
+            margin-bottom: 1rem;
+        }
+
+        .contact-field label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--gray-800);
+        }
+
+        .contact-field input,
+        .contact-field textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--gray-300);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .contact-field input:focus,
+        .contact-field textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Chatbot Preview */
+        .chatbot-preview {
+            display: none;
+            margin-top: 2rem;
+        }
+
+        .chat-container {
+            background: var(--white);
+            border: 2px solid var(--gray-200);
+            border-radius: 1rem;
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background: var(--gray-50);
+        }
+
+        .chat-message {
+            background: var(--white);
+            border-radius: 1rem;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            max-width: 80%;
+        }
+
+        .chat-message.bot {
+            background: linear-gradient(135deg, var(--primary-light), var(--secondary));
+            color: white;
+            margin-left: auto;
+        }
+
+        .chat-input-area {
+            padding: 1rem;
+            border-top: 1px solid var(--gray-200);
+            background: var(--white);
+        }
+
+        .chat-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--gray-200);
+            color: var(--gray-800);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-300);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        /* Loading */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .spinner {
+            border: 4px solid var(--gray-200);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Demo Mode Banner */
+        .demo-banner {
+            background: var(--warning);
+            color: white;
+            padding: 0.75rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .steps {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .step-content {
+                padding: 2rem 1rem;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation will be injected here -->
+    <div id="navigation-placeholder"></div>
+
+    <!-- Demo Mode Banner -->
+    <div class="demo-banner" id="demoBanner" style="display: none;">
+        🎮 Demo Mode - Sign up to unlock full features and download your chatbot
+    </div>
+
+    <!-- Header -->
+    <section class="header">
+        <div class="container">
+            <h1>🌐 Website Scraper Bot Builder</h1>
+            <p>Enter any website URL and we'll automatically create a smart chatbot with your site's content. Perfect for customer support and lead generation.</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="main-content">
+        <div class="container">
+            <div class="builder-container">
+                <!-- Steps -->
+                <div class="steps">
+                    <div class="step active" id="step1">
+                        <i class="fas fa-globe"></i>
+                        <span>1. Website URL</span>
+                    </div>
+                    <div class="step" id="step2">
+                        <i class="fas fa-download"></i>
+                        <span>2. Scraping Content</span>
+                    </div>
+                    <div class="step" id="step3">
+                        <i class="fas fa-address-card"></i>
+                        <span>3. Contact Info</span>
+                    </div>
+                    <div class="step" id="step4">
+                        <i class="fas fa-eye"></i>
+                        <span>4. Preview & Test</span>
+                    </div>
+                    <div class="step" id="step5">
+                        <i class="fas fa-download"></i>
+                        <span>5. Download</span>
+                    </div>
+                </div>
+
+                <!-- Step Content -->
+                <div class="step-content">
+                    <!-- Step 1: URL Input -->
+                    <div id="step1Content">
+                        <h2>Enter Website URL</h2>
+                        <p>We'll scrape your website content and create a smart chatbot that can answer questions about your business, products, and services.</p>
+                        
+                        <div class="url-input-group">
+                            <label for="websiteUrl">Website URL</label>
+                            <input type="url" id="websiteUrl" class="url-input" placeholder="https://www.example.com" required>
+                        </div>
+
+                        <div class="url-examples">
+                            <h4>Try these examples:</h4>
+                            <ul>
+                                <li onclick="setExampleUrl('https://www.surprisegranite.com')">• www.surprisegranite.com (Granite & Stone)</li>
+                                <li onclick="setExampleUrl('https://www.tesla.com')">• www.tesla.com (Electric Vehicles)</li>
+                                <li onclick="setExampleUrl('https://www.shopify.com')">• www.shopify.com (E-commerce Platform)</li>
+                                <li onclick="setExampleUrl('https://www.airbnb.com')">• www.airbnb.com (Travel & Hospitality)</li>
+                            </ul>
+                        </div>
+
+                        <div class="button-group">
+                            <button class="btn btn-primary" onclick="startScraping()">
+                                <i class="fas fa-magic"></i>
+                                Start Building Chatbot
+                            </button>
+                            <a href="/builders.html" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i>
+                                Back to Builders
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Scraping Progress -->
+                    <div id="step2Content" style="display: none;">
+                        <h2>Scraping Website Content</h2>
+                        <p>We're analyzing your website and extracting relevant content for your chatbot...</p>
+                        
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressFill"></div>
+                            </div>
+                            <div class="progress-text" id="progressText">Starting...</div>
+                        </div>
+
+                        <div class="loading">
+                            <div class="spinner"></div>
+                            <p>This usually takes 30-60 seconds...</p>
+                        </div>
+
+                        <div class="scraped-content" id="scrapedContent">
+                            <h3>✅ Content Successfully Extracted</h3>
+                            <div class="content-preview" id="contentPreview">
+                                <!-- Content will be populated here -->
+                            </div>
+                        </div>
+
+                        <div class="button-group">
+                            <button class="btn btn-primary" onclick="nextStep(3)" disabled id="continueBtn">
+                                <i class="fas fa-arrow-right"></i>
+                                Continue to Contact Info
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Contact Information -->
+                    <div id="step3Content" style="display: none;">
+                        <h2>Add Contact Information</h2>
+                        <p>Help your chatbot assist visitors with contact details and lead generation.</p>
+                        
+                        <div class="contact-info">
+                            <div class="contact-grid">
+                                <div class="contact-field">
+                                    <label for="businessName">Business Name</label>
+                                    <input type="text" id="businessName" placeholder="Your Business Name">
+                                </div>
+                                <div class="contact-field">
+                                    <label for="contactEmail">Contact Email</label>
+                                    <input type="email" id="contactEmail" placeholder="contact@yourbusiness.com">
+                                </div>
+                                <div class="contact-field">
+                                    <label for="contactPhone">Phone Number</label>
+                                    <input type="tel" id="contactPhone" placeholder="+1 (555) 123-4567">
+                                </div>
+                                <div class="contact-field">
+                                    <label for="businessHours">Business Hours</label>
+                                    <input type="text" id="businessHours" placeholder="Mon-Fri: 9AM-6PM">
+                                </div>
+                            </div>
+                            <div class="contact-field">
+                                <label for="businessAddress">Business Address</label>
+                                <textarea id="businessAddress" rows="2" placeholder="123 Main St, City, State 12345"></textarea>
+                            </div>
+                            <div class="contact-field">
+                                <label for="specialInstructions">Special Instructions</label>
+                                <textarea id="specialInstructions" rows="3" placeholder="Any special instructions for the chatbot (e.g., 'Always mention our 30-day guarantee' or 'Direct urgent inquiries to call immediately')"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="button-group">
+                            <button class="btn btn-primary" onclick="nextStep(4)">
+                                <i class="fas fa-arrow-right"></i>
+                                Preview Chatbot
+                            </button>
+                            <button class="btn btn-secondary" onclick="nextStep(2)">
+                                <i class="fas fa-arrow-left"></i>
+                                Back
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Preview & Test -->
+                    <div id="step4Content" style="display: none;">
+                        <h2>🎉 Your Chatbot is Ready!</h2>
+                        <p>Test your chatbot below. It knows about your website content and contact information.</p>
+                        
+                        <div class="chatbot-preview">
+                            <div class="chat-container">
+                                <div class="chat-header">
+                                    <span id="chatbotName">Your Website Assistant</span>
+                                </div>
+                                <div class="chat-messages" id="chatMessages">
+                                    <div class="chat-message bot">
+                                        👋 Hello! I'm your website assistant. I can help answer questions about your business, products, and services. How can I help you today?
+                                    </div>
+                                </div>
+                                <div class="chat-input-area">
+                                    <input type="text" class="chat-input" id="chatInput" placeholder="Ask me anything about the website..." onkeypress="handleChatInput(event)">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="button-group">
+                            <button class="btn btn-success" onclick="downloadChatbot()">
+                                <i class="fas fa-download"></i>
+                                Download Chatbot Code
+                            </button>
+                            <button class="btn btn-secondary" onclick="nextStep(3)">
+                                <i class="fas fa-arrow-left"></i>
+                                Edit Contact Info
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 5: Download -->
+                    <div id="step5Content" style="display: none;">
+                        <h2>🚀 Download Complete!</h2>
+                        <p>Your chatbot code has been generated and is ready to deploy. Check your downloads folder for the files.</p>
+                        
+                        <div class="content-preview">
+                            <h3>What you received:</h3>
+                            <div class="content-item">
+                                <h4>📁 chatbot-files.zip</h4>
+                                <p>Complete chatbot code ready to embed on any website</p>
+                            </div>
+                            <div class="content-item">
+                                <h4>📋 README.md</h4>
+                                <p>Step-by-step instructions for installation and customization</p>
+                            </div>
+                            <div class="content-item">
+                                <h4>🎨 Customization Guide</h4>
+                                <p>How to modify colors, personality, and advanced features</p>
+                            </div>
+                        </div>
+
+                        <div class="button-group">
+                            <button class="btn btn-primary" onclick="createAnother()">
+                                <i class="fas fa-plus"></i>
+                                Create Another Chatbot
+                            </button>
+                            <a href="/builders.html" class="btn btn-secondary">
+                                <i class="fas fa-home"></i>
+                                Back to Builders
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        let currentStep = 1;
+        let scrapedData = null;
+        let isDemo = false;
+
+        // Check if this is demo mode
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('demo')) {
+            isDemo = true;
+            document.getElementById('demoBanner').style.display = 'block';
+        }
+
+        // Pre-fill URL if provided
+        if (urlParams.has('url')) {
+            document.getElementById('websiteUrl').value = decodeURIComponent(urlParams.get('url'));
+        }
+
+        function setExampleUrl(url) {
+            document.getElementById('websiteUrl').value = url;
+        }
+
+        function updateSteps(step) {
+            for (let i = 1; i <= 5; i++) {
+                const stepEl = document.getElementById(`step${i}`);
+                const contentEl = document.getElementById(`step${i}Content`);
+                
+                stepEl.classList.remove('active', 'completed');
+                contentEl.style.display = 'none';
+                
+                if (i < step) {
+                    stepEl.classList.add('completed');
+                } else if (i === step) {
+                    stepEl.classList.add('active');
+                    contentEl.style.display = 'block';
+                }
+            }
+        }
+
+        function nextStep(step) {
+            currentStep = step;
+            updateSteps(step);
+
+            if (step === 3) {
+                document.querySelector('.contact-info').style.display = 'block';
+            } else if (step === 4) {
+                document.querySelector('.chatbot-preview').style.display = 'block';
+                updateChatbotName();
+            }
+        }
+
+        async function startScraping() {
+            const url = document.getElementById('websiteUrl').value;
+            if (!url) {
+                alert('Please enter a website URL');
+                return;
+            }
+
+            nextStep(2);
+            document.querySelector('.loading').style.display = 'block';
+
+            // Simulate scraping process
+            const steps = [
+                'Fetching website content...',
+                'Analyzing page structure...',
+                'Extracting text content...',
+                'Processing navigation menus...',
+                'Identifying key information...',
+                'Generating chatbot responses...',
+                'Finalizing content database...'
+            ];
+
+            let progress = 0;
+            for (let i = 0; i < steps.length; i++) {
+                progress = ((i + 1) / steps.length) * 100;
+                document.getElementById('progressFill').style.width = progress + '%';
+                document.getElementById('progressText').textContent = steps[i];
+                await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1000));
+            }
+
+            // Simulate scraped content
+            scrapedData = {
+                title: extractDomainName(url),
+                pages: [
+                    { title: 'Homepage', content: 'Welcome to our website. We provide excellent products and services.' },
+                    { title: 'About Us', content: 'We are a leading company in our industry with years of experience.' },
+                    { title: 'Products/Services', content: 'Our comprehensive range of products and services meets all your needs.' },
+                    { title: 'Contact', content: 'Get in touch with us for more information or to discuss your requirements.' }
+                ]
+            };
+
+            displayScrapedContent();
+            document.querySelector('.loading').style.display = 'none';
+            document.getElementById('scrapedContent').style.display = 'block';
+            document.getElementById('continueBtn').disabled = false;
+        }
+
+        function extractDomainName(url) {
+            try {
+                const domain = new URL(url).hostname.replace('www.', '');
+                return domain.split('.')[0].charAt(0).toUpperCase() + domain.split('.')[0].slice(1);
+            } catch {
+                return 'Website';
+            }
+        }
+
+        function displayScrapedContent() {
+            const preview = document.getElementById('contentPreview');
+            preview.innerHTML = scrapedData.pages.map(page => 
+                `<div class="content-item">
+                    <h4>${page.title}</h4>
+                    <p>${page.content}</p>
+                </div>`
+            ).join('');
+        }
+
+        function updateChatbotName() {
+            const businessName = document.getElementById('businessName').value || scrapedData.title + ' Assistant';
+            document.getElementById('chatbotName').textContent = businessName;
+        }
+
+        function handleChatInput(event) {
+            if (event.key === 'Enter') {
+                const input = document.getElementById('chatInput');
+                const message = input.value.trim();
+                if (message) {
+                    addChatMessage(message, false);
+                    input.value = '';
+                    
+                    // Simulate bot response
+                    setTimeout(() => {
+                        const responses = [
+                            "Thanks for your question! Based on our website content, I can help you with that.",
+                            "I'd be happy to help! Let me check our information for you.",
+                            "Great question! According to our website, here's what I can tell you...",
+                            "I can definitely help with that! Would you like me to connect you with our team for more details?"
+                        ];
+                        const response = responses[Math.floor(Math.random() * responses.length)];
+                        addChatMessage(response, true);
+                    }, 1000 + Math.random() * 2000);
+                }
+            }
+        }
+
+        function addChatMessage(message, isBot) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${isBot ? 'bot' : ''}`;
+            messageDiv.textContent = message;
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function downloadChatbot() {
+            if (isDemo) {
+                alert('🎮 Demo Mode: Sign up to download your chatbot!\n\nIn the full version, you would receive:\n• Complete chatbot code\n• Installation instructions\n• Customization guide\n• 30 days of support');
+                return;
+            }
+
+            // Simulate file download
+            const chatbotData = {
+                websiteUrl: document.getElementById('websiteUrl').value,
+                businessName: document.getElementById('businessName').value,
+                contactEmail: document.getElementById('contactEmail').value,
+                contactPhone: document.getElementById('contactPhone').value,
+                businessHours: document.getElementById('businessHours').value,
+                businessAddress: document.getElementById('businessAddress').value,
+                specialInstructions: document.getElementById('specialInstructions').value,
+                scrapedData: scrapedData,
+                generatedAt: new Date().toISOString()
+            };
+
+            const blob = new Blob([JSON.stringify(chatbotData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'chatbot-config.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            nextStep(5);
+        }
+
+        function createAnother() {
+            // Reset form
+            currentStep = 1;
+            updateSteps(1);
+            document.getElementById('websiteUrl').value = '';
+            document.getElementById('businessName').value = '';
+            document.getElementById('contactEmail').value = '';
+            document.getElementById('contactPhone').value = '';
+            document.getElementById('businessHours').value = '';
+            document.getElementById('businessAddress').value = '';
+            document.getElementById('specialInstructions').value = '';
+            document.getElementById('chatMessages').innerHTML = `
+                <div class="chat-message bot">
+                    👋 Hello! I'm your website assistant. I can help answer questions about your business, products, and services. How can I help you today?
+                </div>
+            `;
+        }
+
+        // Initialize
+        updateSteps(1);
+    </script>
+</body>
+</html>

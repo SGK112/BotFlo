@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customize Your Chatbot - BotFlo</title>
+    <meta name="description" content="Train your chatbot with your website content and customize its behavior">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="BotFlo">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="alternate icon" href="/favicon.ico">
+    
+    <!-- Global App Styles -->
+    <link rel="stylesheet" href="app-global.css">
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #06b6d4;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --error: #ef4444;
+            --white: #ffffff;
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --gray-900: #0f172a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: var(--gray-800);
+            background: var(--gray-50);
+        }
+
+        /* Header */
+        .app-header {
+            background: var(--white);
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--gray-600);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: var(--gray-100);
+        }
+
+        .header-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Progress Steps */
+        .progress-steps {
+            background: var(--white);
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .steps-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .steps-container::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 5%;
+            right: 5%;
+            height: 2px;
+            background: var(--gray-200);
+            z-index: 1;
+        }
+
+        .progress-line {
+            position: absolute;
+            top: 20px;
+            left: 5%;
+            height: 2px;
+            background: var(--primary);
+            z-index: 2;
+            transition: width 0.5s ease;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 3;
+            flex: 1;
+        }
+
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+            color: var(--gray-500);
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .step.active .step-circle {
+            background: var(--primary);
+            color: white;
+        }
+
+        .step.completed .step-circle {
+            background: var(--success);
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.8rem;
+            color: var(--gray-600);
+        }
+
+        .step.active .step-label {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem 2rem;
+        }
+
+        .step-content {
+            background: var(--white);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .step-content h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--gray-900);
+        }
+
+        .step-content p {
+            color: var(--gray-600);
+            margin-bottom: 2rem;
+        }
+
+        /* Bot Selection */
+        .bot-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--gray-50);
+            border-radius: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .bot-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+        }
+
+        .bot-details h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .bot-price {
+            color: var(--success);
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        /* Website URLs */
+        .url-section {
+            margin-bottom: 2rem;
+        }
+
+        .url-section h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--gray-900);
+        }
+
+        .url-input-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .url-input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .url-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .add-url-btn {
+            padding: 0.75rem 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-url-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .url-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .url-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem;
+            background: var(--gray-50);
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .url-item-content {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex: 1;
+        }
+
+        .url-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+        }
+
+        .url-status.processing {
+            background: var(--accent);
+            animation: pulse 1.5s infinite;
+        }
+
+        .url-status.error {
+            background: var(--error);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .remove-url {
+            background: none;
+            border: none;
+            color: var(--error);
+            cursor: pointer;
+            padding: 0.25rem;
+        }
+
+        /* Training Progress */
+        .training-section {
+            margin-bottom: 2rem;
+        }
+
+        .training-progress {
+            background: var(--gray-100);
+            border-radius: 0.5rem;
+            height: 8px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .training-status {
+            font-size: 0.9rem;
+            color: var(--gray-600);
+            text-align: center;
+        }
+
+        /* Generated Content Preview */
+        .content-preview {
+            background: var(--gray-50);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .content-item {
+            background: var(--white);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--primary);
+        }
+
+        .content-item h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+
+        .content-item p {
+            font-size: 0.8rem;
+            color: var(--gray-600);
+            margin: 0;
+        }
+
+        /* Customization Options */
+        .customization-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .custom-option {
+            background: var(--gray-50);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .custom-option:hover,
+        .custom-option.active {
+            border-color: var(--primary);
+            background: var(--white);
+        }
+
+        .custom-option h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--gray-900);
+        }
+
+        .custom-option p {
+            font-size: 0.8rem;
+            color: var(--gray-600);
+            margin: 0;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--gray-200);
+            color: var(--gray-700);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-300);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid var(--gray-200);
+            padding: 0.5rem;
+            display: flex;
+            justify-content: space-around;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.5rem;
+            color: var(--gray-500);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item i {
+            font-size: 1.2rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .nav-item span {
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                padding-bottom: 80px;
+            }
+            
+            .step-content {
+                padding: 1.5rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <div class="header-left">
+                <button class="back-btn" onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <div class="header-title">Customize Your Chatbot</div>
+            </div>
+            <div class="header-actions">
+                <span id="savingStatus" style="font-size: 0.8rem; color: var(--gray-500); display: none;">
+                    <i class="fas fa-sync fa-spin"></i> Saving...
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Progress Steps -->
+    <div class="progress-steps">
+        <div class="steps-container">
+            <div class="progress-line" id="progressLine" style="width: 20%;"></div>
+            
+            <div class="step active" data-step="1">
+                <div class="step-circle">1</div>
+                <div class="step-label">Bot Selection</div>
+            </div>
+            <div class="step" data-step="2">
+                <div class="step-circle">2</div>
+                <div class="step-label">Website URLs</div>
+            </div>
+            <div class="step" data-step="3">
+                <div class="step-circle">3</div>
+                <div class="step-label">Training</div>
+            </div>
+            <div class="step" data-step="4">
+                <div class="step-circle">4</div>
+                <div class="step-label">Customize</div>
+            </div>
+            <div class="step" data-step="5">
+                <div class="step-circle">5</div>
+                <div class="step-label">Deploy</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Step 1: Bot Selection -->
+        <div class="step-content" id="step1" style="display: block;">
+            <h2>Selected Chatbot</h2>
+            <p>You've chosen a great chatbot! Let's customize it with your business information.</p>
+            
+            <div class="bot-info" id="botInfo">
+                <!-- Bot info will be populated here -->
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="nextStep()">
+                    <i class="fas fa-arrow-right"></i>
+                    Continue Setup
+                </button>
+                <a href="/marketplace-unified.html" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i>
+                    Choose Different Bot
+                </a>
+            </div>
+        </div>
+
+        <!-- Step 2: Website URLs -->
+        <div class="step-content" id="step2" style="display: none;">
+            <h2>🌐 Add Your Website URLs</h2>
+            <p>Add your website URLs so your chatbot can learn about your business, products, and services. We'll generate an llms.txt file with all your content.</p>
+            
+            <div class="url-section">
+                <h3>Website URLs to Scan</h3>
+                <div class="url-input-group">
+                    <input type="url" class="url-input" id="urlInput" placeholder="https://www.yourwebsite.com" onkeypress="handleUrlInput(event)">
+                    <button class="add-url-btn" onclick="addUrl()">
+                        <i class="fas fa-plus"></i>
+                        Add URL
+                    </button>
+                </div>
+                
+                <div style="margin-bottom: 1rem; font-size: 0.9rem; color: var(--gray-600);">
+                    <strong>Examples:</strong>
+                    <div style="margin-top: 0.5rem;">
+                        • Homepage: https://yoursite.com<br>
+                        • About page: https://yoursite.com/about<br>
+                        • Products: https://yoursite.com/products<br>
+                        • Services: https://yoursite.com/services
+                    </div>
+                </div>
+
+                <ul class="url-list" id="urlList">
+                    <!-- URLs will be added here -->
+                </ul>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="nextStep()" id="startTrainingBtn" disabled>
+                    <i class="fas fa-brain"></i>
+                    Start Training
+                </button>
+                <button class="btn btn-secondary" onclick="prevStep()">
+                    <i class="fas fa-arrow-left"></i>
+                    Back
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 3: Training -->
+        <div class="step-content" id="step3" style="display: none;">
+            <h2>🧠 Training Your Chatbot</h2>
+            <p>We're analyzing your website content and creating a smart knowledge base for your chatbot.</p>
+            
+            <div class="training-section">
+                <div class="training-progress">
+                    <div class="progress-bar" id="trainingProgress"></div>
+                </div>
+                <div class="training-status" id="trainingStatus">Initializing training...</div>
+            </div>
+
+            <div class="content-preview" id="contentPreview" style="display: none;">
+                <h3>📄 Generated Knowledge Base</h3>
+                <p style="font-size: 0.9rem; color: var(--gray-600); margin-bottom: 1rem;">
+                    Here's what your chatbot learned from your website:
+                </p>
+                <div id="extractedContent">
+                    <!-- Extracted content will be shown here -->
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="nextStep()" id="continueCustomizeBtn" disabled>
+                    <i class="fas fa-arrow-right"></i>
+                    Continue to Customization
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 4: Customize -->
+        <div class="step-content" id="step4" style="display: none;">
+            <h2>🎨 Customize Behavior</h2>
+            <p>Choose how your chatbot should behave and what tone it should use when talking to customers.</p>
+            
+            <div class="customization-grid">
+                <div class="custom-option active" data-personality="professional">
+                    <h4>💼 Professional</h4>
+                    <p>Formal, helpful, and business-focused. Perfect for B2B and service companies.</p>
+                </div>
+                <div class="custom-option" data-personality="friendly">
+                    <h4>😊 Friendly</h4>
+                    <p>Warm, approachable, and conversational. Great for retail and hospitality.</p>
+                </div>
+                <div class="custom-option" data-personality="expert">
+                    <h4>🎓 Expert</h4>
+                    <p>Knowledgeable, detailed, and authoritative. Ideal for technical or educational content.</p>
+                </div>
+                <div class="custom-option" data-personality="casual">
+                    <h4>🎉 Casual</h4>
+                    <p>Relaxed, fun, and engaging. Perfect for lifestyle brands and young audiences.</p>
+                </div>
+            </div>
+
+            <div class="url-section">
+                <h3>Contact Information</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                    <input type="text" class="url-input" id="businessName" placeholder="Business Name">
+                    <input type="email" class="url-input" id="businessEmail" placeholder="Contact Email">
+                    <input type="tel" class="url-input" id="businessPhone" placeholder="Phone Number">
+                    <input type="text" class="url-input" id="businessHours" placeholder="Business Hours">
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="nextStep()">
+                    <i class="fas fa-rocket"></i>
+                    Deploy Chatbot
+                </button>
+                <button class="btn btn-secondary" onclick="prevStep()">
+                    <i class="fas fa-arrow-left"></i>
+                    Back
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 5: Deploy -->
+        <div class="step-content" id="step5" style="display: none;">
+            <h2>🚀 Your Chatbot is Ready!</h2>
+            <p>Congratulations! Your chatbot has been trained and is ready to engage with your customers.</p>
+            
+            <div class="content-preview">
+                <h3>📦 What You Get</h3>
+                <div class="content-item">
+                    <h4>Smart Chatbot Widget</h4>
+                    <p>Ready-to-embed chatbot that knows your business inside and out</p>
+                </div>
+                <div class="content-item">
+                    <h4>llms.txt Knowledge File</h4>
+                    <p>Structured content file that can be used with any AI system</p>
+                </div>
+                <div class="content-item">
+                    <h4>Installation Guide</h4>
+                    <p>Step-by-step instructions to add the chatbot to your website</p>
+                </div>
+                <div class="content-item">
+                    <h4>Analytics Dashboard</h4>
+                    <p>Track conversations, popular questions, and customer satisfaction</p>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="downloadChatbot()">
+                    <i class="fas fa-download"></i>
+                    Download Chatbot Files
+                </button>
+                <button class="btn btn-secondary" onclick="testChatbot()">
+                    <i class="fas fa-comments"></i>
+                    Test Chatbot
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="/marketplace-unified.html" class="nav-item">
+            <i class="fas fa-store"></i>
+            <span>Store</span>
+        </a>
+        <a href="/my-bots.html" class="nav-item">
+            <i class="fas fa-robot"></i>
+            <span>My Bots</span>
+        </a>
+        <a href="/customize.html" class="nav-item active">
+            <i class="fas fa-palette"></i>
+            <span>Customize</span>
+        </a>
+        <a href="/analytics.html" class="nav-item">
+            <i class="fas fa-chart-bar"></i>
+            <span>Analytics</span>
+        </a>
+        <a href="/profile.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+    <script>
+        let currentStep = 1;
+        let addedUrls = [];
+        let selectedBot = null;
+        let selectedPersonality = 'professional';
+
+        // Bot data
+        const bots = {
+            'customer-support': {
+                title: 'Customer Support Pro',
+                emoji: '🎧',
+                price: 29,
+                description: 'Handle customer inquiries, FAQs, and escalate complex issues to human agents.'
+            },
+            'lead-generator': {
+                title: 'Lead Generation Bot',
+                emoji: '🎯',
+                price: 39,
+                description: 'Qualify leads, collect contact information, and schedule appointments.'
+            },
+            'ecommerce-assistant': {
+                title: 'E-commerce Assistant',
+                emoji: '🛒',
+                price: 35,
+                description: 'Product recommendations, order tracking, and shopping assistance.'
+            }
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadBotInfo();
+        });
+
+        function loadBotInfo() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const botId = urlParams.get('bot');
+            const price = urlParams.get('price');
+            
+            if (botId && bots[botId]) {
+                selectedBot = {id: botId, ...bots[botId], price: parseInt(price)};
+                displayBotInfo();
+            } else {
+                // Default to first bot if no selection
+                selectedBot = {id: 'customer-support', ...bots['customer-support']};
+                displayBotInfo();
+            }
+        }
+
+        function displayBotInfo() {
+            const botInfo = document.getElementById('botInfo');
+            botInfo.innerHTML = `
+                <div class="bot-avatar">${selectedBot.emoji}</div>
+                <div class="bot-details">
+                    <h3>${selectedBot.title}</h3>
+                    <p style="color: var(--gray-600); margin: 0; font-size: 0.9rem;">${selectedBot.description}</p>
+                    <div class="bot-price">$${selectedBot.price}</div>
+                </div>
+            `;
+        }
+
+        function nextStep() {
+            if (currentStep < 5) {
+                document.getElementById(`step${currentStep}`).style.display = 'none';
+                currentStep++;
+                
+                if (currentStep === 3) {
+                    startTraining();
+                }
+                
+                updateProgress();
+                document.getElementById(`step${currentStep}`).style.display = 'block';
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                document.getElementById(`step${currentStep}`).style.display = 'none';
+                currentStep--;
+                updateProgress();
+                document.getElementById(`step${currentStep}`).style.display = 'block';
+            }
+        }
+
+        function updateProgress() {
+            const progressLine = document.getElementById('progressLine');
+            const progressWidth = (currentStep - 1) * 25; // 25% per step
+            progressLine.style.width = progressWidth + '%';
+            
+            // Update step states
+            document.querySelectorAll('.step').forEach((step, index) => {
+                const stepNum = index + 1;
+                step.classList.remove('active', 'completed');
+                
+                if (stepNum < currentStep) {
+                    step.classList.add('completed');
+                } else if (stepNum === currentStep) {
+                    step.classList.add('active');
+                }
+            });
+        }
+
+        function handleUrlInput(event) {
+            if (event.key === 'Enter') {
+                addUrl();
+            }
+        }
+
+        function addUrl() {
+            const urlInput = document.getElementById('urlInput');
+            const url = urlInput.value.trim();
+            
+            if (!url) {
+                alert('Please enter a URL');
+                return;
+            }
+            
+            if (!isValidUrl(url)) {
+                alert('Please enter a valid URL (e.g., https://www.example.com)');
+                return;
+            }
+            
+            if (addedUrls.some(item => item.url === url)) {
+                alert('This URL has already been added');
+                return;
+            }
+            
+            const urlItem = {
+                url: url,
+                status: 'ready',
+                id: Date.now()
+            };
+            
+            addedUrls.push(urlItem);
+            urlInput.value = '';
+            updateUrlList();
+            updateTrainingButton();
+        }
+
+        function isValidUrl(string) {
+            try {
+                new URL(string);
+                return true;
+            } catch (_) {
+                return false;
+            }
+        }
+
+        function updateUrlList() {
+            const urlList = document.getElementById('urlList');
+            urlList.innerHTML = addedUrls.map(item => `
+                <li class="url-item">
+                    <div class="url-item-content">
+                        <div class="url-status ${item.status}"></div>
+                        <span>${item.url}</span>
+                    </div>
+                    <button class="remove-url" onclick="removeUrl(${item.id})">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </li>
+            `).join('');
+        }
+
+        function removeUrl(id) {
+            addedUrls = addedUrls.filter(item => item.id !== id);
+            updateUrlList();
+            updateTrainingButton();
+        }
+
+        function updateTrainingButton() {
+            const btn = document.getElementById('startTrainingBtn');
+            btn.disabled = addedUrls.length === 0;
+        }
+
+        async function startTraining() {
+            const trainingProgress = document.getElementById('trainingProgress');
+            const trainingStatus = document.getElementById('trainingStatus');
+            const contentPreview = document.getElementById('contentPreview');
+            const continueBtn = document.getElementById('continueCustomizeBtn');
+            
+            const steps = [
+                'Fetching website content...',
+                'Extracting text and structure...',
+                'Processing page metadata...',
+                'Analyzing content themes...',
+                'Generating FAQ responses...',
+                'Creating knowledge base...',
+                'Building llms.txt file...',
+                'Training complete!'
+            ];
+            
+            let progress = 0;
+            for (let i = 0; i < steps.length; i++) {
+                progress = ((i + 1) / steps.length) * 100;
+                trainingProgress.style.width = progress + '%';
+                trainingStatus.textContent = steps[i];
+                
+                // Update URL statuses
+                if (i < 3) {
+                    addedUrls.forEach((item, index) => {
+                        if (index <= i) {
+                            item.status = 'processing';
+                        }
+                    });
+                    updateUrlList();
+                }
+                
+                await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1000));
+            }
+            
+            // Show extracted content
+            showExtractedContent();
+            contentPreview.style.display = 'block';
+            continueBtn.disabled = false;
+        }
+
+        function showExtractedContent() {
+            const extractedContent = document.getElementById('extractedContent');
+            const sampleContent = [
+                {
+                    title: 'Company Overview',
+                    content: `${selectedBot.title} specializes in helping businesses automate customer interactions and improve engagement.`
+                },
+                {
+                    title: 'Main Services',
+                    content: 'Customer support, lead generation, FAQ handling, appointment scheduling, and 24/7 assistance.'
+                },
+                {
+                    title: 'Contact Information', 
+                    content: 'Multiple contact methods including chat, email, and phone support with quick response times.'
+                },
+                {
+                    title: 'Key Features',
+                    content: 'AI-powered responses, multi-language support, CRM integration, and detailed analytics.'
+                }
+            ];
+            
+            extractedContent.innerHTML = sampleContent.map(item => `
+                <div class="content-item">
+                    <h4>${item.title}</h4>
+                    <p>${item.content}</p>
+                </div>
+            `).join('');
+        }
+
+        // Personality selection
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.custom-option')) {
+                document.querySelectorAll('.custom-option').forEach(option => {
+                    option.classList.remove('active');
+                });
+                e.target.closest('.custom-option').classList.add('active');
+                selectedPersonality = e.target.closest('.custom-option').dataset.personality;
+            }
+        });
+
+        function downloadChatbot() {
+            // Simulate file download
+            const chatbotData = {
+                bot: selectedBot,
+                urls: addedUrls,
+                personality: selectedPersonality,
+                businessInfo: {
+                    name: document.getElementById('businessName').value,
+                    email: document.getElementById('businessEmail').value,
+                    phone: document.getElementById('businessPhone').value,
+                    hours: document.getElementById('businessHours').value
+                },
+                generatedAt: new Date().toISOString(),
+                llmsContent: generateLlmsContent()
+            };
+
+            // Create downloadable files
+            downloadJsonFile(chatbotData, 'chatbot-config.json');
+            downloadTextFile(chatbotData.llmsContent, 'llms.txt');
+            
+            alert('🎉 Chatbot files downloaded!\n\nYou now have:\n• Chatbot configuration file\n• llms.txt with your website content\n• Installation instructions\n\nCheck your downloads folder.');
+        }
+
+        function generateLlmsContent() {
+            const businessName = document.getElementById('businessName').value || 'Your Business';
+            return `# ${businessName} - AI Chatbot Knowledge Base
+
+## Company Information
+Business Name: ${businessName}
+Chatbot Type: ${selectedBot.title}
+Personality: ${selectedPersonality}
+
+## Website Content
+${addedUrls.map(item => `Source: ${item.url}`).join('\n')}
+
+## Capabilities
+- Customer support and FAQ handling
+- Lead generation and qualification
+- Appointment scheduling
+- Product/service information
+- Contact information provision
+
+## Contact Information
+${document.getElementById('businessEmail').value ? `Email: ${document.getElementById('businessEmail').value}` : ''}
+${document.getElementById('businessPhone').value ? `Phone: ${document.getElementById('businessPhone').value}` : ''}
+${document.getElementById('businessHours').value ? `Hours: ${document.getElementById('businessHours').value}` : ''}
+
+## Training Data
+This chatbot has been trained on the following website content:
+${addedUrls.map(item => `- ${item.url}`).join('\n')}
+
+Generated on: ${new Date().toISOString()}
+`;
+        }
+
+        function downloadJsonFile(data, filename) {
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            downloadBlob(blob, filename);
+        }
+
+        function downloadTextFile(content, filename) {
+            const blob = new Blob([content], { type: 'text/plain' });
+            downloadBlob(blob, filename);
+        }
+
+        function downloadBlob(blob, filename) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function testChatbot() {
+            window.open('/chatbot-test.html', '_blank');
+        }
+
+        function goBack() {
+            if (currentStep > 1) {
+                prevStep();
+            } else {
+                window.location.href = '/marketplace-unified.html';
+            }
+        }
+    </script>
+</body>
+</html>
