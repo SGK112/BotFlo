@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🤖 Chatbot Builders - BotFlo</title>
-    <meta name="description" content="Create powerful AI chatbots with three professional builder options: Website Scraper, Marketplace Templates, and Advanced Flow Builder.">
+    <title>🚀 AI Chatbot Builders - BotFlo | Build, Deploy & Monetize</title>
+    <meta name="description" content="Create powerful AI chatbots in minutes with our professional no-code builders. From instant website scrapers to advanced flow builders - start free, scale to enterprise.">
     
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#6366f1">
@@ -45,11 +45,11 @@
             }
         }
 
-        /* Hero Section */
+        /* Hero Section - Enhanced Professional Look */
         .builders-hero {
-            background: var(--gradient-hero);
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%);
             color: white;
-            padding: calc(var(--header-height) + var(--space-16)) 0 var(--space-20);
+            padding: calc(var(--header-height) + var(--space-16)) 0 var(--space-24);
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -62,7 +62,21 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(168, 85, 247, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .builders-hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.1) 100%);
             pointer-events: none;
         }
 
@@ -75,20 +89,27 @@
         }
 
         .hero-content h1 {
-            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-size: clamp(3rem, 6vw, 5.5rem);
             font-weight: 900;
             margin-bottom: var(--space-6);
-            line-height: 1.1;
+            line-height: 1.05;
+            background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 50%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
         .hero-subtitle {
             font-size: var(--text-xl);
-            margin-bottom: var(--space-10);
+            margin-bottom: var(--space-12);
             opacity: 0.95;
-            line-height: 1.6;
-            max-width: 800px;
+            line-height: 1.7;
+            max-width: 900px;
             margin-left: auto;
             margin-right: auto;
+            font-weight: 400;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .hero-stats {
@@ -115,60 +136,88 @@
             opacity: 0.8;
         }
 
-        /* Builder Options Section */
+        /* Builder Options Section - Enhanced */
         .builders-section {
-            padding: var(--space-20) 0;
-            background: var(--white);
+            padding: var(--space-24) 0;
+            background: linear-gradient(180deg, #f8fafc 0%, #ffffff 50%, #f1f5f9 100%);
         }
 
         .builders-container {
-            max-width: 1200px;
+            max-width: 1300px;
             margin: 0 auto;
             padding: 0 var(--space-6);
         }
 
         .section-header {
             text-align: center;
-            margin-bottom: var(--space-16);
+            margin-bottom: var(--space-20);
         }
 
         .section-title {
-            font-size: var(--text-4xl);
+            font-size: var(--text-5xl);
             font-weight: 900;
             color: var(--gray-900);
-            margin-bottom: var(--space-4);
+            margin-bottom: var(--space-6);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .section-subtitle {
             font-size: var(--text-xl);
             color: var(--gray-600);
-            max-width: 700px;
+            max-width: 800px;
             margin: 0 auto;
-            line-height: 1.6;
+            line-height: 1.7;
+            font-weight: 400;
         }
 
         .builders-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-            gap: var(--space-8);
-            margin-bottom: var(--space-16);
+            grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+            gap: var(--space-10);
+            margin-bottom: var(--space-20);
         }
 
-        /* Builder Card Styles */
+        /* Enhanced Builder Card Styles */
         .builder-card {
-            background: var(--white);
-            border-radius: var(--border-radius-xl);
-            box-shadow: var(--shadow-lg);
-            border: 1px solid var(--gray-200);
+            background: linear-gradient(145deg, #ffffff 0%, #fefefe 100%);
+            border-radius: var(--border-radius-2xl);
+            box-shadow: 
+                0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06),
+                0 0 0 1px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(226, 232, 240, 0.8);
             overflow: hidden;
-            transition: all var(--transition-base);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
+            backdrop-filter: blur(10px);
+        }
+
+        .builder-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.02) 0%, rgba(16, 185, 129, 0.02) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
         }
 
         .builder-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-2xl);
-            border-color: var(--primary);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.25),
+                0 0 0 1px rgba(59, 130, 246, 0.2);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .builder-card:hover::before {
+            opacity: 1;
         }
 
         .builder-card.featured {
@@ -416,33 +465,93 @@
 <body>
     <!-- Navigation will be injected here -->
 
-    <!-- Professional Hero Section -->
+    <!-- Enhanced Professional Hero Section -->
     <section class="builders-hero" style="padding-top: calc(var(--header-height) + var(--space-16));">
         <div class="hero-content">
-            <h1>🤖 Professional Chatbot Builders</h1>
-            <p class="subtitle">Three powerful ways to create intelligent AI chatbots - from instant website scraping to advanced custom flows. Choose the method that fits your expertise and business needs.</p>
+            <h1>🚀 Build AI Chatbots That Convert</h1>
+            <p class="hero-subtitle">
+                Choose from three professional-grade builders designed for different skill levels. 
+                From instant website scraping to advanced enterprise flows - launch your AI assistant in minutes, not months.
+            </p>
             
-            <!-- User Journey Steps -->
-            <div class="user-journey">
-                <div class="journey-step">
-                    <span class="icon">🌐</span>
-                    <div class="journey-step-title">Scrape</div>
-                    <div class="journey-step-desc">Instant from website</div>
+            <!-- Enhanced Value Proposition -->
+            <div class="hero-stats" style="display: flex; justify-content: center; gap: var(--space-12); margin-bottom: var(--space-12); flex-wrap: wrap;">
+                <div class="hero-stat">
+                    <span class="hero-stat-number" style="display: block; font-size: 3rem; font-weight: 900; margin-bottom: var(--space-1); color: #10b981;">30s</span>
+                    <span class="hero-stat-label" style="font-size: var(--text-sm); opacity: 0.9;">Setup Time</span>
                 </div>
-                <div class="journey-step">
-                    <span class="icon">🎨</span>
-                    <div class="journey-step-title">Customize</div>
-                    <div class="journey-step-desc">Add your branding</div>
+                <div class="hero-stat">
+                    <span class="hero-stat-number" style="display: block; font-size: 3rem; font-weight: 900; margin-bottom: var(--space-1); color: #3b82f6;">$0</span>
+                    <span class="hero-stat-label" style="font-size: var(--text-sm); opacity: 0.9;">To Start</span>
                 </div>
-                <div class="journey-step">
-                    <span class="icon">🧠</span>
-                    <div class="journey-step-title">Train</div>
-                    <div class="journey-step-desc">AI learns your content</div>
+                <div class="hero-stat">
+                    <span class="hero-stat-number" style="display: block; font-size: 3rem; font-weight: 900; margin-bottom: var(--space-1); color: #f59e0b;">24/7</span>
+                    <span class="hero-stat-label" style="font-size: var(--text-sm); opacity: 0.9;">AI Support</span>
                 </div>
-                <div class="journey-step">
-                    <span class="icon">🚀</span>
-                    <div class="journey-step-title">Deploy</div>
-                    <div class="journey-step-desc">Launch in minutes</div>
+                <div class="hero-stat">
+                    <span class="hero-stat-number" style="display: block; font-size: 3rem; font-weight: 900; margin-bottom: var(--space-1); color: #ef4444;">+250%</span>
+                    <span class="hero-stat-label" style="font-size: var(--text-sm); opacity: 0.9;">Lead Growth</span>
+                </div>
+            </div>
+            
+            <!-- CTA Buttons -->
+            <div style="display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap; margin-bottom: var(--space-16);">
+                <a href="#builders" style="
+                    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+                    color: white;
+                    padding: var(--space-4) var(--space-8);
+                    border-radius: var(--border-radius-full);
+                    text-decoration: none;
+                    font-weight: 700;
+                    font-size: var(--text-lg);
+                    display: inline-flex;
+                    align-items: center;
+                    gap: var(--space-2);
+                    transition: all 0.3s ease;
+                    box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.4);
+                " onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 25px 0 rgba(16, 185, 129, 0.6)'"
+                   onmouseout="this.style.transform=''; this.style.boxShadow='0 4px 14px 0 rgba(16, 185, 129, 0.4)'">
+                    <i class="fas fa-rocket"></i>
+                    Start Building Free
+                </a>
+                <a href="/demo.html" style="
+                    background: rgba(255, 255, 255, 0.15);
+                    color: white;
+                    padding: var(--space-4) var(--space-8);
+                    border-radius: var(--border-radius-full);
+                    text-decoration: none;
+                    font-weight: 600;
+                    font-size: var(--text-lg);
+                    display: inline-flex;
+                    align-items: center;
+                    gap: var(--space-2);
+                    border: 2px solid rgba(255, 255, 255, 0.3);
+                    transition: all 0.3s ease;
+                    backdrop-filter: blur(10px);
+                " onmouseover="this.style.background='rgba(255, 255, 255, 0.25)'; this.style.borderColor='rgba(255, 255, 255, 0.6)'"
+                   onmouseout="this.style.background='rgba(255, 255, 255, 0.15)'; this.style.borderColor='rgba(255, 255, 255, 0.3)'">
+                    <i class="fas fa-play"></i>
+                    Watch Demo
+                </a>
+            </div>
+            
+            <!-- Trust Indicators -->
+            <div style="display: flex; justify-content: center; align-items: center; gap: var(--space-8); flex-wrap: wrap; opacity: 0.8; font-size: var(--text-sm);">
+                <div style="display: flex; align-items: center; gap: var(--space-1);">
+                    <i class="fas fa-shield-alt" style="color: #10b981;"></i>
+                    <span>Enterprise Security</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: var(--space-1);">
+                    <i class="fas fa-cloud" style="color: #3b82f6;"></i>
+                    <span>Cloud Hosted</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: var(--space-1);">
+                    <i class="fas fa-mobile-alt" style="color: #f59e0b;"></i>
+                    <span>Mobile Ready</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: var(--space-1);">
+                    <i class="fas fa-code" style="color: #a855f7;"></i>
+                    <span>No Code Required</span>
                 </div>
             </div>
         </div>
@@ -452,322 +561,800 @@
     <section class="builders-section" id="builders">
         <div class="builders-container">
             <div class="section-header">
-                <h2 class="section-title">Choose Your Builder</h2>
+                <h2 class="section-title">Choose Your Builder Path</h2>
                 <p class="section-subtitle">
-                    From beginners to enterprise developers, we have the perfect solution for your chatbot creation needs.
+                    Start free with any builder, then upgrade as you scale. From solo entrepreneurs to enterprise teams, 
+                    we have the perfect solution to turn your ideas into profitable AI assistants.
                 </p>
+                
+                <!-- Builder Selection Guide -->
+                <div style="display: flex; justify-content: center; gap: var(--space-6); margin-top: var(--space-8); flex-wrap: wrap;">
+                    <div style="text-align: center; max-width: 200px;">
+                        <div style="font-size: 2rem; margin-bottom: var(--space-2);">⚡</div>
+                        <div style="font-weight: 600; color: var(--gray-700);">Quick Start</div>
+                        <div style="font-size: var(--text-sm); color: var(--gray-500);">Website Scraper</div>
+                    </div>
+                    <div style="text-align: center; max-width: 200px;">
+                        <div style="font-size: 2rem; margin-bottom: var(--space-2);">🎮</div>
+                        <div style="font-weight: 600; color: var(--gray-700);">Most Engaging</div>
+                        <div style="font-size: var(--text-sm); color: var(--gray-500);">Character Creator</div>
+                    </div>
+                    <div style="text-align: center; max-width: 200px;">
+                        <div style="font-size: 2rem; margin-bottom: var(--space-2);">🏢</div>
+                        <div style="font-weight: 600; color: var(--gray-700);">Most Powerful</div>
+                        <div style="font-size: var(--text-sm); color: var(--gray-500);">Flow Builder</div>
+                    </div>
+                </div>
             </div>
 
             <div class="builders-grid">
-                <!-- Website Scraper -->
-                <div style="background: white; border-radius: 1rem; padding: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: 2px solid transparent; transition: all 0.3s ease;" 
-                     onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='var(--primary)'" 
-                     onmouseout="this.style.transform=''; this.style.borderColor='transparent'">
-                    <div style="width: 4rem; height: 4rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 1rem; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; color: white; font-size: 1.5rem;">
-                        <i class="fas fa-globe"></i>
+                <!-- Website Scraper - Enhanced -->
+                <div class="builder-card" 
+                     onmouseover="this.style.transform='translateY(-8px) scale(1.02)'; this.style.boxShadow='0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(59, 130, 246, 0.2)';" 
+                     onmouseout="this.style.transform=''; this.style.boxShadow='0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.05)';">
+                    
+                    <!-- Card Header -->
+                    <div style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); padding: var(--space-8); text-align: center; color: white; position: relative;">
+                        <div style="position: absolute; top: var(--space-4); right: var(--space-4); background: rgba(255,255,255,0.2); padding: var(--space-1) var(--space-3); border-radius: var(--border-radius-full); font-size: var(--text-xs); font-weight: 600;">
+                            Most Popular
+                        </div>
+                        <div style="width: 5rem; height: 5rem; background: rgba(255,255,255,0.2); border-radius: var(--border-radius-xl); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-4); font-size: 2rem; backdrop-filter: blur(10px);">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <h3 style="font-size: 1.5rem; font-weight: 800; margin-bottom: var(--space-2);">Website Scraper Bot</h3>
+                        <p style="opacity: 0.9; font-size: var(--text-sm);">
+                            Instant AI chatbot from any website URL
+                        </p>
                     </div>
-                    <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem; color: var(--gray-900);">Website Scraper Bot</h3>
-                    <p style="color: var(--gray-600); margin-bottom: 1.5rem;">
-                        Enter any website URL and we'll automatically create a chatbot with your site's content. Perfect for customer support and lead generation.
-                    </p>
-                    <div style="margin-bottom: 1.5rem; font-size: 0.9rem; color: var(--gray-500);">
-                        <div>⚡ <strong>Speed:</strong> 30 seconds</div>
-                        <div>🎯 <strong>Best for:</strong> Quick deployment</div>
-                        <div>💡 <strong>Skill level:</strong> Beginner</div>
+                    
+                    <!-- Card Body -->
+                    <div style="padding: var(--space-8);">
+                        <!-- Pricing -->
+                        <div style="text-align: center; margin-bottom: var(--space-6); padding: var(--space-4); background: var(--gray-50); border-radius: var(--border-radius-lg);">
+                            <div style="font-size: 2rem; font-weight: 900; color: var(--primary); margin-bottom: var(--space-1);">
+                                FREE
+                            </div>
+                            <div style="font-size: var(--text-sm); color: var(--gray-600);">
+                                3 bots • 100 messages/month
+                            </div>
+                        </div>
+                        
+                        <!-- Description -->
+                        <p style="color: var(--gray-600); margin-bottom: var(--space-6); line-height: 1.6;">
+                            Perfect for customer support, lead generation, and FAQ automation. 
+                            Just enter a website URL and we'll create an intelligent chatbot trained on your content.
+                        </p>
+                        
+                        <!-- Features List -->
+                        <ul style="list-style: none; padding: 0; margin: 0 0 var(--space-6) 0;">
+                            <li style="display: flex; align-items: center; margin-bottom: var(--space-3); color: var(--gray-700);">
+                                <i class="fas fa-check" style="color: var(--success); margin-right: var(--space-3); font-size: var(--text-sm);"></i>
+                                <span>⚡ 30-second setup</span>
+                            </li>
+                            <li style="display: flex; align-items: center; margin-bottom: var(--space-3); color: var(--gray-700);">
+                                <i class="fas fa-check" style="color: var(--success); margin-right: var(--space-3); font-size: var(--text-sm);"></i>
+                                <span>🧠 Auto-trains on website content</span>
+                            </li>
+                            <li style="display: flex; align-items: center; margin-bottom: var(--space-3); color: var(--gray-700);">
+                                <i class="fas fa-check" style="color: var(--success); margin-right: var(--space-3); font-size: var(--text-sm);"></i>
+                                <span>📱 Mobile & desktop ready</span>
+                            </li>
+                            <li style="display: flex; align-items: center; margin-bottom: var(--space-3); color: var(--gray-700);">
+                                <i class="fas fa-check" style="color: var(--success); margin-right: var(--space-3); font-size: var(--text-sm);"></i>
+                                <span>🎨 Customizable appearance</span>
+                            </li>
+                            <li style="display: flex; align-items: center; margin-bottom: var(--space-3); color: var(--gray-700);">
+                                <i class="fas fa-check" style="color: var(--success); margin-right: var(--space-3); font-size: var(--text-sm);"></i>
+                                <span>💬 Multi-language support</span>
+                            </li>
+                        </ul>
+                        
+                        <!-- Skill Level -->
+                        <div style="display: flex; align-items: center; justify-content: center; gap: var(--space-2); margin-bottom: var(--space-6); padding: var(--space-2) var(--space-4); background: linear-gradient(135deg, #10b981, #059669); color: white; border-radius: var(--border-radius-lg); font-size: var(--text-sm); font-weight: 600;">
+                            <i class="fas fa-seedling"></i>
+                            <span>Perfect for Beginners</span>
+                        </div>
+                        
+                        <!-- CTA Button -->
+                        <a href="/chatbot.html" style="
+                            padding: var(--space-4) var(--space-6);
+                            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+                            color: white;
+                            text-decoration: none;
+                            border-radius: var(--border-radius-lg);
+                            font-weight: 700;
+                            transition: all var(--transition-base);
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: var(--space-2);
+                            font-size: var(--text-base);
+                        " onmouseover="this.style.background='linear-gradient(135deg, #1d4ed8 0%, #1e3a8a 100%)'; this.style.transform='translateY(-2px)'"
+                           onmouseout="this.style.background='linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)'; this.style.transform=''">
+                            <i class="fas fa-rocket"></i>
+                            Start Free Now
+                        </a>
                     </div>
-                    <a href="/website-scraper.html" style="
-                        padding: var(--space-3) var(--space-6);
-                        font-size: var(--text-sm);
-                        background: var(--primary);
-                        color: white;
-                        text-decoration: none;
-                        border-radius: var(--border-radius-lg);
-                        font-weight: 600;
-                        transition: all var(--transition-base);
-                        display: inline-block;
-                    " onmouseover="this.style.background='var(--primary-dark)'; this.style.transform='translateY(-2px)'"
-                       onmouseout="this.style.background='var(--primary)'; this.style.transform=''">
-                        Try Website Scraper
-                    </a>
                 </div>
 
-                <!-- Character Creator -->
-                <div style="background: white; border-radius: 1rem; padding: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: 2px solid var(--accent); transition: all 0.3s ease; position: relative;" 
-                     onmouseover="this.style.transform='translateY(-5px)'" 
-                     onmouseout="this.style.transform=''">
-                    <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--accent); color: white; padding: 0.5rem 1rem; border-radius: 1rem; font-size: 0.875rem; font-weight: 600;">
-                        Most Fun!
+                <!-- Character Creator - Enhanced -->
+                <div class="builder-card" style="border: 2px solid var(--accent); position: relative;" 
+                     onmouseover="this.style.transform='translateY(-8px) scale(1.02)'; this.style.boxShadow='0 25px 50px -12px rgba(234, 88, 12, 0.25), 0 0 0 1px rgba(234, 88, 12, 0.3)';" 
+                     onmouseout="this.style.transform=''; this.style.boxShadow='0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.05)';">
+                    
+                    <!-- Featured Badge -->
+                    <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, var(--accent) 0%, #c2410c 100%); color: white; padding: var(--space-2) var(--space-4); border-radius: var(--border-radius-full); font-size: var(--text-xs); font-weight: 700; z-index: 1; box-shadow: 0 4px 14px 0 rgba(234, 88, 12, 0.4);">
+                        🎮 Most Engaging!
                     </div>
-                    <div style="width: 4rem; height: 4rem; background: linear-gradient(135deg, var(--accent), #ec4899); border-radius: 1rem; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; color: white; font-size: 1.5rem;">
-                        <i class="fas fa-user-plus"></i>
+                    
+                    <!-- Card Header -->
+                    <div style="background: linear-gradient(135deg, var(--accent) 0%, #c2410c 100%); padding: var(--space-8); padding-top: var(--space-12); text-align: center; color: white; position: relative;">
+                        <div style="width: 5rem; height: 5rem; background: rgba(255,255,255,0.2); border-radius: var(--border-radius-xl); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-4); font-size: 2rem; backdrop-filter: blur(10px);">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <h3 style="font-size: 1.5rem; font-weight: 800; margin-bottom: var(--space-2);">Character Creator</h3>
+                        <p style="opacity: 0.9; font-size: var(--text-sm);">
+                            Gamified chatbot building experience
+                        </p>
                     </div>
-                    <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem; color: var(--gray-900);">Character Creator</h3>
-                    <p style="color: var(--gray-600); margin-bottom: 1.5rem;">
-                        Design your chatbot like a game character - choose personality, appearance, abilities, and watch it evolve with XP and achievements.
-                    </p>
-                    <div style="margin-bottom: 1.5rem; font-size: 0.9rem; color: var(--gray-500);">
-                        <div>🎮 <strong>Speed:</strong> 5-10 minutes</div>
-                        <div>🎯 <strong>Best for:</strong> Engagement & fun</div>
-                        <div>💡 <strong>Skill level:</strong> Any</div>
+                    
+                    <!-- Card Body -->
+                    <div style="padding: var(--space-8);">
+                        <!-- Pricing -->
+                        <div style="text-align: center; margin-bottom: var(--space-6); padding: var(--space-4); background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%); border-radius: var(--border-radius-lg);">
+                            <div style="font-size: 2rem; font-weight: 900; color: var(--accent); margin-bottom: var(--space-1);">
+                                FREE
+                            </div>
+                            <div style="font-size: var(--text-sm); color: var(--gray-700);">
+                                Unlimited characters • XP system
+                            </div>
+                        </div>
+                        
+                        <!-- Description -->
+                        <p style="color: var(--gray-600); margin-bottom: var(--space-6); line-height: 1.6;">
+                            Create chatbots like RPG characters! Choose avatars, unlock abilities, gain XP, and earn achievements. 
+                            Perfect for engagement and making AI fun.
+                        </p>
+                        
+                        <!-- Features List -->
+                        <ul style="list-style: none; padding: 0; margin: 0 0 var(--space-6) 0;">
+                            <li style="display: flex; align-items: center; margin-bottom: var(--space-3); color: var(--gray-700);">
+                                <i class="fas fa-check" style="color: var(--success); margin-right: var(--space-3); font-size: var(--text-sm);"></i>
+                                <span>🎭 Unique character avatars</span>
+                            </li>
+                            <li style="display: flex; align-items: center; margin-bottom: var(--space-3); color: var(--gray-700);">
+                                <i class="fas fa-check" style="color: var(--success); margin-right: var(--space-3); font-size: var(--text-sm);"></i>
+                                <span>⚡ Unlock special abilities</span>
+                            </li>
+                            <li style="display: flex; align-items: center; margin-bottom: var(--space-3); color: var(--gray-700);">
+                                <i class="fas fa-check" style="color: var(--success); margin-right: var(--space-3); font-size: var(--text-sm);"></i>
+                                <span>📊 Level up with experience</span>
+                            </li>
+                            <li style="display: flex; align-items: center; margin-bottom: var(--space-3); color: var(--gray-700);">
+                                <i class="fas fa-check" style="color: var(--success); margin-right: var(--space-3); font-size: var(--text-sm);"></i>
+                                <span>🏆 Achievement system</span>
+                            </li>
+                            <li style="display: flex; align-items: center; margin-bottom: var(--space-3); color: var(--gray-700);">
+                                <i class="fas fa-check" style="color: var(--success); margin-right: var(--space-3); font-size: var(--text-sm);"></i>
+                                <span>🎮 Gamified interface</span>
+                            </li>
+                        </ul>
+                        
+                        <!-- Skill Level -->
+                        <div style="display: flex; align-items: center; justify-content: center; gap: var(--space-2); margin-bottom: var(--space-6); padding: var(--space-2) var(--space-4); background: linear-gradient(135deg, var(--accent), #c2410c); color: white; border-radius: var(--border-radius-lg); font-size: var(--text-sm); font-weight: 600;">
+                            <i class="fas fa-gamepad"></i>
+                            <span>Fun for Everyone</span>
+                        </div>
+                        
+                        <!-- CTA Button -->
+                        <a href="/character-creator.html" style="
+                            padding: var(--space-4) var(--space-6);
+                            background: linear-gradient(135deg, var(--accent) 0%, #c2410c 100%);
+                            color: white;
+                            text-decoration: none;
+                            border-radius: var(--border-radius-lg);
+                            font-weight: 700;
+                            transition: all var(--transition-base);
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: var(--space-2);
+                            font-size: var(--text-base);
+                        " onmouseover="this.style.background='linear-gradient(135deg, #c2410c 0%, #9a3412 100%)'; this.style.transform='translateY(-2px)'"
+                           onmouseout="this.style.background='linear-gradient(135deg, var(--accent) 0%, #c2410c 100%)'; this.style.transform=''">
+                            <i class="fas fa-magic"></i>
+                            Create Character
+                        </a>
                     </div>
-                    <a href="/character-creator.html" style="
-                        padding: var(--space-3) var(--space-6);
-                        font-size: var(--text-sm);
-                        background: var(--accent);
-                        color: white;
-                        text-decoration: none;
-                        border-radius: var(--border-radius-lg);
-                        font-weight: 600;
-                        transition: all var(--transition-base);
-                        display: inline-block;
-                    " onmouseover="this.style.background='var(--accent-dark)'; this.style.transform='translateY(-2px)'"
-                       onmouseout="this.style.background='var(--accent)'; this.style.transform=''">
-                        Create Character
-                    </a>
                 </div>
 
-                <!-- Advanced Builder -->
-                <div style="background: white; border-radius: 1rem; padding: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: 2px solid transparent; transition: all 0.3s ease;" 
-                     onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='var(--secondary)'" 
-                     onmouseout="this.style.transform=''; this.style.borderColor='transparent'">
-                    <div style="width: 4rem; height: 4rem; background: linear-gradient(135deg, var(--secondary), #0891b2); border-radius: 1rem; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; color: white; font-size: 1.5rem;">
-                        <i class="fas fa-project-diagram"></i>
+                <!-- Advanced Builder - Enhanced -->
+                <div class="builder-card" 
+                     onmouseover="this.style.transform='translateY(-8px) scale(1.02)'; this.style.boxShadow='0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(13, 148, 136, 0.2)';" 
+                     onmouseout="this.style.transform=''; this.style.boxShadow='0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.05)';">
+                    
+                    <!-- Card Header -->
+                    <div style="background: linear-gradient(135deg, var(--secondary) 0%, #0f766e 100%); padding: var(--space-8); text-align: center; color: white; position: relative;">
+                        <div style="position: absolute; top: var(--space-4); right: var(--space-4); background: rgba(255,255,255,0.2); padding: var(--space-1) var(--space-3); border-radius: var(--border-radius-full); font-size: var(--text-xs); font-weight: 600;">
+                            Enterprise
+                        </div>
+                        <div style="width: 5rem; height: 5rem; background: rgba(255,255,255,0.2); border-radius: var(--border-radius-xl); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-4); font-size: 2rem; backdrop-filter: blur(10px);">
+                            <i class="fas fa-project-diagram"></i>
+                        </div>
+                        <h3 style="font-size: 1.5rem; font-weight: 800; margin-bottom: var(--space-2);">Advanced Flow Builder</h3>
+                        <p style="opacity: 0.9; font-size: var(--text-sm);">
+                            Professional drag-and-drop interface
+                        </p>
                     </div>
-                    <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem; color: var(--gray-900);">Advanced Flow Builder</h3>
-                    <p style="color: var(--gray-600); margin-bottom: 1.5rem;">
-                        Professional drag-and-drop interface for complex conversation flows. Perfect for enterprise use cases and advanced integrations.
-                    </p>
-                    <div style="margin-bottom: 1.5rem; font-size: 0.9rem; color: var(--gray-500);">
-                        <div>🔧 <strong>Speed:</strong> 15-30 minutes</div>
-                        <div>🎯 <strong>Best for:</strong> Complex workflows</div>
-                        <div>💡 <strong>Skill level:</strong> Intermediate</div>
+                    
+                    <!-- Card Body -->
+                    <div style="padding: var(--space-8);">
+                        <!-- Pricing -->
+                        <div style="text-align: center; margin-bottom: var(--space-6); padding: var(--space-4); background: var(--gray-50); border-radius: var(--border-radius-lg); border: 2px dashed var(--secondary);">
+                            <div style="font-size: 1.2rem; font-weight: 700; color: var(--secondary); margin-bottom: var(--space-1);">
+                                FREE DEMO
+                            </div>
+                            <div style="font-size: var(--text-sm); color: var(--gray-600);">
+                                3 nodes • Upgrade for unlimited
+                            </div>
+                            <div style="font-size: var(--text-xs); color: var(--accent); margin-top: var(--space-1); font-weight: 600;">
+                                Pro: $29/mo • Enterprise: $99/mo
+                            </div>
+                        </div>
+                        
+                        <!-- Description -->
+                        <p style="color: var(--gray-600); margin-bottom: var(--space-6); line-height: 1.6;">
+                            Enterprise-grade visual flow builder with advanced integrations, APIs, and custom logic. 
+                            Perfect for complex workflows and high-volume businesses.
+                        </p>
+                        
+                        <!-- Features List -->
+                        <ul style="list-style: none; padding: 0; margin: 0 0 var(--space-6) 0;">
+                            <li style="display: flex; align-items: center; margin-bottom: var(--space-3); color: var(--gray-700);">
+                                <i class="fas fa-check" style="color: var(--success); margin-right: var(--space-3); font-size: var(--text-sm);"></i>
+                                <span>🔧 Drag & drop interface</span>
+                            </li>
+                            <li style="display: flex; align-items: center; margin-bottom: var(--space-3); color: var(--gray-700);">
+                                <i class="fas fa-check" style="color: var(--success); margin-right: var(--space-3); font-size: var(--text-sm);"></i>
+                                <span>🔗 API integrations</span>
+                            </li>
+                            <li style="display: flex; align-items: center; margin-bottom: var(--space-3); color: var(--gray-700);">
+                                <i class="fas fa-check" style="color: var(--success); margin-right: var(--space-3); font-size: var(--text-sm);"></i>
+                                <span>📊 Advanced analytics</span>
+                            </li>
+                            <li style="display: flex; align-items: center; margin-bottom: var(--space-3); color: var(--gray-700);">
+                                <i class="fas fa-check" style="color: var(--success); margin-right: var(--space-3); font-size: var(--text-sm);"></i>
+                                <span>⚙️ Custom logic blocks</span>
+                            </li>
+                            <li style="display: flex; align-items: center; margin-bottom: var(--space-3); color: var(--gray-700);">
+                                <i class="fas fa-check" style="color: var(--success); margin-right: var(--space-3); font-size: var(--text-sm);"></i>
+                                <span>🏢 Team collaboration</span>
+                            </li>
+                        </ul>
+                        
+                        <!-- Skill Level -->
+                        <div style="display: flex; align-items: center; justify-content: center; gap: var(--space-2); margin-bottom: var(--space-6); padding: var(--space-2) var(--space-4); background: linear-gradient(135deg, var(--secondary), #0f766e); color: white; border-radius: var(--border-radius-lg); font-size: var(--text-sm); font-weight: 600;">
+                            <i class="fas fa-graduation-cap"></i>
+                            <span>Intermediate to Advanced</span>
+                        </div>
+                        
+                        <!-- CTA Button -->
+                        <a href="/advanced-flow-builder.html" style="
+                            padding: var(--space-4) var(--space-6);
+                            background: linear-gradient(135deg, var(--secondary) 0%, #0f766e 100%);
+                            color: white;
+                            text-decoration: none;
+                            border-radius: var(--border-radius-lg);
+                            font-weight: 700;
+                            transition: all var(--transition-base);
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: var(--space-2);
+                            font-size: var(--text-base);
+                        " onmouseover="this.style.background='linear-gradient(135deg, #0f766e 0%, #134e4a 100%)'; this.style.transform='translateY(-2px)'"
+                           onmouseout="this.style.background='linear-gradient(135deg, var(--secondary) 0%, #0f766e 100%)'; this.style.transform=''">
+                            <i class="fas fa-cogs"></i>
+                            Try Demo
+                        </a>
                     </div>
-                    <a href="/advanced-flow-builder.html" style="
-                        padding: var(--space-3) var(--space-6);
-                        font-size: var(--text-sm);
-                        background: var(--secondary);
-                        color: white;
-                        text-decoration: none;
-                        border-radius: var(--border-radius-lg);
-                        font-weight: 600;
-                        transition: all var(--transition-base);
-                        display: inline-block;
-                    " onmouseover="this.style.background='var(--secondary-dark)'; this.style.transform='translateY(-2px)'"
-                       onmouseout="this.style.background='var(--secondary)'; this.style.transform=''">
-                        Open Advanced Builder
-                    </a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Character Creator Section -->
-    <section class="character-creator" style="background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 50%, #581c87 100%); color: white; padding: 5rem 0;">
-        <div class="container">
-            <div class="showcase-grid">
-                <div class="showcase-content animate-on-scroll">
-                    <h2 style="color: white; font-size: 2.5rem; margin-bottom: 1.5rem;">🎮 Character Creator</h2>
-                    <p style="font-size: 1.2rem; margin-bottom: 2rem; opacity: 0.9;">
-                        Experience chatbot creation like never before! Build and customize your AI companion 
-                        like creating a character in your favorite RPG game.
+    <!-- Enhanced Character Creator Showcase -->
+    <section class="character-creator" style="background: linear-gradient(135deg, #1e40af 0%, #3730a3 25%, #581c87 75%, #7c2d12 100%); color: white; padding: var(--space-24) 0; position: relative; overflow: hidden;">
+        <!-- Background Effects -->
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 20% 30%, rgba(234, 88, 12, 0.3) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(168, 85, 247, 0.2) 0%, transparent 50%); pointer-events: none;"></div>
+        
+        <div class="container" style="max-width: 1400px; margin: 0 auto; padding: 0 var(--space-6); position: relative; z-index: 2;">
+            <div class="showcase-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-16); align-items: center;">
+                <div class="showcase-content">
+                    <div style="display: inline-flex; align-items: center; gap: var(--space-2); background: rgba(234, 88, 12, 0.2); padding: var(--space-2) var(--space-4); border-radius: var(--border-radius-full); margin-bottom: var(--space-6); border: 1px solid rgba(234, 88, 12, 0.3);">
+                        <i class="fas fa-gamepad" style="color: var(--accent);"></i>
+                        <span style="font-weight: 600; font-size: var(--text-sm);">GAMIFICATION FEATURE</span>
+                    </div>
+                    
+                    <h2 style="color: white; font-size: clamp(2.5rem, 4vw, 3.5rem); margin-bottom: var(--space-6); font-weight: 900; line-height: 1.1;">
+                        🎮 Build Chatbots Like Gaming Characters
+                    </h2>
+                    <p style="font-size: var(--text-xl); margin-bottom: var(--space-8); opacity: 0.9; line-height: 1.7;">
+                        Experience the world's first gamified chatbot builder! Create AI assistants with unique personalities, 
+                        unlock special abilities, and watch them evolve as they gain experience from real conversations.
                     </p>
                     
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
-                        <div style="text-align: center;">
-                            <div style="font-size: 3rem; margin-bottom: 0.5rem;">🎭</div>
-                            <h4>Choose Avatar</h4>
-                            <p style="font-size: 0.9rem; opacity: 0.8;">Pick unique avatars and personalities</p>
+                    <!-- Feature Grid -->
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-6); margin-bottom: var(--space-10);">
+                        <div style="text-align: center; padding: var(--space-4); background: rgba(255, 255, 255, 0.1); border-radius: var(--border-radius-lg); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);">
+                            <div style="font-size: 2.5rem; margin-bottom: var(--space-2);">🎭</div>
+                            <h4 style="font-weight: 700; margin-bottom: var(--space-1);">Choose Avatar</h4>
+                            <p style="font-size: var(--text-sm); opacity: 0.8;">Pick from 50+ unique personalities</p>
                         </div>
-                        <div style="text-align: center;">
-                            <div style="font-size: 3rem; margin-bottom: 0.5rem;">⚡</div>
-                            <h4>Unlock Abilities</h4>
-                            <p style="font-size: 0.9rem; opacity: 0.8;">Equip powerful AI capabilities</p>
+                        <div style="text-align: center; padding: var(--space-4); background: rgba(255, 255, 255, 0.1); border-radius: var(--border-radius-lg); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);">
+                            <div style="font-size: 2.5rem; margin-bottom: var(--space-2);">⚡</div>
+                            <h4 style="font-weight: 700; margin-bottom: var(--space-1);">Unlock Powers</h4>
+                            <p style="font-size: var(--text-sm); opacity: 0.8;">Gain AI superpowers as you level up</p>
                         </div>
-                        <div style="text-align: center;">
-                            <div style="font-size: 3rem; margin-bottom: 0.5rem;">📊</div>
-                            <h4>Level Up</h4>
-                            <p style="font-size: 0.9rem; opacity: 0.8;">Gain XP and unlock new features</p>
+                        <div style="text-align: center; padding: var(--space-4); background: rgba(255, 255, 255, 0.1); border-radius: var(--border-radius-lg); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);">
+                            <div style="font-size: 2.5rem; margin-bottom: var(--space-2);">📊</div>
+                            <h4 style="font-weight: 700; margin-bottom: var(--space-1);">Level System</h4>
+                            <p style="font-size: var(--text-sm); opacity: 0.8;">XP from every conversation</p>
                         </div>
-                        <div style="text-align: center;">
-                            <div style="font-size: 3rem; margin-bottom: 0.5rem;">🏆</div>
-                            <h4>Achievements</h4>
-                            <p style="font-size: 0.9rem; opacity: 0.8;">Complete challenges and earn rewards</p>
+                        <div style="text-align: center; padding: var(--space-4); background: rgba(255, 255, 255, 0.1); border-radius: var(--border-radius-lg); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);">
+                            <div style="font-size: 2.5rem; margin-bottom: var(--space-2);">🏆</div>
+                            <h4 style="font-weight: 700; margin-bottom: var(--space-1);">Achievements</h4>
+                            <p style="font-size: var(--text-sm); opacity: 0.8;">Unlock rewards and special features</p>
                         </div>
                     </div>
                     
-                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                        <a href="/character-creator.html" class="btn" style="
-                            background: linear-gradient(45deg, #10b981, #059669);
+                    <!-- CTA Buttons -->
+                    <div style="display: flex; gap: var(--space-4); flex-wrap: wrap;">
+                        <a href="/character-creator.html" style="
+                            background: linear-gradient(45deg, var(--accent), #c2410c);
                             color: white;
                             border: none;
-                            padding: 15px 30px;
-                            border-radius: 50px;
+                            padding: var(--space-4) var(--space-8);
+                            border-radius: var(--border-radius-full);
                             text-decoration: none;
-                            font-weight: 600;
+                            font-weight: 700;
+                            font-size: var(--text-lg);
                             display: inline-flex;
                             align-items: center;
-                            gap: 0.5rem;
+                            gap: var(--space-2);
                             transition: all 0.3s ease;
-                        " onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 25px rgba(16, 185, 129, 0.4)'"
-                           onmouseout="this.style.transform=''; this.style.boxShadow=''">
+                            box-shadow: 0 4px 14px 0 rgba(234, 88, 12, 0.4);
+                        " onmouseover="this.style.transform='translateY(-3px) scale(1.05)'; this.style.boxShadow='0 10px 25px rgba(234, 88, 12, 0.6)'"
+                           onmouseout="this.style.transform=''; this.style.boxShadow='0 4px 14px 0 rgba(234, 88, 12, 0.4)'">
                             <i class="fas fa-magic"></i>
                             Start Character Creation
                         </a>
-                        <a href="/advanced-flow-builder.html" class="btn" style="
+                        <a href="/advanced-flow-builder.html" style="
                             background: rgba(255,255,255,0.1);
                             color: white;
                             border: 2px solid rgba(255,255,255,0.3);
-                            padding: 15px 30px;
-                            border-radius: 50px;
+                            padding: var(--space-4) var(--space-8);
+                            border-radius: var(--border-radius-full);
                             text-decoration: none;
                             font-weight: 600;
+                            font-size: var(--text-lg);
                             display: inline-flex;
                             align-items: center;
-                            gap: 0.5rem;
+                            gap: var(--space-2);
                             transition: all 0.3s ease;
                             backdrop-filter: blur(10px);
                         " onmouseover="this.style.background='rgba(255,255,255,0.2)'; this.style.borderColor='rgba(255,255,255,0.5)'"
                            onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.borderColor='rgba(255,255,255,0.3)'">
                             <i class="fas fa-cogs"></i>
-                            Advanced Builder
+                            Try Advanced Builder
                         </a>
                     </div>
                 </div>
                 
-                <div class="showcase-visual animate-on-scroll" style="display: flex; align-items: center; justify-content: center;">
+                <!-- Character Showcase -->
+                <div class="showcase-visual" style="display: flex; align-items: center; justify-content: center;">
                     <div style="
-                        background: rgba(255,255,255,0.1);
-                        border-radius: 20px;
-                        padding: 2rem;
-                        backdrop-filter: blur(10px);
+                        background: linear-gradient(145deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%);
+                        border-radius: var(--border-radius-2xl);
+                        padding: var(--space-8);
+                        backdrop-filter: blur(20px);
                         border: 1px solid rgba(255,255,255,0.2);
                         text-align: center;
-                        max-width: 400px;
+                        max-width: 500px;
+                        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
                     ">
-                        <div style="font-size: 4rem; margin-bottom: 1rem;">🤖</div>
-                        <h3 style="margin: 0 0 1rem 0;">Your Bot Character</h3>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
-                            <span>Level 3</span>
-                            <span>🧙‍♂️ Wizard Bot</span>
+                        <!-- Character Avatar -->
+                        <div style="font-size: 6rem; margin-bottom: var(--space-4); background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); border-radius: 50%; width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-4); box-shadow: 0 8px 25px 0 rgba(245, 158, 11, 0.4);">
+                            �‍♂️
                         </div>
-                        <div style="background: rgba(0,0,0,0.3); border-radius: 10px; height: 10px; margin-bottom: 1rem; overflow: hidden;">
-                            <div style="background: linear-gradient(90deg, #fbbf24, #f59e0b); height: 100%; width: 75%; border-radius: 10px;"></div>
+                        
+                        <!-- Character Info -->
+                        <h3 style="margin: 0 0 var(--space-4) 0; font-size: var(--text-2xl); font-weight: 800;">Wizard Bot "Merlin"</h3>
+                        
+                        <!-- Level & Experience -->
+                        <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-4); background: rgba(0,0,0,0.2); padding: var(--space-3); border-radius: var(--border-radius-lg);">
+                            <span style="font-weight: 700;">Level 15</span>
+                            <span style="color: #fbbf24;">⭐ Master Tier</span>
                         </div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.8rem;">
-                            <div>Intelligence: 85</div>
-                            <div>Friendliness: 90</div>
-                            <div>Efficiency: 75</div>
-                            <div>Creativity: 80</div>
+                        
+                        <!-- XP Bar -->
+                        <div style="background: rgba(0,0,0,0.3); border-radius: var(--border-radius-full); height: 12px; margin-bottom: var(--space-6); overflow: hidden; position: relative;">
+                            <div style="background: linear-gradient(90deg, #fbbf24, #f59e0b); height: 100%; width: 85%; border-radius: var(--border-radius-full); position: relative;">
+                                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: var(--text-xs); font-weight: 700;">8,450 / 10,000 XP</div>
+                            </div>
                         </div>
-                        <div style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.8;">
-                            ⚡ Abilities: Multilingual, Analytics, Live Chat
+                        
+                        <!-- Stats Grid -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); margin-bottom: var(--space-6); font-size: var(--text-sm);">
+                            <div style="background: rgba(16, 185, 129, 0.2); padding: var(--space-2); border-radius: var(--border-radius); border: 1px solid rgba(16, 185, 129, 0.3);">
+                                <div style="font-weight: 700;">Intelligence</div>
+                                <div style="color: #10b981; font-size: var(--text-lg); font-weight: 800;">95/100</div>
+                            </div>
+                            <div style="background: rgba(59, 130, 246, 0.2); padding: var(--space-2); border-radius: var(--border-radius); border: 1px solid rgba(59, 130, 246, 0.3);">
+                                <div style="font-weight: 700;">Friendliness</div>
+                                <div style="color: #3b82f6; font-size: var(--text-lg); font-weight: 800;">88/100</div>
+                            </div>
+                            <div style="background: rgba(245, 158, 11, 0.2); padding: var(--space-2); border-radius: var(--border-radius); border: 1px solid rgba(245, 158, 11, 0.3);">
+                                <div style="font-weight: 700;">Speed</div>
+                                <div style="color: #f59e0b; font-size: var(--text-lg); font-weight: 800;">92/100</div>
+                            </div>
+                            <div style="background: rgba(168, 85, 247, 0.2); padding: var(--space-2); border-radius: var(--border-radius); border: 1px solid rgba(168, 85, 247, 0.3);">
+                                <div style="font-weight: 700;">Creativity</div>
+                                <div style="color: #a855f7; font-size: var(--text-lg); font-weight: 800;">79/100</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Abilities -->
+                        <div style="margin-bottom: var(--space-4);">
+                            <h4 style="margin-bottom: var(--space-3); font-weight: 700;">🔮 Unlocked Abilities</h4>
+                            <div style="display: flex; flex-wrap: wrap; gap: var(--space-2); justify-content: center;">
+                                <span style="background: rgba(16, 185, 129, 0.2); color: white; padding: var(--space-1) var(--space-2); border-radius: var(--border-radius); font-size: var(--text-xs); font-weight: 600; border: 1px solid rgba(16, 185, 129, 0.3);">
+                                    🌍 Multilingual
+                                </span>
+                                <span style="background: rgba(59, 130, 246, 0.2); color: white; padding: var(--space-1) var(--space-2); border-radius: var(--border-radius); font-size: var(--text-xs); font-weight: 600; border: 1px solid rgba(59, 130, 246, 0.3);">
+                                    📊 Analytics
+                                </span>
+                                <span style="background: rgba(245, 158, 11, 0.2); color: white; padding: var(--space-1) var(--space-2); border-radius: var(--border-radius); font-size: var(--text-xs); font-weight: 600; border: 1px solid rgba(245, 158, 11, 0.3);">
+                                    💬 Live Chat
+                                </span>
+                                <span style="background: rgba(168, 85, 247, 0.2); color: white; padding: var(--space-1) var(--space-2); border-radius: var(--border-radius); font-size: var(--text-xs); font-weight: 600; border: 1px solid rgba(168, 85, 247, 0.3);">
+                                    🔗 API Power
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <!-- Recent Achievement -->
+                        <div style="background: linear-gradient(135deg, rgba(234, 88, 12, 0.2) 0%, rgba(194, 65, 12, 0.2) 100%); padding: var(--space-3); border-radius: var(--border-radius-lg); border: 1px solid rgba(234, 88, 12, 0.3);">
+                            <div style="font-size: 1.5rem; margin-bottom: var(--space-1);">🏆</div>
+                            <div style="font-weight: 700; font-size: var(--text-sm);">Latest Achievement</div>
+                            <div style="font-size: var(--text-xs); opacity: 0.9;">"Conversation Master" - 10,000 successful chats</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        
+        <!-- Mobile Responsive Adjustment -->
+        <style>
+            @media (max-width: 1024px) {
+                .showcase-grid {
+                    grid-template-columns: 1fr !important;
+                    gap: var(--space-12) !important;
+                    text-align: center;
+                }
+            }
+        </style>
     </section>
 
-    <!-- Pricing Section -->
-    <section class="pricing">
-        <div class="container">
-            <h2>Simple, Transparent Pricing</h2>
-            
-            <div class="pricing-grid">
-                <div class="pricing-card animate-on-scroll">
-                    <div class="pricing-header">
-                        <h3>Starter</h3>
-                        <div class="pricing-price">$0<span>/month</span></div>
+    <!-- Enhanced Pricing Section -->
+    <section class="pricing" style="background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%); padding: var(--space-24) 0;">
+        <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 var(--space-6);">
+            <div style="text-align: center; margin-bottom: var(--space-20);">
+                <h2 style="font-size: var(--text-5xl); font-weight: 900; color: var(--gray-900); margin-bottom: var(--space-6); background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                    Simple, Transparent Pricing
+                </h2>
+                <p style="font-size: var(--text-xl); color: var(--gray-600); max-width: 700px; margin: 0 auto var(--space-8); line-height: 1.7;">
+                    Start building for free, upgrade as you grow. No hidden fees, cancel anytime.
+                </p>
+                
+                <!-- Billing Toggle -->
+                <div style="display: flex; align-items: center; justify-content: center; gap: var(--space-4); margin-bottom: var(--space-4);">
+                    <span style="color: var(--gray-600); font-weight: 600;">Monthly</span>
+                    <div style="background: var(--gray-200); border-radius: var(--border-radius-full); padding: var(--space-1); position: relative; width: 60px; height: 30px;">
+                        <div style="background: var(--primary); border-radius: var(--border-radius-full); width: 26px; height: 26px; position: absolute; top: 2px; left: 2px; transition: all 0.3s ease;"></div>
                     </div>
-                    <ul class="pricing-features">
-                        <li><i class="fas fa-check"></i> Up to 3 chatbots</li>
-                        <li><i class="fas fa-check"></i> 100 conversations/month</li>
-                        <li><i class="fas fa-check"></i> Basic templates</li>
-                        <li><i class="fas fa-check"></i> Community support</li>
-                        <li><i class="fas fa-check"></i> BotFlo branding</li>
+                    <span style="color: var(--primary); font-weight: 600;">
+                        Yearly 
+                        <span style="background: var(--success); color: white; padding: var(--space-1) var(--space-2); border-radius: var(--border-radius); font-size: var(--text-xs); margin-left: var(--space-1);">Save 20%</span>
+                    </span>
+                </div>
+            </div>
+            
+            <div class="pricing-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: var(--space-8); margin-bottom: var(--space-16);">
+                <!-- Starter Plan -->
+                <div class="pricing-card" style="background: white; border-radius: var(--border-radius-2xl); padding: var(--space-8); box-shadow: var(--shadow-lg); border: 1px solid var(--gray-200); transition: all 0.3s ease; position: relative;"
+                     onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-2xl)'"
+                     onmouseout="this.style.transform=''; this.style.boxShadow='var(--shadow-lg)'">
+                    <div class="pricing-header" style="text-align: center; margin-bottom: var(--space-8);">
+                        <h3 style="font-size: var(--text-2xl); font-weight: 800; color: var(--gray-900); margin-bottom: var(--space-2);">Starter</h3>
+                        <div class="pricing-price" style="font-size: 3.5rem; font-weight: 900; color: var(--primary); margin-bottom: var(--space-2);">
+                            $0<span style="font-size: var(--text-lg); color: var(--gray-500); font-weight: 400;">/month</span>
+                        </div>
+                        <p style="color: var(--gray-600); font-size: var(--text-sm);">Perfect for trying out BotFlo</p>
+                    </div>
+                    <ul class="pricing-features" style="list-style: none; padding: 0; margin: 0 0 var(--space-8) 0;">
+                        <li style="display: flex; align-items: center; margin-bottom: var(--space-4); color: var(--gray-700);">
+                            <i class="fas fa-check" style="color: var(--success); margin-right: var(--space-3); font-size: var(--text-sm);"></i>
+                            <span>Up to 3 chatbots</span>
+                        </li>
+                        <li style="display: flex; align-items: center; margin-bottom: var(--space-4); color: var(--gray-700);">
+                            <i class="fas fa-check" style="color: var(--success); margin-right: var(--space-3); font-size: var(--text-sm);"></i>
+                            <span>100 conversations/month</span>
+                        </li>
+                        <li style="display: flex; align-items: center; margin-bottom: var(--space-4); color: var(--gray-700);">
+                            <i class="fas fa-check" style="color: var(--success); margin-right: var(--space-3); font-size: var(--text-sm);"></i>
+                            <span>All builder tools</span>
+                        </li>
+                        <li style="display: flex; align-items: center; margin-bottom: var(--space-4); color: var(--gray-700);">
+                            <i class="fas fa-check" style="color: var(--success); margin-right: var(--space-3); font-size: var(--text-sm);"></i>
+                            <span>Community support</span>
+                        </li>
+                        <li style="display: flex; align-items: center; margin-bottom: var(--space-4); color: var(--gray-400);">
+                            <i class="fas fa-times" style="color: var(--gray-400); margin-right: var(--space-3); font-size: var(--text-sm);"></i>
+                            <span>BotFlo branding</span>
+                        </li>
                     </ul>
-                    <a href="/advanced-flow-builder.html" style="
-                        display: inline-block;
+                    <a href="/chatbot.html" style="
+                        display: block;
                         width: 100%;
                         padding: var(--space-4) var(--space-6);
-                        background: rgba(255, 255, 255, 0.2);
+                        background: var(--gray-100);
                         color: var(--gray-900);
                         border: 2px solid var(--gray-300);
                         border-radius: var(--border-radius-lg);
                         text-decoration: none;
-                        font-weight: 600;
+                        font-weight: 700;
                         text-align: center;
                         transition: all var(--transition-base);
-                    " onmouseover="this.style.background='var(--gray-100)'; this.style.borderColor='var(--primary)'"
-                       onmouseout="this.style.background='rgba(255, 255, 255, 0.2)'; this.style.borderColor='var(--gray-300)'">
+                        font-size: var(--text-base);
+                    " onmouseover="this.style.background='var(--gray-200)'; this.style.borderColor='var(--primary)'"
+                       onmouseout="this.style.background='var(--gray-100)'; this.style.borderColor='var(--gray-300)'">
                         Start Free
                     </a>
                 </div>
 
-                <div class="pricing-card featured animate-on-scroll">
-                    <div class="pricing-header">
-                        <h3>Professional</h3>
-                        <div class="pricing-price">$29<span>/month</span></div>
+                <!-- Professional Plan - Featured -->
+                <div class="pricing-card featured" style="background: white; border-radius: var(--border-radius-2xl); padding: var(--space-8); box-shadow: var(--shadow-2xl); border: 2px solid var(--primary); transition: all 0.3s ease; position: relative; transform: scale(1.05);"
+                     onmouseover="this.style.transform='translateY(-4px) scale(1.05)'; this.style.boxShadow='0 25px 50px -12px rgba(59, 130, 246, 0.25)'"
+                     onmouseout="this.style.transform='scale(1.05)'; this.style.boxShadow='var(--shadow-2xl)'">
+                    
+                    <!-- Popular Badge -->
+                    <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: white; padding: var(--space-2) var(--space-6); border-radius: var(--border-radius-full); font-size: var(--text-sm); font-weight: 700; box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.4);">
+                        🚀 Most Popular
                     </div>
-                    <ul class="pricing-features">
-                        <li><i class="fas fa-check"></i> Unlimited chatbots</li>
-                        <li><i class="fas fa-check"></i> 10,000 conversations/month</li>
-                        <li><i class="fas fa-check"></i> Advanced components</li>
-                        <li><i class="fas fa-check"></i> API integrations</li>
-                        <li><i class="fas fa-check"></i> Custom branding</li>
-                        <li><i class="fas fa-check"></i> Priority support</li>
-                        <li><i class="fas fa-check"></i> Analytics dashboard</li>
+                    
+                    <div class="pricing-header" style="text-align: center; margin-bottom: var(--space-8); margin-top: var(--space-4);">
+                        <h3 style="font-size: var(--text-2xl); font-weight: 800; color: var(--gray-900); margin-bottom: var(--space-2);">Professional</h3>
+                        <div class="pricing-price" style="font-size: 3.5rem; font-weight: 900; color: var(--primary); margin-bottom: var(--space-2);">
+                            $29<span style="font-size: var(--text-lg); color: var(--gray-500); font-weight: 400;">/month</span>
+                        </div>
+                        <p style="color: var(--gray-600); font-size: var(--text-sm);">Best for growing businesses</p>
+                    </div>
+                    <ul class="pricing-features" style="list-style: none; padding: 0; margin: 0 0 var(--space-8) 0;">
+                        <li style="display: flex; align-items: center; margin-bottom: var(--space-4); color: var(--gray-700); font-weight: 600;">
+                            <i class="fas fa-check" style="color: var(--success); margin-right: var(--space-3); font-size: var(--text-sm);"></i>
+                            <span>Everything in Starter</span>
+                        </li>
+                        <li style="display: flex; align-items: center; margin-bottom: var(--space-4); color: var(--gray-700);">
+                            <i class="fas fa-check" style="color: var(--success); margin-right: var(--space-3); font-size: var(--text-sm);"></i>
+                            <span>Unlimited chatbots</span>
+                        </li>
+                        <li style="display: flex; align-items: center; margin-bottom: var(--space-4); color: var(--gray-700);">
+                            <i class="fas fa-check" style="color: var(--success); margin-right: var(--space-3); font-size: var(--text-sm);"></i>
+                            <span>10,000 conversations/month</span>
+                        </li>
+                        <li style="display: flex; align-items: center; margin-bottom: var(--space-4); color: var(--gray-700);">
+                            <i class="fas fa-check" style="color: var(--success); margin-right: var(--space-3); font-size: var(--text-sm);"></i>
+                            <span>Advanced AI models</span>
+                        </li>
+                        <li style="display: flex; align-items: center; margin-bottom: var(--space-4); color: var(--gray-700);">
+                            <i class="fas fa-check" style="color: var(--success); margin-right: var(--space-3); font-size: var(--text-sm);"></i>
+                            <span>API integrations</span>
+                        </li>
+                        <li style="display: flex; align-items: center; margin-bottom: var(--space-4); color: var(--gray-700);">
+                            <i class="fas fa-check" style="color: var(--success); margin-right: var(--space-3); font-size: var(--text-sm);"></i>
+                            <span>Custom branding</span>
+                        </li>
+                        <li style="display: flex; align-items: center; margin-bottom: var(--space-4); color: var(--gray-700);">
+                            <i class="fas fa-check" style="color: var(--success); margin-right: var(--space-3); font-size: var(--text-sm);"></i>
+                            <span>Priority support</span>
+                        </li>
                     </ul>
                     <a href="#" style="
-                        display: inline-block;
+                        display: block;
                         width: 100%;
                         padding: var(--space-4) var(--space-6);
-                        background: var(--primary);
+                        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
                         color: white;
-                        border: 2px solid var(--primary);
+                        border: none;
                         border-radius: var(--border-radius-lg);
                         text-decoration: none;
-                        font-weight: 600;
+                        font-weight: 700;
                         text-align: center;
                         transition: all var(--transition-base);
+                        font-size: var(--text-base);
+                        box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.4);
                     " onclick="startUpgrade('professional')"
-                       onmouseover="this.style.background='var(--primary-dark)'; this.style.transform='translateY(-2px)'"
-                       onmouseout="this.style.background='var(--primary)'; this.style.transform=''">
+                       onmouseover="this.style.background='linear-gradient(135deg, var(--primary-dark) 0%, #1e3a8a 100%)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px 0 rgba(59, 130, 246, 0.6)'"
+                       onmouseout="this.style.background='linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%)'; this.style.transform=''; this.style.boxShadow='0 4px 14px 0 rgba(59, 130, 246, 0.4)'">
                         Upgrade Now
                     </a>
                 </div>
 
-                <div class="pricing-card animate-on-scroll">
-                    <div class="pricing-header">
-                        <h3>Enterprise</h3>
-                        <div class="pricing-price">$99<span>/month</span></div>
+                <!-- Enterprise Plan -->
+                <div class="pricing-card" style="background: white; border-radius: var(--border-radius-2xl); padding: var(--space-8); box-shadow: var(--shadow-lg); border: 1px solid var(--gray-200); transition: all 0.3s ease; position: relative;"
+                     onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-2xl)'"
+                     onmouseout="this.style.transform=''; this.style.boxShadow='var(--shadow-lg)'">
+                    <div class="pricing-header" style="text-align: center; margin-bottom: var(--space-8);">
+                        <h3 style="font-size: var(--text-2xl); font-weight: 800; color: var(--gray-900); margin-bottom: var(--space-2);">Enterprise</h3>
+                        <div class="pricing-price" style="font-size: 3.5rem; font-weight: 900; color: var(--secondary); margin-bottom: var(--space-2);">
+                            $99<span style="font-size: var(--text-lg); color: var(--gray-500); font-weight: 400;">/month</span>
+                        </div>
+                        <p style="color: var(--gray-600); font-size: var(--text-sm);">For large organizations</p>
                     </div>
-                    <ul class="pricing-features">
-                        <li><i class="fas fa-check"></i> Everything in Professional</li>
-                        <li><i class="fas fa-check"></i> 100,000 conversations/month</li>
-                        <li><i class="fas fa-check"></i> Advanced AI models</li>
-                        <li><i class="fas fa-check"></i> Custom integrations</li>
-                        <li><i class="fas fa-check"></i> Dedicated support</li>
-                        <li><i class="fas fa-check"></i> SLA guarantee</li>
-                        <li><i class="fas fa-check"></i> Advanced security</li>
+                    <ul class="pricing-features" style="list-style: none; padding: 0; margin: 0 0 var(--space-8) 0;">
+                        <li style="display: flex; align-items: center; margin-bottom: var(--space-4); color: var(--gray-700); font-weight: 600;">
+                            <i class="fas fa-check" style="color: var(--success); margin-right: var(--space-3); font-size: var(--text-sm);"></i>
+                            <span>Everything in Professional</span>
+                        </li>
+                        <li style="display: flex; align-items: center; margin-bottom: var(--space-4); color: var(--gray-700);">
+                            <i class="fas fa-check" style="color: var(--success); margin-right: var(--space-3); font-size: var(--text-sm);"></i>
+                            <span>100,000 conversations/month</span>
+                        </li>
+                        <li style="display: flex; align-items: center; margin-bottom: var(--space-4); color: var(--gray-700);">
+                            <i class="fas fa-check" style="color: var(--success); margin-right: var(--space-3); font-size: var(--text-sm);"></i>
+                            <span>Advanced AI models (GPT-4)</span>
+                        </li>
+                        <li style="display: flex; align-items: center; margin-bottom: var(--space-4); color: var(--gray-700);">
+                            <i class="fas fa-check" style="color: var(--success); margin-right: var(--space-3); font-size: var(--text-sm);"></i>
+                            <span>White-label solution</span>
+                        </li>
+                        <li style="display: flex; align-items: center; margin-bottom: var(--space-4); color: var(--gray-700);">
+                            <i class="fas fa-check" style="color: var(--success); margin-right: var(--space-3); font-size: var(--text-sm);"></i>
+                            <span>Custom integrations</span>
+                        </li>
+                        <li style="display: flex; align-items: center; margin-bottom: var(--space-4); color: var(--gray-700);">
+                            <i class="fas fa-check" style="color: var(--success); margin-right: var(--space-3); font-size: var(--text-sm);"></i>
+                            <span>Dedicated support</span>
+                        </li>
+                        <li style="display: flex; align-items: center; margin-bottom: var(--space-4); color: var(--gray-700);">
+                            <i class="fas fa-check" style="color: var(--success); margin-right: var(--space-3); font-size: var(--text-sm);"></i>
+                            <span>99.9% SLA guarantee</span>
+                        </li>
                     </ul>
                     <a href="#" style="
-                        display: inline-block;
+                        display: block;
                         width: 100%;
                         padding: var(--space-4) var(--space-6);
-                        background: rgba(255, 255, 255, 0.2);
+                        background: var(--gray-100);
                         color: var(--gray-900);
                         border: 2px solid var(--gray-300);
                         border-radius: var(--border-radius-lg);
                         text-decoration: none;
-                        font-weight: 600;
+                        font-weight: 700;
                         text-align: center;
                         transition: all var(--transition-base);
+                        font-size: var(--text-base);
                     " onclick="startUpgrade('enterprise')"
-                       onmouseover="this.style.background='var(--gray-100)'; this.style.borderColor='var(--primary)'"
-                       onmouseout="this.style.background='rgba(255, 255, 255, 0.2)'; this.style.borderColor='var(--gray-300)'">
+                       onmouseover="this.style.background='var(--gray-200)'; this.style.borderColor='var(--secondary)'"
+                       onmouseout="this.style.background='var(--gray-100)'; this.style.borderColor='var(--gray-300)'">
                         Contact Sales
                     </a>
+                </div>
+            </div>
+            
+            <!-- Money Back Guarantee -->
+            <div style="text-align: center; padding: var(--space-8); background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border-radius: var(--border-radius-2xl); border: 1px solid #a7f3d0;">
+                <div style="font-size: 3rem; margin-bottom: var(--space-4);">💰</div>
+                <h3 style="font-size: var(--text-2xl); font-weight: 800; color: var(--gray-900); margin-bottom: var(--space-2);">30-Day Money Back Guarantee</h3>
+                <p style="color: var(--gray-600); font-size: var(--text-lg); max-width: 600px; margin: 0 auto;">
+                    Try BotFlo risk-free. If you're not completely satisfied within 30 days, we'll refund every penny.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Strong CTA Section -->
+    <section style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 75%, #475569 100%); color: white; padding: var(--space-24) 0; position: relative; overflow: hidden;">
+        <!-- Background Effects -->
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 30% 40%, rgba(59, 130, 246, 0.2) 0%, transparent 50%), radial-gradient(circle at 70% 60%, rgba(16, 185, 129, 0.15) 0%, transparent 50%); pointer-events: none;"></div>
+        
+        <div style="max-width: 1000px; margin: 0 auto; padding: 0 var(--space-6); text-align: center; position: relative; z-index: 2;">
+            <h2 style="font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 900; margin-bottom: var(--space-6); line-height: 1.1; background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 50%, #cbd5e1 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                Ready to Transform Your Business?
+            </h2>
+            <p style="font-size: var(--text-xl); margin-bottom: var(--space-10); opacity: 0.9; line-height: 1.7; max-width: 800px; margin-left: auto; margin-right: auto;">
+                Join thousands of businesses using BotFlo to automate customer support, generate leads, and boost sales 24/7. 
+                Start building your first AI assistant in under 30 seconds.
+            </p>
+            
+            <!-- Stats Row -->
+            <div style="display: flex; justify-content: center; gap: var(--space-12); margin-bottom: var(--space-12); flex-wrap: wrap;">
+                <div style="text-align: center;">
+                    <div style="font-size: 2.5rem; font-weight: 900; color: #10b981; margin-bottom: var(--space-1);">5,000+</div>
+                    <div style="font-size: var(--text-sm); opacity: 0.8;">Active Chatbots</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 2.5rem; font-weight: 900; color: #3b82f6; margin-bottom: var(--space-1);">98%</div>
+                    <div style="font-size: var(--text-sm); opacity: 0.8;">Customer Satisfaction</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 2.5rem; font-weight: 900; color: #f59e0b; margin-bottom: var(--space-1);">250%</div>
+                    <div style="font-size: var(--text-sm); opacity: 0.8;">Average ROI</div>
+                </div>
+            </div>
+            
+            <!-- CTA Buttons -->
+            <div style="display: flex; gap: var(--space-6); justify-content: center; flex-wrap: wrap;">
+                <a href="/chatbot.html" style="
+                    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+                    color: white;
+                    padding: var(--space-5) var(--space-10);
+                    border-radius: var(--border-radius-full);
+                    text-decoration: none;
+                    font-weight: 800;
+                    font-size: var(--text-xl);
+                    display: inline-flex;
+                    align-items: center;
+                    gap: var(--space-3);
+                    transition: all 0.3s ease;
+                    box-shadow: 0 8px 25px 0 rgba(16, 185, 129, 0.4);
+                " onmouseover="this.style.transform='translateY(-4px) scale(1.05)'; this.style.boxShadow='0 15px 40px 0 rgba(16, 185, 129, 0.6)'"
+                   onmouseout="this.style.transform=''; this.style.boxShadow='0 8px 25px 0 rgba(16, 185, 129, 0.4)'">
+                    <i class="fas fa-rocket" style="font-size: 1.2rem;"></i>
+                    Start Building Free
+                </a>
+                <a href="/demo.html" style="
+                    background: rgba(255, 255, 255, 0.1);
+                    color: white;
+                    padding: var(--space-5) var(--space-10);
+                    border-radius: var(--border-radius-full);
+                    text-decoration: none;
+                    font-weight: 700;
+                    font-size: var(--text-xl);
+                    display: inline-flex;
+                    align-items: center;
+                    gap: var(--space-3);
+                    border: 2px solid rgba(255, 255, 255, 0.3);
+                    transition: all 0.3s ease;
+                    backdrop-filter: blur(10px);
+                " onmouseover="this.style.background='rgba(255, 255, 255, 0.2)'; this.style.borderColor='rgba(255, 255, 255, 0.6)'"
+                   onmouseout="this.style.background='rgba(255, 255, 255, 0.1)'; this.style.borderColor='rgba(255, 255, 255, 0.3)'">
+                    <i class="fas fa-play" style="font-size: 1.2rem;"></i>
+                    Watch Demo
+                </a>
+            </div>
+            
+            <!-- Trust Indicators -->
+            <div style="margin-top: var(--space-12); padding-top: var(--space-8); border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                <p style="font-size: var(--text-sm); opacity: 0.7; margin-bottom: var(--space-4);">Trusted by leading companies worldwide</p>
+                <div style="display: flex; justify-content: center; align-items: center; gap: var(--space-8); flex-wrap: wrap; opacity: 0.6;">
+                    <div style="display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-sm);">
+                        <i class="fas fa-shield-alt" style="color: #10b981;"></i>
+                        <span>SOC 2 Compliant</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-sm);">
+                        <i class="fas fa-lock" style="color: #3b82f6;"></i>
+                        <span>GDPR Ready</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-sm);">
+                        <i class="fas fa-clock" style="color: #f59e0b;"></i>
+                        <span>99.9% Uptime</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-sm);">
+                        <i class="fas fa-headset" style="color: #a855f7;"></i>
+                        <span>24/7 Support</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -843,27 +1430,145 @@
         }
 
         function startUpgrade(plan) {
-            // Redirect to pricing or payment flow
+            // Enhanced upgrade flow with better UX
             if (plan === 'professional') {
-                alert('Professional upgrade coming soon! Start building for free now.');
-                window.location.href = '/advanced-flow-builder.html';
+                // Show upgrade modal or redirect to payment
+                const userConfirmed = confirm(
+                    '🚀 Ready to unlock unlimited chatbots and 10,000 conversations/month?\n\n' +
+                    '✅ Professional Plan - $29/month\n' +
+                    '✅ Unlimited chatbots\n' +
+                    '✅ 10,000 conversations/month\n' +
+                    '✅ Advanced AI models\n' +
+                    '✅ API integrations\n' +
+                    '✅ Custom branding\n' +
+                    '✅ Priority support\n\n' +
+                    'Click OK to start your upgrade!'
+                );
+                
+                if (userConfirmed) {
+                    // For now, redirect to builder to show the value
+                    window.location.href = '/advanced-flow-builder.html?plan=professional';
+                }
             } else if (plan === 'enterprise') {
-                alert('Contact us at hello@botflo.ai for Enterprise solutions!');
+                // Enterprise contact flow
+                const userConfirmed = confirm(
+                    '🏢 Enterprise Plan - Perfect for large organizations!\n\n' +
+                    '✅ 100,000 conversations/month\n' +
+                    '✅ Advanced AI models (GPT-4)\n' +
+                    '✅ White-label solution\n' +
+                    '✅ Custom integrations\n' +
+                    '✅ Dedicated support\n' +
+                    '✅ 99.9% SLA guarantee\n\n' +
+                    'Would you like to speak with our enterprise team?'
+                );
+                
+                if (userConfirmed) {
+                    // Open email client or contact form
+                    window.location.href = 'mailto:enterprise@botflo.ai?subject=Enterprise Plan Interest&body=Hi, I\'m interested in learning more about the BotFlo Enterprise plan for my organization.';
+                }
             }
         }
 
-        // Add some interactivity
+        // Enhanced demo and interaction functions
+        function testDemo() {
+            const demoNodes = document.getElementById('demoNodes');
+            const placeholder = document.querySelector('.demo-placeholder');
+            
+            if (demoNodes && placeholder) {
+                if (demoNodes.style.display === 'none') {
+                    demoNodes.style.display = 'flex';
+                    placeholder.style.display = 'none';
+                    
+                    // Show upgrade hint after demo
+                    setTimeout(() => {
+                        if (confirm('🎯 Loved the demo? Upgrade to Professional for unlimited nodes and advanced features!\n\nWant to see pricing?')) {
+                            document.querySelector('.pricing').scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }, 3000);
+                } else {
+                    demoNodes.style.display = 'none';
+                    placeholder.style.display = 'flex';
+                }
+            }
+        }
+
+        function saveDemo() {
+            const btn = event.target.closest('button');
+            const originalText = btn.innerHTML;
+            
+            // Simulate save with upgrade prompt
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            btn.style.background = 'var(--warning)';
+            
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-lock"></i> Upgrade to Save';
+                btn.style.background = 'var(--primary)';
+                
+                // Show upgrade prompt
+                setTimeout(() => {
+                    if (confirm('💾 To save your chatbots and deploy them live, upgrade to Professional!\n\n🚀 Professional Plan includes:\n✅ Unlimited saves\n✅ Live deployment\n✅ Custom branding\n✅ Advanced features\n\nUpgrade now for just $29/month?')) {
+                        startUpgrade('professional');
+                    } else {
+                        btn.innerHTML = originalText;
+                        btn.style.background = 'var(--primary)';
+                    }
+                }, 1000);
+            }, 1500);
+        }
+
+        // Smooth scrolling for anchor links
         document.addEventListener('DOMContentLoaded', function() {
-            // Add hover effects to demo workspace
-            const workspace = document.getElementById('demoWorkspace');
-            workspace.addEventListener('mouseenter', function() {
-                this.style.borderColor = 'var(--primary)';
-                this.style.backgroundColor = 'var(--gray-50)';
+            // Add smooth scrolling to all anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
             });
             
-            workspace.addEventListener('mouseleave', function() {
-                this.style.borderColor = 'var(--gray-300)';
-                this.style.backgroundColor = 'white';
+            // Enhanced hover effects
+            const workspace = document.getElementById('demoWorkspace');
+            if (workspace) {
+                workspace.addEventListener('mouseenter', function() {
+                    this.style.borderColor = 'var(--primary)';
+                    this.style.backgroundColor = 'var(--gray-50)';
+                    this.style.transform = 'scale(1.02)';
+                });
+                
+                workspace.addEventListener('mouseleave', function() {
+                    this.style.borderColor = 'var(--gray-300)';
+                    this.style.backgroundColor = 'white';
+                    this.style.transform = 'scale(1)';
+                });
+            }
+            
+            // Add entrance animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe elements for animation
+            document.querySelectorAll('.builder-card, .pricing-card').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(el);
             });
         });
     </script>

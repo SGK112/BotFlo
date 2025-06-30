@@ -206,6 +206,14 @@ export class NodeManager extends EventEmitter {
     }
 
     /**
+     * Get currently selected node ID
+     * @returns {string|null} Selected node ID or null
+     */
+    get selectedNodeId() {
+        return this.selectedNode;
+    }
+
+    /**
      * Duplicate a node
      * @param {string} nodeId - Node ID to duplicate
      * @param {number} offsetX - X offset for the new node

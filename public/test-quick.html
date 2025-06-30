@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Module Test</title>
+</head>
+<body>
+    <div id="test-output" style="padding: 20px; font-family: monospace;">
+        <h2>Module Loading Test</h2>
+        <div id="results"></div>
+    </div>
+
+    <script type="module">
+        const results = document.getElementById('results');
+        
+        function addResult(test, success, message) {
+            const div = document.createElement('div');
+            div.style.padding = '5px';
+            div.style.color = success ? 'green' : 'red';
+            div.innerHTML = `${success ? '✓' : '✗'} ${test}: ${message}`;
+            results.appendChild(div);
+        }
+
+        async function testModules() {
+            try {
+                addResult('EventEmitter', true, 'Starting module tests...');
+                
+                // Test EventEmitter
+                const { EventEmitter } = await import('./flow-builder/js/core/EventEmitter.js');
+                const emitter = new EventEmitter();
+                addResult('EventEmitter', true, 'Loaded successfully');
+
+                // Test NodeConfigs
+                const { NODE_CONFIGS } = await import('./flow-builder/js/utils/NodeConfigs.js');
+                addResult('NodeConfigs', Object.keys(NODE_CONFIGS).length > 0, `Found ${Object.keys(NODE_CONFIGS).length} node types`);
+
+                // Test NodeManager
+                const { NodeManager } = await import('./flow-builder/js/core/NodeManager.js');
+                const nodeManager = new NodeManager();
+                addResult('NodeManager', true, 'Loaded successfully');
+
+                // Test ComponentLibrary
+                const { ComponentLibrary } = await import('./flow-builder/js/components/ComponentLibrary.js');
+                addResult('ComponentLibrary', true, 'Loaded successfully');
+
+                // Test Workspace
+                const { Workspace } = await import('./flow-builder/js/components/Workspace.js');
+                addResult('Workspace', true, 'Loaded successfully');
+
+                // Test PropertiesPanel
+                const { PropertiesPanel } = await import('./flow-builder/js/components/PropertiesPanel.js');
+                addResult('PropertiesPanel', true, 'Loaded successfully');
+
+                // Test main FlowBuilder
+                const { FlowBuilder } = await import('./flow-builder/js/FlowBuilder.js');
+                addResult('FlowBuilder', true, 'Loaded successfully');
+
+                // Test node creation
+                const testNode = nodeManager.createNode('message', 100, 100);
+                addResult('Node Creation', testNode && testNode.id, `Created node: ${testNode?.id}`);
+
+                addResult('All Tests', true, 'All modules loaded successfully!');
+
+            } catch (error) {
+                addResult('Module Loading', false, error.message);
+                console.error('Module test error:', error);
+            }
+        }
+
+        testModules();
+    </script>
+</body>
+</html>

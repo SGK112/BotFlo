@@ -368,6 +368,19 @@ export class PropertiesPanel extends EventEmitter {
         `;
     }
 
+    /**
+     * Update properties panel when node properties change
+     * @param {object} node - Updated node object
+     */
+    updateNodeProperties(node) {
+        if (this.selectedNode && this.selectedNode.id === node.id) {
+            // Update the internal reference
+            this.selectedNode = node;
+            // Refresh the properties display
+            this.showNodeProperties(node);
+        }
+    }
+
     toggleCollapse() {
         const icon = this.container.querySelector('#collapseProperties i');
         this.container.classList.toggle('collapsed');

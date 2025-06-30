@@ -21,7 +21,7 @@ export class ComponentLibrary extends EventEmitter {
             this.render();
             this.setupEventHandlers();
             this.isInitialized = true;
-            console.log('ComponentLibrary initialized');
+            console.log('ComponentLibrary initialized successfully');
         } catch (error) {
             console.error('Failed to initialize ComponentLibrary:', error);
             throw error;

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flow Builder Integration Test</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Flow Builder Styles -->
+    <link rel="stylesheet" href="flow-builder/css/base.css">
+    <link rel="stylesheet" href="flow-builder/css/layout.css">
+    <link rel="stylesheet" href="flow-builder/css/components.css">
+    <link rel="stylesheet" href="flow-builder/css/workspace.css">
+    <link rel="stylesheet" href="flow-builder/css/properties.css">
+    <link rel="stylesheet" href="flow-builder/css/animations.css">
+    
+    <style>
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+        }
+        
+        .test-header {
+            background: #2c3e50;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .test-status {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            z-index: 1000;
+            max-width: 300px;
+        }
+        
+        .test-item {
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        
+        .test-item.pending {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .test-item.pass {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+        }
+        
+        .test-item.fail {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+        }
+        
+        .integration-container {
+            display: grid;
+            grid-template-columns: 300px 1fr 300px;
+            grid-template-rows: 60px 1fr;
+            height: calc(100vh - 120px);
+            gap: 1px;
+            background: #e1e8ed;
+        }
+        
+        .toolbar {
+            grid-column: 1 / -1;
+            background: #fff;
+            border-bottom: 1px solid #e1e8ed;
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+            gap: 1rem;
+        }
+        
+        .test-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #007bff;
+            background: #007bff;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .test-btn:hover {
+            background: #0056b3;
+        }
+        
+        .test-btn.secondary {
+            background: #6c757d;
+            border-color: #6c757d;
+        }
+        
+        .test-btn.secondary:hover {
+            background: #545b62;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-header">
+        <h1>Flow Builder Integration Test</h1>
+        <p>Testing drag and drop, node creation, and component integration</p>
+    </div>
+    
+    <div class="test-status">
+        <h3>Test Status</h3>
+        <div id="test-results">
+            <div class="test-item pending" id="test-init">1. Application Init</div>
+            <div class="test-item pending" id="test-components">2. Component Loading</div>
+            <div class="test-item pending" id="test-workspace">3. Workspace Ready</div>
+            <div class="test-item pending" id="test-drag">4. Drag & Drop</div>
+            <div class="test-item pending" id="test-node-creation">5. Node Creation</div>
+            <div class="test-item pending" id="test-selection">6. Node Selection</div>
+            <div class="test-item pending" id="test-properties">7. Properties Panel</div>
+        </div>
+        <div style="margin-top: 1rem;">
+            <button class="test-btn" onclick="runAutoTest()">Run Auto Test</button>
+            <button class="test-btn secondary" onclick="resetTests()">Reset</button>
+        </div>
+    </div>
+
+    <div class="integration-container">
+        <div class="toolbar">
+            <h3>Integration Test Environment</h3>
+            <span style="margin-left: auto; font-size: 0.9rem; color: #666;">
+                Try dragging components from the library to the workspace
+            </span>
+        </div>
+        
+        <!-- Component Library Panel -->
+        <div id="component-library" class="panel">
+            <!-- Will be populated by ComponentLibrary -->
+        </div>
+        
+        <!-- Main Workspace -->
+        <div id="main-workspace" class="panel">
+            <!-- Will be populated by Workspace -->
+        </div>
+        
+        <!-- Properties Panel -->
+        <div id="properties-panel" class="panel">
+            <!-- Will be populated by PropertiesPanel -->
+        </div>
+    </div>
+
+    <!-- Loading screen -->
+    <div id="loading-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); display: flex; align-items: center; justify-content: center; z-index: 10000;">
+        <div style="text-align: center;">
+            <div style="width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #007bff; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1rem;"></div>
+            <p>Loading Flow Builder...</p>
+        </div>
+    </div>
+
+    <style>
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+
+    <!-- Main application script -->
+    <script type="module">
+        import { FlowBuilder } from './flow-builder/js/FlowBuilder.js';
+        
+        let app;
+        let testResults = {
+            init: false,
+            components: false,
+            workspace: false,
+            drag: false,
+            nodeCreation: false,
+            selection: false,
+            properties: false
+        };
+
+        // Test helper functions
+        function updateTestStatus(testId, status) {
+            const element = document.getElementById(`test-${testId}`);
+            if (element) {
+                element.className = `test-item ${status}`;
+                testResults[testId] = status === 'pass';
+            }
+        }
+
+        function resetTests() {
+            Object.keys(testResults).forEach(key => {
+                testResults[key] = false;
+                updateTestStatus(key, 'pending');
+            });
+        }
+
+        async function runAutoTest() {
+            console.log('Starting automated integration test...');
+            resetTests();
+            
+            try {
+                // Test 1: Application Init
+                console.log('Testing application initialization...');
+                if (app && app.isInitialized) {
+                    updateTestStatus('init', 'pass');
+                    console.log('✓ Application initialized');
+                } else {
+                    updateTestStatus('init', 'fail');
+                    console.log('✗ Application not initialized');
+                    return;
+                }
+
+                // Test 2: Component Loading
+                console.log('Testing component library...');
+                if (app.componentLibrary && app.componentLibrary.container.children.length > 0) {
+                    updateTestStatus('components', 'pass');
+                    console.log('✓ Component library loaded');
+                } else {
+                    updateTestStatus('components', 'fail');
+                    console.log('✗ Component library not loaded');
+                }
+
+                // Test 3: Workspace Ready
+                console.log('Testing workspace...');
+                if (app.workspace && app.workspace.canvas) {
+                    updateTestStatus('workspace', 'pass');
+                    console.log('✓ Workspace ready');
+                } else {
+                    updateTestStatus('workspace', 'fail');
+                    console.log('✗ Workspace not ready');
+                }
+
+                // Test 4: Programmatic node creation
+                console.log('Testing node creation...');
+                const initialNodeCount = app.nodeManager.getAllNodes().length;
+                const testNode = await app.createNode('message', 200, 200);
+                
+                if (testNode && app.nodeManager.getAllNodes().length > initialNodeCount) {
+                    updateTestStatus('node-creation', 'pass');
+                    console.log('✓ Node creation works');
+                    
+                    // Test 5: Node Selection
+                    console.log('Testing node selection...');
+                    app.nodeManager.selectNode(testNode.id);
+                    
+                    setTimeout(() => {
+                        if (app.nodeManager.selectedNodeId === testNode.id) {
+                            updateTestStatus('selection', 'pass');
+                            console.log('✓ Node selection works');
+                            
+                            // Test 6: Properties Panel
+                            if (app.propertiesPanel && 
+                                app.propertiesPanel.container.querySelector('.property-group')) {
+                                updateTestStatus('properties', 'pass');
+                                console.log('✓ Properties panel works');
+                            } else {
+                                updateTestStatus('properties', 'fail');
+                                console.log('✗ Properties panel not working');
+                            }
+                        } else {
+                            updateTestStatus('selection', 'fail');
+                            console.log('✗ Node selection not working');
+                        }
+                    }, 100);
+                    
+                } else {
+                    updateTestStatus('node-creation', 'fail');
+                    console.log('✗ Node creation failed');
+                }
+
+                // Test 4: Drag & Drop (manual test indicator)
+                updateTestStatus('drag', 'pending');
+                console.log('ℹ Drag & drop requires manual testing - try dragging a component');
+                
+            } catch (error) {
+                console.error('Test failed:', error);
+            }
+        }
+
+        // Initialize the application
+        async function initApp() {
+            try {
+                console.log('Initializing Flow Builder for integration test...');
+                
+                app = new FlowBuilder();
+                await app.init();
+                
+                // Hide loading screen
+                document.getElementById('loading-screen').style.display = 'none';
+                
+                // Set up test event listeners
+                setupTestEventListeners();
+                
+                // Run initial tests
+                setTimeout(() => {
+                    runAutoTest();
+                }, 500);
+                
+            } catch (error) {
+                console.error('Failed to initialize:', error);
+                document.getElementById('loading-screen').innerHTML = `
+                    <div style="text-align: center; color: red;">
+                        <h3>Initialization Failed</h3>
+                        <p>${error.message}</p>
+                        <button onclick="location.reload()">Retry</button>
+                    </div>
+                `;
+            }
+        }
+
+        function setupTestEventListeners() {
+            // Listen for drag and drop events
+            if (app.workspace) {
+                app.workspace.on('node:drop', () => {
+                    updateTestStatus('drag', 'pass');
+                    console.log('✓ Drag & drop works');
+                });
+            }
+            
+            // Monitor node creation
+            if (app.nodeManager) {
+                app.nodeManager.on('node:created', () => {
+                    updateTestStatus('node-creation', 'pass');
+                });
+            }
+        }
+
+        // Make functions global for buttons
+        window.runAutoTest = runAutoTest;
+        window.resetTests = resetTests;
+
+        // Start the application
+        initApp();
+    </script>
+</body>
+</html>

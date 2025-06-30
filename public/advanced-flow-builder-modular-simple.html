@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Flow Builder - BotFlo.ai</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    
+    <!-- External Dependencies -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Flow Builder Styles -->
+    <link rel="stylesheet" href="flow-builder/css/base.css">
+    <link rel="stylesheet" href="flow-builder/css/layout.css">
+    <link rel="stylesheet" href="flow-builder/css/components.css">
+    <link rel="stylesheet" href="flow-builder/css/workspace.css">
+    <link rel="stylesheet" href="flow-builder/css/properties.css">
+    <link rel="stylesheet" href="flow-builder/css/animations.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h3>Loading Flow Builder...</h3>
+            <p>Initializing components and workspace</p>
+        </div>
+    </div>
+
+    <!-- Main Builder Container -->
+    <div id="builder-container" class="builder-container" style="display: none;">
+        <!-- Header -->
+        <header class="builder-header">
+            <div class="header-left">
+                <div class="logo-section">
+                    <i class="fas fa-project-diagram" style="color: var(--primary-color); font-size: 24px;"></i>
+                    <h1 class="app-title">BotFlo Flow Builder</h1>
+                </div>
+                <div class="breadcrumb">
+                    <span class="breadcrumb-item">Projects</span>
+                    <i class="fas fa-chevron-right"></i>
+                    <span class="breadcrumb-item active" id="project-name">My Chatbot Flow</span>
+                </div>
+            </div>
+            
+            <div class="header-center">
+                <div class="zoom-controls">
+                    <button id="zoom-out" class="btn btn-icon" title="Zoom Out">
+                        <i class="fas fa-search-minus"></i>
+                    </button>
+                    <span id="zoom-level" class="zoom-display">100%</span>
+                    <button id="zoom-in" class="btn btn-icon" title="Zoom In">
+                        <i class="fas fa-search-plus"></i>
+                    </button>
+                    <button id="zoom-fit" class="btn btn-icon" title="Fit to Screen">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="header-right">
+                <div class="action-buttons">
+                    <button id="save-btn" class="btn btn-secondary">
+                        <i class="fas fa-save"></i>
+                        Save
+                    </button>
+                    <button id="test-btn" class="btn btn-outline">
+                        <i class="fas fa-play"></i>
+                        Test
+                    </button>
+                    <button id="export-btn" class="btn btn-outline">
+                        <i class="fas fa-download"></i>
+                        Export
+                    </button>
+                    <button id="publish-btn" class="btn btn-primary">
+                        <i class="fas fa-rocket"></i>
+                        Publish
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sidebar - Component Library -->
+        <aside class="sidebar component-library" id="component-library">
+            <!-- Fallback content in case JS doesn't load -->
+            <div class="sidebar-header">
+                <div class="sidebar-title">Components</div>
+                <div class="sidebar-subtitle">Loading...</div>
+            </div>
+            <div class="sidebar-content">
+                <div style="padding: 20px; text-align: center; color: #666;">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Initializing component library...</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="workspace" id="main-workspace">
+            <div class="workspace-canvas" id="canvas">
+                <div class="canvas-background"></div>
+                <div class="canvas-grid"></div>
+                <svg class="connections-layer" id="connections-svg">
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7" 
+                                refX="10" refY="3.5" orient="auto">
+                            <polygon points="0 0, 10 3.5, 0 7" fill="#6366f1" />
+                        </marker>
+                    </defs>
+                </svg>
+                <div class="nodes-layer" id="nodes-layer">
+                    <!-- Nodes will be added here dynamically -->
+                </div>
+            </div>
+            
+            <!-- Canvas Controls -->
+            <div class="canvas-controls">
+                <button id="center-canvas" class="btn btn-icon" title="Center Canvas">
+                    <i class="fas fa-crosshairs"></i>
+                </button>
+                <button id="toggle-grid" class="btn btn-icon" title="Toggle Grid">
+                    <i class="fas fa-th"></i>
+                </button>
+                <button id="toggle-minimap" class="btn btn-icon" title="Toggle Minimap">
+                    <i class="fas fa-map"></i>
+                </button>
+            </div>
+        </main>
+
+        <!-- Properties Panel -->
+        <aside class="properties-panel" id="properties-panel">
+            <div class="properties-header">
+                <h3 id="properties-title">Properties</h3>
+                <button id="properties-close" class="btn btn-icon">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="properties-content" id="properties-content">
+                <div class="no-selection">
+                    <div class="no-selection-icon">
+                        <i class="fas fa-mouse-pointer"></i>
+                    </div>
+                    <h4>No Selection</h4>
+                    <p>Select a node to edit its properties</p>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Test Modal -->
+    <div id="test-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Test Your Bot</h3>
+                <button class="modal-close" data-modal="test-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="test-chat-container" id="test-chat">
+                    <div style="text-align: center; padding: 40px; color: var(--gray-500);">
+                        <i class="fas fa-robot" style="font-size: 48px; margin-bottom: 16px; color: var(--primary-color);"></i>
+                        <h4>Chat Test Coming Soon</h4>
+                        <p>This feature will allow you to test your chatbot in real-time.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Modal -->
+    <div id="export-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Export Flow</h3>
+                <button class="modal-close" data-modal="export-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="export-options">
+                    <button class="btn btn-outline export-option" data-format="json">
+                        <i class="fas fa-code"></i>
+                        Export as JSON
+                    </button>
+                    <button class="btn btn-outline export-option" data-format="yaml">
+                        <i class="fas fa-file-code"></i>
+                        Export as YAML
+                    </button>
+                    <button class="btn btn-outline export-option" data-format="image">
+                        <i class="fas fa-image"></i>
+                        Export as Image
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notifications" class="notifications-container"></div>
+
+    <!-- Flow Builder JavaScript Modules -->
+    <script type="module" src="flow-builder/js/main.js"></script>
+</body>
+</html>

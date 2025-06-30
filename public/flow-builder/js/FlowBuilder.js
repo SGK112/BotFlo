@@ -28,7 +28,8 @@ export class FlowBuilder extends EventEmitter {
         this.currentProject = null;
         this.isDirty = false;
         
-        this.init();
+        console.log('FlowBuilder constructor complete');
+        // Note: init() will be called manually from main.js
     }
 
     /**
@@ -69,29 +70,34 @@ export class FlowBuilder extends EventEmitter {
         if (componentLibraryContainer) {
             this.componentLibrary = new ComponentLibrary(componentLibraryContainer);
             await this.componentLibrary.init();
+        } else {
+            console.error('Component library container not found!');
         }
 
         // Initialize workspace
         const workspaceContainer = document.getElementById('main-workspace');
         if (workspaceContainer) {
             this.workspace = new Workspace(workspaceContainer);
-            // Workspace init is not async, but we call it explicitly
-            this.workspace.init();
+            // Workspace init is called automatically in constructor
+        } else {
+            console.error('Workspace container not found!');
         }
 
         // Initialize properties panel
         const propertiesPanelContainer = document.getElementById('properties-panel');
         if (propertiesPanelContainer) {
             this.propertiesPanel = new PropertiesPanel(propertiesPanelContainer);
-            await this.propertiesPanel.init();
+            // PropertiesPanel init is called automatically in constructor
+        } else {
+            console.warn('Properties panel container not found - panel will not be available');
         }
 
         // Verify all components are initialized
-        if (!this.componentLibrary || !this.workspace || !this.propertiesPanel) {
-            throw new Error('Failed to initialize one or more UI components');
+        if (!this.componentLibrary || !this.workspace) {
+            throw new Error('Failed to initialize required UI components');
         }
         
-        console.log('All components initialized:', {
+        console.log('Components initialized:', {
             componentLibrary: !!this.componentLibrary,
             workspace: !!this.workspace,
             propertiesPanel: !!this.propertiesPanel
@@ -160,13 +166,13 @@ export class FlowBuilder extends EventEmitter {
 
         // Component library events
         if (this.componentLibrary) {
-            this.componentLibrary.on('component:drag:start', (componentType) => {
+            this.componentLibrary.on('component:drag:start', (eventData) => {
                 if (this.workspace && typeof this.workspace.enableDropMode === 'function') {
                     this.workspace.enableDropMode();
                 }
             });
 
-            this.componentLibrary.on('component:drag:end', () => {
+            this.componentLibrary.on('component:drag:end', (eventData) => {
                 if (this.workspace && typeof this.workspace.disableDropMode === 'function') {
                     this.workspace.disableDropMode();
                 }
@@ -391,237 +397,233 @@ export class FlowBuilder extends EventEmitter {
     }
 
     /**
-     * Test the chatbot
-     */
-    async testChatbot() {
-        try {
-            this.notificationManager.show('Opening chatbot test...', 'info');
-            
-            // Save current flow before testing
-            await this.autoSave();
-            
-            // Open test window
-            const testWindow = window.open('/chatbot-test.html', '_blank', 'width=400,height=600');
-            if (!testWindow) {
-                throw new Error('Pop-up blocked. Please allow pop-ups for this site.');
-            }
-            
-        } catch (error) {
-            console.error('Failed to test chatbot:', error);
-            this.notificationManager.show('Failed to test chatbot: ' + error.message, 'error');
-        }
-    }
-
-    /**
-     * Save chatbot
+     * Save the current chatbot configuration
      */
     async saveChatbot() {
         try {
-            this.notificationManager.show('Saving chatbot...', 'info');
+            const flowData = this.exportFlowData();
+            const projectName = this.currentProject?.name || 'Untitled Chatbot';
             
-            const flowData = this.serializeFlow();
-            const success = await this.storageManager.saveProject('current', flowData);
+            // Save to storage
+            await this.storageManager.saveProject(projectName, flowData);
             
-            if (success) {
-                this.markClean();
-                this.notificationManager.show('Chatbot saved successfully!', 'success');
-            } else {
-                throw new Error('Save operation failed');
-            }
+            this.isDirty = false;
+            this.emit('project:saved', { name: projectName, data: flowData });
+            
+            this.notificationManager.show('Chatbot saved successfully', 'success');
+            
+            return flowData;
         } catch (error) {
             console.error('Failed to save chatbot:', error);
-            this.notificationManager.show('Failed to save chatbot: ' + error.message, 'error');
+            this.notificationManager.show('Failed to save chatbot', 'error');
+            throw error;
         }
     }
 
     /**
-     * Deploy chatbot
+     * Export flow data in various formats
+     */
+    async export(format = 'json') {
+        try {
+            const flowData = this.exportFlowData();
+            const fileName = `chatbot-flow-${Date.now()}`;
+
+            switch (format.toLowerCase()) {
+                case 'json':
+                    this.downloadFile(JSON.stringify(flowData, null, 2), `${fileName}.json`, 'application/json');
+                    break;
+                case 'yaml':
+                    const yaml = this.convertToYAML(flowData);
+                    this.downloadFile(yaml, `${fileName}.yaml`, 'text/yaml');
+                    break;
+                case 'png':
+                    await this.exportAsImage('png');
+                    break;
+                case 'svg':
+                    await this.exportAsImage('svg');
+                    break;
+                default:
+                    throw new Error(`Unsupported export format: ${format}`);
+            }
+
+            this.notificationManager.show(`Flow exported as ${format.toUpperCase()}`, 'success');
+        } catch (error) {
+            console.error('Failed to export flow:', error);
+            this.notificationManager.show('Failed to export flow', 'error');
+            throw error;
+        }
+    }
+
+    /**
+     * Test the current chatbot flow
+     */
+    testChatbot() {
+        try {
+            const flowData = this.exportFlowData();
+            
+            // Validate flow
+            const validation = this.validateFlow(flowData);
+            if (!validation.isValid) {
+                this.notificationManager.show(`Flow validation failed: ${validation.errors.join(', ')}`, 'error');
+                return;
+            }
+
+            // Open test window
+            const testWindow = window.open('/chat.html', 'chatbot-test', 'width=400,height=600,scrollbars=yes,resizable=yes');
+            
+            if (testWindow) {
+                // Pass flow data to test window
+                testWindow.addEventListener('load', () => {
+                    testWindow.postMessage({ type: 'LOAD_FLOW', data: flowData }, '*');
+                });
+                
+                this.notificationManager.show('Test window opened', 'success');
+            } else {
+                this.notificationManager.show('Failed to open test window. Please allow popups.', 'warning');
+            }
+        } catch (error) {
+            console.error('Failed to test chatbot:', error);
+            this.notificationManager.show('Failed to test chatbot', 'error');
+        }
+    }
+
+    /**
+     * Deploy the chatbot
      */
     async deployChatbot() {
         try {
-            this.notificationManager.show('Deploying chatbot...', 'info');
+            const flowData = this.exportFlowData();
             
-            // Save first
+            // Validate flow
+            const validation = this.validateFlow(flowData);
+            if (!validation.isValid) {
+                this.notificationManager.show(`Cannot deploy: ${validation.errors.join(', ')}`, 'error');
+                return;
+            }
+
+            // For demo purposes, we'll just save and show success
             await this.saveChatbot();
             
-            // TODO: Implement actual deployment
-            await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate deployment
+            // In a real implementation, this would deploy to a server
+            const deploymentId = `deploy_${Date.now()}`;
+            const deploymentUrl = `https://your-chatbot-domain.com/chat/${deploymentId}`;
             
-            this.notificationManager.show('Chatbot deployed successfully!', 'success');
+            this.notificationManager.show(`Chatbot deployed successfully! URL: ${deploymentUrl}`, 'success');
             
-            // Show deployment options
-            this.showDeploymentOptions();
-            
+            // Copy URL to clipboard
+            if (navigator.clipboard) {
+                await navigator.clipboard.writeText(deploymentUrl);
+                this.notificationManager.show('Deployment URL copied to clipboard', 'info');
+            }
+
+            this.emit('chatbot:deployed', { id: deploymentId, url: deploymentUrl });
         } catch (error) {
             console.error('Failed to deploy chatbot:', error);
-            this.notificationManager.show('Failed to deploy chatbot: ' + error.message, 'error');
+            this.notificationManager.show('Failed to deploy chatbot', 'error');
         }
     }
 
     /**
-     * Show deployment options
+     * Export current flow data
      */
-    showDeploymentOptions() {
-        // Create deployment modal
-        const modal = document.createElement('div');
-        modal.className = 'modal fade';
-        modal.innerHTML = `
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Deployment Successful</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Your chatbot has been deployed successfully!</p>
-                        <div class="deployment-options">
-                            <div class="option">
-                                <h6>Embed Code</h6>
-                                <textarea class="form-control" readonly rows="3">&lt;script src="https://botflo.com/embed/chatbot-${Date.now()}.js"&gt;&lt;/script&gt;</textarea>
-                            </div>
-                            <div class="option mt-3">
-                                <h6>Direct Link</h6>
-                                <input type="text" class="form-control" readonly value="https://botflo.com/chat/chatbot-${Date.now()}">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" onclick="this.copyDeploymentInfo()">Copy Info</button>
-                    </div>
-                </div>
-            </div>
-        `;
-        
-        document.body.appendChild(modal);
-        
-        // Show modal (assuming Bootstrap is available)
-        if (window.bootstrap) {
-            const bootstrapModal = new bootstrap.Modal(modal);
-            bootstrapModal.show();
-            
-            // Clean up when modal is hidden
-            modal.addEventListener('hidden.bs.modal', () => {
-                modal.remove();
-            });
-        }
-    }
-
-    /**
-     * Preview chatbot
-     */
-    async previewChatbot() {
-        try {
-            this.notificationManager.show('Opening preview...', 'info');
-            
-            // Save current flow before preview
-            await this.autoSave();
-            
-            // Open preview window
-            const previewWindow = window.open('/chatbot.html?preview=true', '_blank', 'width=800,height=600');
-            if (!previewWindow) {
-                throw new Error('Pop-up blocked. Please allow pop-ups for this site.');
-            }
-            
-        } catch (error) {
-            console.error('Failed to preview chatbot:', error);
-            this.notificationManager.show('Failed to preview chatbot: ' + error.message, 'error');
-        }
-    }
-
-    /**
-     * Auto-save functionality
-     */
-    async autoSave() {
-        try {
-            const flowData = this.serializeFlow();
-            await this.storageManager.saveProject('autosave', flowData);
-            console.log('Auto-saved project');
-        } catch (error) {
-            console.warn('Auto-save failed:', error);
-        }
-    }
-
-    /**
-     * Load the last saved project
-     */
-    async loadLastProject() {
-        try {
-            const flowData = await this.storageManager.loadProject('current') || 
-                            await this.storageManager.loadProject('autosave');
-            
-            if (flowData) {
-                await this.deserializeFlow(flowData);
-                this.markClean();
-                console.log('Loaded saved project');
-            }
-        } catch (error) {
-            console.warn('Failed to load saved project:', error);
-        }
-    }
-
-    /**
-     * Serialize the current flow to JSON
-     */
-    serializeFlow() {
-        const nodes = [];
-        const connections = [];
-        
-        // Serialize nodes
-        this.nodeManager.getNodes().forEach(node => {
-            nodes.push({
-                id: node.id,
-                type: node.type,
-                x: node.x,
-                y: node.y,
-                config: node.config
-            });
-        });
-        
-        // TODO: Serialize connections when connection system is implemented
+    exportFlowData() {
+        const nodes = this.nodeManager.getAllNodes();
+        const connections = []; // TODO: Implement connections when available
         
         return {
             version: '1.0.0',
-            nodes,
-            connections,
+            created: new Date().toISOString(),
+            nodes: nodes,
+            connections: connections,
             metadata: {
-                created: this.currentProject?.created || new Date().toISOString(),
-                modified: new Date().toISOString(),
-                name: this.currentProject?.name || 'Untitled Chatbot'
+                name: this.currentProject?.name || 'Untitled Chatbot',
+                description: this.currentProject?.description || '',
+                tags: this.currentProject?.tags || [],
+                author: 'BotFlo User',
+                nodeCount: nodes.length,
+                connectionCount: connections.length
             }
         };
     }
 
     /**
-     * Deserialize flow from JSON
+     * Validate flow for deployment
      */
-    async deserializeFlow(flowData) {
-        try {
-            // Clear existing nodes
-            this.nodeManager.clear();
-            
-            // Load nodes
-            if (flowData.nodes) {
-                for (const nodeData of flowData.nodes) {
-                    const node = this.nodeManager.createNode(
-                        nodeData.type, 
-                        nodeData.x, 
-                        nodeData.y,
-                        nodeData.config || {}
-                    );
-                    node.id = nodeData.id; // Preserve original ID
-                }
-            }
-            
-            // TODO: Load connections when connection system is implemented
-            
-            // Update project metadata
-            this.currentProject = flowData.metadata || {};
-            
-        } catch (error) {
-            console.error('Failed to deserialize flow:', error);
-            this.notificationManager.show('Failed to load project', 'error');
+    validateFlow(flowData) {
+        const errors = [];
+        const warnings = [];
+
+        // Check for start node
+        const hasStartNode = flowData.nodes.some(node => node.type === 'start');
+        if (!hasStartNode) {
+            errors.push('Flow must have a start node');
         }
+
+        // Check for at least one response node
+        const hasResponseNode = flowData.nodes.some(node => node.type === 'message' || node.type === 'response');
+        if (!hasResponseNode) {
+            warnings.push('Flow should have at least one response node');
+        }
+
+        // Check for orphaned nodes (nodes without connections)
+        if (flowData.nodes.length > 1 && flowData.connections.length === 0) {
+            warnings.push('Nodes appear to be disconnected');
+        }
+
+        return {
+            isValid: errors.length === 0,
+            errors,
+            warnings
+        };
+    }
+
+    /**
+     * Download file helper
+     */
+    downloadFile(content, fileName, mimeType) {
+        const blob = new Blob([content], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }
+
+    /**
+     * Convert data to YAML format
+     */
+    convertToYAML(data) {
+        // Simple YAML conversion (in production, use a proper YAML library)
+        return JSON.stringify(data, null, 2)
+            .replace(/"/g, '')
+            .replace(/\{/g, '')
+            .replace(/\}/g, '')
+            .replace(/\[/g, '')
+            .replace(/\]/g, '')
+            .replace(/,$/gm, '');
+    }
+
+    /**
+     * Export workspace as image
+     */
+    async exportAsImage(format = 'png') {
+        if (!this.workspace || !this.workspace.canvas) {
+            throw new Error('Workspace canvas not available');
+        }
+
+        const canvas = this.workspace.canvas;
+        const dataURL = canvas.toDataURL(`image/${format}`);
+        
+        // Create download link
+        const link = document.createElement('a');
+        link.href = dataURL;
+        link.download = `chatbot-flow-${Date.now()}.${format}`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
 
     /**

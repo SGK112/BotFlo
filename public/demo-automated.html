@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BotFlo Flow Builder - Automated Demo</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Flow Builder Styles -->
+    <link rel="stylesheet" href="flow-builder/css/base.css">
+    <link rel="stylesheet" href="flow-builder/css/layout.css">
+    <link rel="stylesheet" href="flow-builder/css/components.css">
+    <link rel="stylesheet" href="flow-builder/css/workspace.css">
+    <link rel="stylesheet" href="flow-builder/css/properties.css">
+    <link rel="stylesheet" href="flow-builder/css/animations.css">
+    
+    <style>
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+        }
+        
+        .demo-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .demo-title {
+            font-size: 2.5rem;
+            margin: 0 0 0.5rem 0;
+            font-weight: 700;
+        }
+        
+        .demo-subtitle {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin: 0 0 2rem 0;
+        }
+        
+        .demo-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .demo-btn {
+            padding: 0.75rem 2rem;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .demo-btn:hover {
+            background: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.5);
+            transform: translateY(-2px);
+        }
+        
+        .demo-btn.primary {
+            background: rgba(255,255,255,0.9);
+            color: #667eea;
+            border-color: rgba(255,255,255,0.9);
+        }
+        
+        .demo-container {
+            display: grid;
+            grid-template-columns: 300px 1fr 320px;
+            height: calc(100vh - 200px);
+            gap: 1px;
+            background: #e1e8ed;
+        }
+        
+        .panel {
+            background: white;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .demo-status {
+            position: fixed;
+            top: 220px;
+            right: 20px;
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            z-index: 1000;
+            max-width: 350px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .status-title {
+            font-weight: 600;
+            margin: 0 0 1rem 0;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .status-item {
+            margin: 0.75rem 0;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .status-item.pending {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            color: #856404;
+        }
+        
+        .status-item.running {
+            background: #cce5ff;
+            border-left: 4px solid #007bff;
+            color: #004085;
+            animation: pulse 2s infinite;
+        }
+        
+        .status-item.success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            color: #155724;
+        }
+        
+        .status-item.error {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            color: #721c24;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            backdrop-filter: blur(8px);
+        }
+        
+        .loading-content {
+            text-align: center;
+            color: #667eea;
+        }
+        
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 2rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Demo Header -->
+    <div class="demo-header">
+        <h1 class="demo-title">🤖 BotFlo Flow Builder</h1>
+        <p class="demo-subtitle">Advanced Modular Chatbot Designer with ES6 Architecture</p>
+        <div class="demo-controls">
+            <button class="demo-btn primary" onclick="startFullDemo()">
+                <i class="fas fa-play"></i>
+                Start Full Demo
+            </button>
+            <button class="demo-btn" onclick="testDragDrop()">
+                <i class="fas fa-hand-paper"></i>
+                Test Drag & Drop
+            </button>
+            <button class="demo-btn" onclick="testNodeCreation()">
+                <i class="fas fa-plus-circle"></i>
+                Test Node Creation
+            </button>
+            <button class="demo-btn" onclick="testPropertiesPanel()">
+                <i class="fas fa-cog"></i>
+                Test Properties
+            </button>
+            <button class="demo-btn" onclick="resetDemo()">
+                <i class="fas fa-refresh"></i>
+                Reset
+            </button>
+        </div>
+    </div>
+
+    <!-- Demo Status Panel -->
+    <div class="demo-status">
+        <h3 class="status-title">
+            <i class="fas fa-chart-line"></i>
+            Demo Progress
+        </h3>
+        <div id="demo-steps">
+            <div class="status-item pending" id="step-init">1. Initialize Application</div>
+            <div class="status-item pending" id="step-components">2. Load Component Library</div>
+            <div class="status-item pending" id="step-workspace">3. Setup Workspace</div>
+            <div class="status-item pending" id="step-properties">4. Initialize Properties Panel</div>
+            <div class="status-item pending" id="step-events">5. Wire Event Handlers</div>
+            <div class="status-item pending" id="step-nodes">6. Create Sample Nodes</div>
+            <div class="status-item pending" id="step-interaction">7. Test Interactions</div>
+            <div class="status-item pending" id="step-complete">8. Demo Complete!</div>
+        </div>
+    </div>
+
+    <!-- Main Application Container -->
+    <div class="demo-container">
+        <!-- Component Library Panel -->
+        <div id="component-library" class="panel">
+            <!-- Populated by ComponentLibrary module -->
+        </div>
+        
+        <!-- Main Workspace -->
+        <div id="main-workspace" class="panel">
+            <!-- Populated by Workspace module -->
+        </div>
+        
+        <!-- Properties Panel -->
+        <div id="properties-panel" class="panel">
+            <!-- Populated by PropertiesPanel module -->
+        </div>
+    </div>
+
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <h3>Initializing BotFlo Flow Builder</h3>
+            <p>Loading modular components and setting up workspace...</p>
+        </div>
+    </div>
+
+    <!-- Demo Script -->
+    <script type="module">
+        import { FlowBuilder } from './flow-builder/js/FlowBuilder.js';
+        
+        let app;
+        let demoProgress = {
+            init: false,
+            components: false,
+            workspace: false,
+            properties: false,
+            events: false,
+            nodes: false,
+            interaction: false,
+            complete: false
+        };
+
+        // UI References
+        const loadingScreen = document.getElementById('loading-screen');
+
+        /**
+         * Update demo step status
+         */
+        function updateStep(stepId, status, message = '') {
+            const element = document.getElementById(`step-${stepId}`);
+            if (element) {
+                element.className = `status-item ${status}`;
+                if (message) {
+                    const originalText = element.textContent.split('.')[0] + '.';
+                    element.textContent = `${originalText} ${message}`;
+                }
+                demoProgress[stepId] = status === 'success';
+            }
+        }
+
+        /**
+         * Add delay for demo visualization
+         */
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        /**
+         * Initialize the application
+         */
+        async function initializeApp() {
+            try {
+                console.log('🚀 Starting BotFlo Demo...');
+                
+                updateStep('init', 'running');
+                await delay(500);
+                
+                // Initialize FlowBuilder
+                app = new FlowBuilder();
+                await app.init();
+                
+                updateStep('init', 'success', '✓ App initialized');
+                await delay(300);
+                
+                // Check components
+                updateStep('components', 'running');
+                await delay(300);
+                
+                if (app.componentLibrary && app.componentLibrary.container.children.length > 0) {
+                    updateStep('components', 'success', '✓ Library loaded');
+                } else {
+                    updateStep('components', 'error', '✗ Library failed');
+                }
+                await delay(300);
+                
+                // Check workspace
+                updateStep('workspace', 'running');
+                await delay(300);
+                
+                if (app.workspace && app.workspace.canvas) {
+                    updateStep('workspace', 'success', '✓ Canvas ready');
+                } else {
+                    updateStep('workspace', 'error', '✗ Canvas failed');
+                }
+                await delay(300);
+                
+                // Check properties panel
+                updateStep('properties', 'running');
+                await delay(300);
+                
+                if (app.propertiesPanel) {
+                    updateStep('properties', 'success', '✓ Panel ready');
+                } else {
+                    updateStep('properties', 'error', '✗ Panel failed');
+                }
+                await delay(300);
+                
+                // Setup event monitoring
+                updateStep('events', 'running');
+                await delay(300);
+                setupDemoEventListeners();
+                updateStep('events', 'success', '✓ Events wired');
+                
+                // Hide loading screen
+                loadingScreen.classList.add('hidden');
+                
+                console.log('✅ BotFlo Demo initialized successfully');
+                
+            } catch (error) {
+                console.error('❌ Demo initialization failed:', error);
+                updateStep('init', 'error', `✗ ${error.message}`);
+                loadingScreen.innerHTML = `
+                    <div class="loading-content" style="color: #dc3545;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <h3>Demo Failed to Load</h3>
+                        <p>${error.message}</p>
+                        <button class="demo-btn primary" onclick="location.reload()" style="margin-top: 1rem;">
+                            Retry
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        /**
+         * Setup demo event listeners
+         */
+        function setupDemoEventListeners() {
+            if (!app) return;
+
+            // Monitor node creation
+            if (app.nodeManager) {
+                app.nodeManager.on('node:created', (node) => {
+                    console.log('📝 Node created:', node.type);
+                    if (!demoProgress.nodes) {
+                        updateStep('nodes', 'success', '✓ Node created');
+                    }
+                });
+
+                app.nodeManager.on('node:selected', ({ node }) => {
+                    console.log('🎯 Node selected:', node.id);
+                    if (!demoProgress.interaction) {
+                        updateStep('interaction', 'success', '✓ Selection works');
+                    }
+                });
+            }
+
+            // Monitor workspace events
+            if (app.workspace) {
+                app.workspace.on('node:drop', (data) => {
+                    console.log('🎯 Node dropped:', data);
+                    updateStep('interaction', 'success', '✓ Drag & drop works');
+                });
+            }
+        }
+
+        /**
+         * Start full automated demo
+         */
+        window.startFullDemo = async function() {
+            if (!app) {
+                alert('Application not initialized yet!');
+                return;
+            }
+
+            try {
+                updateStep('nodes', 'running');
+                await delay(500);
+
+                // Create a sequence of nodes
+                const nodes = [
+                    { type: 'message', x: 200, y: 100, label: 'Welcome Message' },
+                    { type: 'condition', x: 400, y: 200, label: 'User Intent Check' },
+                    { type: 'message', x: 200, y: 300, label: 'Help Response' },
+                    { type: 'action', x: 600, y: 300, label: 'API Call' }
+                ];
+
+                for (let i = 0; i < nodes.length; i++) {
+                    const nodeData = nodes[i];
+                    console.log(`Creating node ${i + 1}/${nodes.length}: ${nodeData.type}`);
+                    
+                    const node = await app.createNode(nodeData.type, nodeData.x, nodeData.y);
+                    
+                    await delay(800);
+                    
+                    // Select each node briefly to show properties
+                    app.nodeManager.selectNode(node.id);
+                    await delay(600);
+                }
+
+                updateStep('nodes', 'success', `✓ Created ${nodes.length} nodes`);
+                await delay(500);
+
+                updateStep('complete', 'success', '🎉 Demo completed!');
+                
+                console.log('🎉 Full demo completed successfully!');
+
+            } catch (error) {
+                console.error('Demo error:', error);
+                updateStep('nodes', 'error', `✗ ${error.message}`);
+            }
+        };
+
+        /**
+         * Test drag and drop functionality
+         */
+        window.testDragDrop = function() {
+            if (!app) {
+                alert('Application not initialized yet!');
+                return;
+            }
+            
+            alert('Try dragging a component from the left panel to the workspace canvas in the center!');
+            updateStep('interaction', 'running', 'Waiting for drag & drop...');
+        };
+
+        /**
+         * Test node creation programmatically
+         */
+        window.testNodeCreation = async function() {
+            if (!app) {
+                alert('Application not initialized yet!');
+                return;
+            }
+
+            updateStep('nodes', 'running');
+            
+            try {
+                const x = Math.random() * 400 + 100;
+                const y = Math.random() * 300 + 100;
+                const types = ['message', 'condition', 'action', 'response'];
+                const type = types[Math.floor(Math.random() * types.length)];
+                
+                const node = await app.createNode(type, x, y);
+                console.log('Created test node:', node);
+                
+                updateStep('nodes', 'success', `✓ Created ${type} node`);
+            } catch (error) {
+                updateStep('nodes', 'error', `✗ Failed: ${error.message}`);
+            }
+        };
+
+        /**
+         * Test properties panel
+         */
+        window.testPropertiesPanel = function() {
+            if (!app || !app.nodeManager) {
+                alert('Application not initialized yet!');
+                return;
+            }
+
+            const nodes = app.nodeManager.getAllNodes();
+            if (nodes.length === 0) {
+                alert('Create some nodes first!');
+                return;
+            }
+
+            // Select the first node
+            const firstNode = nodes[0];
+            app.nodeManager.selectNode(firstNode.id);
+            
+            updateStep('interaction', 'success', '✓ Properties panel activated');
+            alert('Check the properties panel on the right - it should show the selected node\'s properties!');
+        };
+
+        /**
+         * Reset demo
+         */
+        window.resetDemo = function() {
+            location.reload();
+        };
+
+        // Make app globally available for debugging
+        window.flowBuilderApp = app;
+        window.demoApp = {
+            getStatus: () => demoProgress,
+            getApp: () => app,
+            createTestNode: testNodeCreation,
+            startDemo: startFullDemo
+        };
+
+        // Auto-initialize when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeApp);
+        } else {
+            initializeApp();
+        }
+    </script>
+</body>
+</html>

@@ -5,314 +5,438 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simple Chatbot Builder - BotFlo.ai</title>
     
-    <!-- Shared Navigation -->
-    <link rel="stylesheet" href="shared-nav-new.css">
-    <script src="shared-nav-new.js"></script>
+    <!-- Global App Styles -->
+    <link rel="stylesheet" href="app-global.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f8fafc;
+            font-family: var(--font-family);
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
             min-height: 100vh;
             padding: 1rem;
-            padding-top: 5rem; /* Account for fixed nav */
+            padding-top: calc(var(--header-height) + 1rem);
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border-radius: var(--border-radius-2xl);
+            box-shadow: var(--shadow-2xl);
             overflow: hidden;
         }
 
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             color: white;
-            padding: 2rem;
+            padding: var(--space-8);
             text-align: center;
+            position: relative;
         }
-    </style>
-</head>
-<body>
-    <!-- Navigation will be injected here -->
-    <div id="navigation-placeholder"></div>
 
-    <div class="container">
-        <div class="header">
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
 
         .header h1 {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
+            font-size: var(--text-4xl);
+            margin-bottom: var(--space-2);
+            font-weight: 900;
+            position: relative;
+            z-index: 2;
         }
 
         .header p {
             opacity: 0.9;
-            font-size: 1.1rem;
+            font-size: var(--text-xl);
+            position: relative;
+            z-index: 2;
         }
 
         .builder-content {
             display: grid;
-            grid-template-columns: 300px 1fr;
-            min-height: 500px;
+            grid-template-columns: 350px 1fr;
+            min-height: 600px;
         }
 
         .sidebar {
-            background: #f8fafc;
-            padding: 2rem;
-            border-right: 1px solid #e2e8f0;
+            background: var(--gray-50);
+            padding: var(--space-8);
+            border-right: 1px solid var(--gray-200);
         }
 
         .sidebar h3 {
-            color: #2d3748;
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
+            color: var(--gray-900);
+            margin-bottom: var(--space-6);
+            font-size: var(--text-xl);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
         }
 
         .template-list {
             display: grid;
-            gap: 0.75rem;
+            gap: var(--space-4);
         }
 
         .template-item {
-            padding: 1rem;
+            padding: var(--space-4);
             background: white;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--border-radius-lg);
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             text-align: center;
         }
 
         .template-item:hover {
-            border-color: #667eea;
-            transform: translateY(-1px);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
         }
 
         .template-item.active {
-            border-color: #667eea;
-            background: #eef2ff;
+            border-color: var(--primary);
+            background: var(--primary-50);
+            box-shadow: var(--shadow-lg);
         }
 
         .template-icon {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
+            font-size: 2rem;
+            margin-bottom: var(--space-2);
         }
 
         .template-name {
-            font-weight: 600;
-            color: #2d3748;
-            margin-bottom: 0.25rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: var(--space-1);
+            font-size: var(--text-base);
         }
 
         .template-desc {
-            font-size: 0.85rem;
-            color: #718096;
+            font-size: var(--text-sm);
+            color: var(--gray-600);
         }
 
         .main-area {
-            padding: 2rem;
+            padding: var(--space-8);
             display: flex;
             flex-direction: column;
         }
 
         .builder-actions {
             display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
+            gap: var(--space-4);
+            margin-bottom: var(--space-8);
             align-items: center;
+            flex-wrap: wrap;
         }
 
         .btn {
-            padding: 0.75rem 1.5rem;
+            padding: var(--space-3) var(--space-6);
             border: none;
-            border-radius: 6px;
+            border-radius: var(--border-radius-lg);
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             text-decoration: none;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            font-size: var(--text-sm);
         }
 
         .btn-primary {
-            background: #667eea;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
+            box-shadow: 0 4px 14px 0 rgba(30, 64, 175, 0.4);
         }
 
         .btn-primary:hover {
-            background: #5a67d8;
-            transform: translateY(-1px);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1e3a8a 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px 0 rgba(30, 64, 175, 0.6);
         }
 
         .btn-secondary {
-            background: #e2e8f0;
-            color: #4a5568;
+            background: var(--gray-100);
+            color: var(--gray-700);
+            border: 1px solid var(--gray-300);
         }
 
         .btn-secondary:hover {
-            background: #cbd5e0;
+            background: var(--gray-200);
+            border-color: var(--primary);
+            color: var(--primary);
         }
 
         .preview-area {
             flex: 1;
-            background: #f8fafc;
-            border: 2px dashed #cbd5e0;
-            border-radius: 8px;
+            background: var(--gray-50);
+            border: 2px dashed var(--gray-300);
+            border-radius: var(--border-radius-xl);
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 300px;
+            min-height: 400px;
             position: relative;
+            padding: var(--space-8);
         }
 
         .preview-content {
             text-align: center;
-            color: #718096;
+            color: var(--gray-600);
+            max-width: 500px;
         }
 
         .preview-content h3 {
-            color: #2d3748;
-            margin-bottom: 1rem;
+            color: var(--gray-900);
+            margin-bottom: var(--space-4);
+            font-size: var(--text-2xl);
+            font-weight: 800;
         }
 
         .chatbot-preview {
             background: white;
-            border-radius: 12px;
-            width: 300px;
-            height: 400px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-radius: var(--border-radius-xl);
+            width: 350px;
+            height: 500px;
+            box-shadow: var(--shadow-2xl);
             display: none;
             flex-direction: column;
+            border: 1px solid var(--gray-200);
         }
 
         .chat-header {
-            background: #667eea;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
-            padding: 1rem;
-            border-radius: 12px 12px 0 0;
-            font-weight: 600;
+            padding: var(--space-4);
+            border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
+            font-weight: 700;
+            text-align: center;
+            position: relative;
+        }
+
+        .chat-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
         }
 
         .chat-messages {
             flex: 1;
-            padding: 1rem;
+            padding: var(--space-4);
             overflow-y: auto;
+            background: var(--gray-50);
         }
 
         .message {
-            margin-bottom: 1rem;
-            padding: 0.75rem;
-            border-radius: 8px;
-            max-width: 80%;
+            margin-bottom: var(--space-3);
+            padding: var(--space-3);
+            border-radius: var(--border-radius-lg);
+            max-width: 85%;
+            font-size: var(--text-sm);
+            line-height: 1.5;
         }
 
         .message.bot {
-            background: #f1f5f9;
-            color: #334155;
+            background: white;
+            color: var(--gray-800);
+            border: 1px solid var(--gray-200);
+            box-shadow: var(--shadow-sm);
         }
 
         .message.user {
-            background: #667eea;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
             margin-left: auto;
+            box-shadow: var(--shadow-sm);
         }
 
         .chat-input {
-            padding: 1rem;
-            border-top: 1px solid #e2e8f0;
+            padding: var(--space-4);
+            border-top: 1px solid var(--gray-200);
             display: flex;
-            gap: 0.5rem;
+            gap: var(--space-2);
+            background: white;
+            border-radius: 0 0 var(--border-radius-xl) var(--border-radius-xl);
         }
 
         .chat-input input {
             flex: 1;
-            padding: 0.5rem;
-            border: 1px solid #e2e8f0;
-            border-radius: 6px;
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--gray-300);
+            border-radius: var(--border-radius);
             outline: none;
+            font-size: var(--text-sm);
+        }
+
+        .chat-input input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
         }
 
         .chat-input button {
-            background: #667eea;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
             border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--border-radius);
             cursor: pointer;
+            font-weight: 600;
+            font-size: var(--text-sm);
+            transition: all 0.2s ease;
+        }
+
+        .chat-input button:hover {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1e3a8a 100%);
         }
 
         .success-message {
-            background: #d4edda;
-            color: #155724;
-            padding: 1rem;
-            border-radius: 6px;
-            margin-bottom: 1rem;
-            border: 1px solid #c3e6cb;
+            background: linear-gradient(135deg, var(--success-light) 0%, var(--success) 100%);
+            color: white;
+            padding: var(--space-4);
+            border-radius: var(--border-radius-lg);
+            margin-bottom: var(--space-4);
+            border: none;
+            font-weight: 600;
+            box-shadow: 0 4px 14px 0 rgba(5, 150, 105, 0.4);
         }
 
-        @media (max-width: 768px) {
+        .template-preview {
+            background: var(--gray-50);
+            padding: var(--space-4);
+            border-radius: var(--border-radius-lg);
+            margin: var(--space-4) 0;
+            text-align: left;
+            border: 1px solid var(--gray-200);
+        }
+
+        .response-item {
+            background: var(--primary-50);
+            padding: var(--space-2);
+            margin: var(--space-2) 0;
+            border-radius: var(--border-radius);
+            font-size: var(--text-sm);
+            border-left: 3px solid var(--primary);
+        }
+
+        @media (max-width: 1024px) {
             .builder-content {
                 grid-template-columns: 1fr;
             }
             
             .sidebar {
                 border-right: none;
-                border-bottom: 1px solid #e2e8f0;
+                border-bottom: 1px solid var(--gray-200);
+            }
+
+            .chatbot-preview {
+                width: 100%;
+                max-width: 350px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 0.5rem;
+                padding-top: calc(var(--mobile-header-height) + 0.5rem);
+            }
+
+            .container {
+                border-radius: var(--border-radius-lg);
+            }
+
+            .header {
+                padding: var(--space-6);
+            }
+
+            .header h1 {
+                font-size: var(--text-3xl);
+            }
+
+            .sidebar, .main-area {
+                padding: var(--space-6);
+            }
+
+            .builder-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn {
+                justify-content: center;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Navigation will be injected here -->
+
     <div class="container">
         <div class="header">
-            <h1>🤖 Simple Chatbot Builder</h1>
-            <p>Create a chatbot in minutes with our easy template system</p>
+            <h1><i class="fas fa-robot"></i> Simple Chatbot Builder</h1>
+            <p>Create a professional chatbot in minutes with our easy template system</p>
         </div>
 
         <div class="builder-content">
             <div class="sidebar">
-                <h3>📚 Choose a Template</h3>
+                <h3><i class="fas fa-layer-group"></i> Choose a Template</h3>
                 <div class="template-list">
                     <div class="template-item" onclick="selectTemplate('customer-service')">
                         <div class="template-icon">🎧</div>
                         <div class="template-name">Customer Service</div>
-                        <div class="template-desc">FAQ and support</div>
+                        <div class="template-desc">FAQ and support automation</div>
                     </div>
                     <div class="template-item" onclick="selectTemplate('lead-generation')">
                         <div class="template-icon">🎯</div>
                         <div class="template-name">Lead Generation</div>
-                        <div class="template-desc">Capture leads</div>
+                        <div class="template-desc">Capture and qualify leads</div>
                     </div>
                     <div class="template-item" onclick="selectTemplate('booking')">
                         <div class="template-icon">📅</div>
-                        <div class="template-name">Appointment</div>
-                        <div class="template-desc">Schedule meetings</div>
+                        <div class="template-name">Appointment Booking</div>
+                        <div class="template-desc">Schedule meetings automatically</div>
                     </div>
                     <div class="template-item" onclick="selectTemplate('ecommerce')">
                         <div class="template-icon">🛒</div>
-                        <div class="template-name">E-commerce</div>
-                        <div class="template-desc">Product support</div>
+                        <div class="template-name">E-commerce Support</div>
+                        <div class="template-desc">Product help and orders</div>
                     </div>
                     <div class="template-item" onclick="selectTemplate('survey')">
                         <div class="template-icon">📊</div>
-                        <div class="template-name">Survey</div>
-                        <div class="template-desc">Collect feedback</div>
+                        <div class="template-name">Survey & Feedback</div>
+                        <div class="template-desc">Collect user insights</div>
                     </div>
                 </div>
             </div>
 
             <div class="main-area">
                 <div class="builder-actions">
-                    <button class="btn btn-primary" onclick="previewChatbot()">👁️ Preview</button>
-                    <button class="btn btn-secondary" onclick="customizeBot()">⚙️ Customize</button>
-                    <a href="./chatbot-builder-pro.html" class="btn btn-secondary">🚀 Advanced Builder</a>
+                    <button class="btn btn-primary" onclick="previewChatbot()">
+                        <i class="fas fa-eye"></i> Preview Chatbot
+                    </button>
+                    <button class="btn btn-secondary" onclick="customizeBot()">
+                        <i class="fas fa-cog"></i> Customize
+                    </button>
+                    <a href="/advanced-flow-builder.html" class="btn btn-secondary">
+                        <i class="fas fa-rocket"></i> Advanced Builder
+                    </a>
                 </div>
 
                 <div id="successMessage" style="display: none;"></div>
@@ -321,13 +445,15 @@
                     <div class="preview-content" id="previewContent">
                         <h3>Select a Template to Get Started</h3>
                         <p>Choose from our professionally designed templates above, then preview and customize your chatbot.</p>
-                        <div style="margin-top: 2rem;">
-                            <div style="font-size: 3rem; margin-bottom: 1rem;">🎯</div>
-                            <p><strong>Quick Start:</strong></p>
-                            <p>1. Pick a template</p>
-                            <p>2. Click preview</p>
-                            <p>3. Customize as needed</p>
-                            <p>4. Export your code</p>
+                        <div style="margin-top: var(--space-8);">
+                            <div style="font-size: 4rem; margin-bottom: var(--space-4);">🎯</div>
+                            <div style="text-align: left; max-width: 300px; margin: 0 auto;">
+                                <p style="margin-bottom: var(--space-2);"><strong>Quick Start Guide:</strong></p>
+                                <p style="margin-bottom: var(--space-1);">1. Pick a template that fits your needs</p>
+                                <p style="margin-bottom: var(--space-1);">2. Click "Preview Chatbot" to test it</p>
+                                <p style="margin-bottom: var(--space-1);">3. Customize responses and styling</p>
+                                <p style="margin-bottom: var(--space-1);">4. Deploy to your website</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -335,6 +461,8 @@
         </div>
     </div>
 
+    <!-- Global App Scripts -->
+    <script src="app-navigation.js"></script>
     <script>
         let selectedTemplate = null;
         let chatbotVisible = false;
@@ -342,50 +470,73 @@
         const templates = {
             'customer-service': {
                 name: 'Customer Service Bot',
-                welcome: 'Hi! I\'m here to help you with any questions or issues you might have.',
+                welcome: 'Hi! I\'m here to help you with any questions or issues you might have. How can I assist you today?',
                 responses: [
                     'I can help you with account issues, billing questions, or technical support.',
                     'What specific issue can I assist you with today?',
-                    'Feel free to ask me about our products, services, or policies.'
+                    'Feel free to ask me about our products, services, or policies.',
+                    'Would you like me to connect you with a human agent?',
+                    'I\'m here to make sure you have the best experience possible!'
                 ]
             },
             'lead-generation': {
                 name: 'Lead Generation Bot',
-                welcome: 'Welcome! I\'d love to learn more about your business needs.',
+                welcome: 'Welcome! I\'d love to learn more about your business needs and see how we can help you grow.',
                 responses: [
                     'What type of business are you in?',
                     'How can our services help grow your business?',
-                    'Would you like to schedule a consultation?'
+                    'Would you like to schedule a consultation with our team?',
+                    'What\'s your biggest challenge right now?',
+                    'Let me connect you with one of our specialists!'
                 ]
             },
             'booking': {
                 name: 'Appointment Booking Bot',
-                welcome: 'Hello! I can help you schedule an appointment with our team.',
+                welcome: 'Hello! I can help you schedule an appointment with our team. What type of service are you interested in?',
                 responses: [
                     'What type of appointment would you like to book?',
                     'When would be the best time for you?',
-                    'Let me check our available slots for you.'
+                    'Let me check our available slots for you.',
+                    'Would you prefer morning or afternoon?',
+                    'Great! I\'ll send you a confirmation email shortly.'
                 ]
             },
             'ecommerce': {
                 name: 'E-commerce Support Bot',
-                welcome: 'Hi! I\'m here to help you find the perfect product.',
+                welcome: 'Hi! I\'m here to help you find the perfect product and answer any questions about your order.',
                 responses: [
                     'What product are you looking for today?',
                     'I can help you track orders, process returns, or answer product questions.',
-                    'Would you like to see our current promotions?'
+                    'Would you like to see our current promotions?',
+                    'Do you need help with sizing or product specifications?',
+                    'I can also help you with payment and shipping options!'
                 ]
             },
             'survey': {
                 name: 'Survey Collection Bot',
-                welcome: 'Thank you for participating in our survey! Your feedback is valuable.',
+                welcome: 'Thank you for participating in our survey! Your feedback is valuable and helps us improve our services.',
                 responses: [
                     'How would you rate your experience with us?',
                     'What improvements would you suggest?',
-                    'Would you recommend us to others?'
+                    'Would you recommend us to others?',
+                    'What feature would you like to see added?',
+                    'Thank you for your valuable feedback!'
                 ]
             }
         };
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize navigation
+            if (typeof BotFloApp !== 'undefined') {
+                new BotFloApp();
+            }
+            
+            // Show welcome message
+            setTimeout(() => {
+                showSuccess('👋 Welcome to the Simple Chatbot Builder! Pick a template to get started.');
+            }, 1000);
+        });
 
         function selectTemplate(templateId) {
             // Remove active class from all templates
@@ -410,21 +561,28 @@
             if (selectedTemplate) {
                 const template = templates[selectedTemplate];
                 previewContent.innerHTML = `
-                    <h3>📋 ${template.name}</h3>
-                    <p><strong>Welcome Message:</strong></p>
-                    <div style="background: #f1f5f9; padding: 1rem; border-radius: 6px; margin: 1rem 0; text-align: left;">
-                        "${template.welcome}"
+                    <h3><i class="fas fa-robot"></i> ${template.name}</h3>
+                    <div style="margin: var(--space-6) 0;">
+                        <p style="margin-bottom: var(--space-4); font-weight: 600; color: var(--gray-700);"><i class="fas fa-comment-dots"></i> Welcome Message:</p>
+                        <div class="template-preview">
+                            "${template.welcome}"
+                        </div>
+                        <p style="margin-bottom: var(--space-4); font-weight: 600; color: var(--gray-700);"><i class="fas fa-brain"></i> Sample AI Responses:</p>
+                        <div style="text-align: left;">
+                            ${template.responses.slice(0, 3).map(response => `
+                                <div class="response-item">
+                                    ${response}
+                                </div>
+                            `).join('')}
+                        </div>
                     </div>
-                    <p><strong>Sample Responses:</strong></p>
-                    <div style="text-align: left; margin-top: 1rem;">
-                        ${template.responses.map(response => `
-                            <div style="background: #eef2ff; padding: 0.5rem; margin: 0.5rem 0; border-radius: 4px; font-size: 0.9rem;">
-                                • ${response}
-                            </div>
-                        `).join('')}
-                    </div>
-                    <div style="margin-top: 2rem;">
-                        <button class="btn btn-primary" onclick="previewChatbot()">👁️ Test Chat</button>
+                    <div style="margin-top: var(--space-8); display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap;">
+                        <button class="btn btn-primary" onclick="previewChatbot()">
+                            <i class="fas fa-play"></i> Test Live Chat
+                        </button>
+                        <a href="/advanced-flow-builder.html" class="btn btn-secondary">
+                            <i class="fas fa-magic"></i> Advanced Editor
+                        </a>
                     </div>
                 `;
             }
@@ -442,7 +600,7 @@
             previewArea.innerHTML = `
                 <div class="chatbot-preview" style="display: flex;">
                     <div class="chat-header">
-                        ${template.name}
+                        <i class="fas fa-robot"></i> ${template.name}
                     </div>
                     <div class="chat-messages" id="chatMessages">
                         <div class="message bot">
@@ -450,21 +608,30 @@
                         </div>
                     </div>
                     <div class="chat-input">
-                        <input type="text" placeholder="Type a message..." id="userInput">
-                        <button onclick="sendMessage()">Send</button>
+                        <input type="text" placeholder="Type your message here..." id="userInput">
+                        <button onclick="sendMessage()">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
                     </div>
                 </div>
-                <div style="text-align: center; margin-top: 1rem;">
-                    <button class="btn btn-secondary" onclick="backToTemplates()">← Back to Templates</button>
-                    <a href="./chatbot-builder-pro.html" class="btn btn-primary" style="margin-left: 1rem;">🚀 Upgrade to Pro Builder</a>
+                <div style="text-align: center; margin-top: var(--space-6); display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap;">
+                    <button class="btn btn-secondary" onclick="backToTemplates()">
+                        <i class="fas fa-arrow-left"></i> Back to Templates
+                    </button>
+                    <a href="/advanced-flow-builder.html" class="btn btn-primary">
+                        <i class="fas fa-rocket"></i> Upgrade to Pro Builder
+                    </a>
                 </div>
             `;
 
-            showSuccess('🎉 Chatbot preview is ready! Try sending a message.');
+            showSuccess('🎉 Chatbot preview is ready! Try sending a message to test the AI responses.');
             
             // Focus on input
             setTimeout(() => {
-                document.getElementById('userInput').focus();
+                const input = document.getElementById('userInput');
+                if (input) {
+                    input.focus();
+                }
             }, 100);
         }
 
@@ -485,8 +652,23 @@
             
             input.value = '';
             
+            // Show typing indicator
+            chatMessages.innerHTML += `
+                <div class="message bot" id="typing">
+                    <i class="fas fa-ellipsis-h"></i> Typing...
+                </div>
+            `;
+            
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
             // Add bot response after delay
             setTimeout(() => {
+                // Remove typing indicator
+                const typingMsg = document.getElementById('typing');
+                if (typingMsg) {
+                    typingMsg.remove();
+                }
+                
                 const template = templates[selectedTemplate];
                 const randomResponse = template.responses[Math.floor(Math.random() * template.responses.length)];
                 
@@ -497,9 +679,7 @@
                 `;
                 
                 chatMessages.scrollTop = chatMessages.scrollHeight;
-            }, 1000);
-            
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 1500);
         }
 
         function backToTemplates() {
@@ -512,33 +692,47 @@
                 return;
             }
             
-            showSuccess('🎨 For advanced customization, use our Pro Builder!');
+            showSuccess('🎨 For advanced customization and unlimited features, upgrade to our Pro Builder!');
             setTimeout(() => {
-                window.open('./chatbot-builder-pro.html', '_blank');
-            }, 1500);
+                window.open('/advanced-flow-builder.html', '_blank');
+            }, 2000);
         }
 
         function showSuccess(message) {
             const successDiv = document.getElementById('successMessage');
-            successDiv.innerHTML = `<div class="success-message">${message}</div>`;
+            successDiv.innerHTML = `<div class="success-message"><i class="fas fa-check-circle"></i> ${message}</div>`;
             successDiv.style.display = 'block';
             
             setTimeout(() => {
                 successDiv.style.display = 'none';
-            }, 3000);
+            }, 4000);
         }
 
         // Handle enter key in chat
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && document.getElementById('userInput') === document.activeElement) {
-                sendMessage();
+            if (e.key === 'Enter') {
+                const userInput = document.getElementById('userInput');
+                if (userInput && document.activeElement === userInput) {
+                    sendMessage();
+                }
             }
         });
 
-        // Welcome message
-        setTimeout(() => {
-            showSuccess('👋 Welcome to the Simple Chatbot Builder! Pick a template to get started.');
-        }, 500);
+        // Add some interactive animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate template items on hover
+            const templateItems = document.querySelectorAll('.template-item');
+            templateItems.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-4px) scale(1.02)';
+                });
+                item.addEventListener('mouseleave', function() {
+                    if (!this.classList.contains('active')) {
+                        this.style.transform = '';
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>

@@ -8,86 +8,2268 @@
     <!-- Favicon and Manifest -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="alternate icon" href="/favicon.ico">
-    <link rel="manifest" href="/manifest.json">
     
-    <!-- Shared Navigation -->
-    <link rel="stylesheet" href="shared-nav-new.css">
-    <script src="shared-nav-new.js"></script>
+    <!-- Global App Styles -->
+    <link rel="stylesheet" href="app-global.css">
     
     <!-- External Dependencies -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/svg.js@3.2.0/dist/svg.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
-    <!-- Modular CSS -->
-    <link rel="stylesheet" href="flow-builder/css/base.css">
-    <link rel="stylesheet" href="flow-builder/css/layout.css">
-    <link rel="stylesheet" href="flow-builder/css/components.css">
-    <link rel="stylesheet" href="flow-builder/css/workspace.css">
-    <link rel="stylesheet" href="flow-builder/css/properties.css">
-    <link rel="stylesheet" href="flow-builder/css/animations.css">
+    <style>
+    :root {
+        --primary: #3b82f6;
+        --primary-dark: #2563eb;
+        --primary-light: #dbeafe;
+        --secondary: #6366f1;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --error: #ef4444;
+        --gray-50: #f8fafc;
+        --gray-100: #f1f5f9;
+        --gray-200: #e2e8f0;
+        --gray-300: #cbd5e1;
+        --gray-400: #94a3b8;
+        --gray-500: #64748b;
+        --gray-600: #475569;
+        --gray-700: #334155;
+        --gray-800: #1e293b;
+        --gray-900: #0f172a;
+        --border-radius: 8px;
+        --border-radius-lg: 12px;
+        --border-radius-xl: 16px;
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        --space-1: 0.25rem;
+        --space-2: 0.5rem;
+        --space-3: 0.75rem;
+        --space-4: 1rem;
+        --space-5: 1.25rem;
+        --space-6: 1.5rem;
+        --space-8: 2rem;
+        --space-12: 3rem;
+        --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
     
-    <!-- Flow Builder as ES6 Module -->
-    <script type="module">
-        import { FlowBuilder } from './flow-builder/js/FlowBuilder.js';
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        font-family: var(--font-family);
+        background: var(--gray-50);
+        color: var(--gray-900);
+        line-height: 1.6;
+        overflow: hidden;
+    }
+    
+    /* Layout */
+    .builder-container {
+        display: grid;
+        grid-template-areas: 
+            "header header header"
+            "sidebar workspace properties";
+        grid-template-columns: 320px 1fr 360px;
+        grid-template-rows: 72px 1fr;
+        height: 100vh;
+        gap: 2px;
+        background: var(--gray-200);
+        padding: 0;
+    }
+    
+    /* Header */
+    .builder-header {
+        grid-area: header;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 var(--space-8);
+        border-bottom: 1px solid var(--gray-200);
+        box-shadow: var(--shadow-sm);
+        z-index: 100;
+        min-height: 72px;
+    }
+    
+    .header-left {
+        display: flex;
+        align-items: center;
+        gap: var(--space-4);
+    }
+    
+    .app-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--gray-900);
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+    }
+    
+    .app-title i {
+        color: var(--primary);
+        font-size: 1.5rem;
+    }
+    
+    .project-info {
+        display: flex;
+        align-items: center;
+        gap: var(--space-4);
+        color: var(--gray-600);
+        font-size: 0.875rem;
+    }
+    
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+    }
+    
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-2);
+        padding: var(--space-2) var(--space-4);
+        border: none;
+        border-radius: var(--border-radius);
+        font-weight: 600;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+    
+    .btn-primary {
+        background: var(--primary);
+        color: white;
+    }
+    
+    .btn-primary:hover {
+        background: var(--primary-dark);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-lg);
+    }
+    
+    .btn-secondary {
+        background: var(--gray-100);
+        color: var(--gray-700);
+        border: 1px solid var(--gray-300);
+    }
+    
+    .btn-secondary:hover {
+        background: var(--gray-200);
+    }
+    
+    .btn-success {
+        background: var(--success);
+        color: white;
+    }
+    
+    .btn-warning {
+        background: var(--warning);
+        color: white;
+    }
+    
+    .btn-sm {
+        padding: var(--space-1) var(--space-3);
+        font-size: 0.75rem;
+    }
+    
+    /* Sidebar */
+    .sidebar {
+        grid-area: sidebar;
+        background: white;
+        overflow-y: auto;
+        border-right: 1px solid var(--gray-200);
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .sidebar-header {
+        padding: var(--space-8) var(--space-6);
+        border-bottom: 1px solid var(--gray-200);
+        background: var(--gray-50);
+        flex-shrink: 0;
+    }
+    
+    .sidebar-title {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: var(--gray-900);
+        margin-bottom: var(--space-2);
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+    }
+    
+    .component-search {
+        position: relative;
+        margin-top: var(--space-4);
+    }
+    
+    .component-search input {
+        width: 100%;
+        padding: var(--space-3) var(--space-4) var(--space-3) var(--space-12);
+        border: 1px solid var(--gray-300);
+        border-radius: var(--border-radius);
+        font-size: 0.875rem;
+        background: white;
+    }
+    
+    .component-search i {
+        position: absolute;
+        left: var(--space-4);
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--gray-400);
+    }
+    
+    .component-categories {
+        padding: var(--space-6) var(--space-4);
+        flex: 1;
+        overflow-y: auto;
+    }
+    
+    .component-category {
+        margin-bottom: var(--space-8);
+    }
+    
+    .category-title {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--gray-700);
+        margin-bottom: var(--space-4);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    
+    .component-item {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        padding: var(--space-4);
+        margin-bottom: var(--space-3);
+        border: 2px dashed var(--gray-200);
+        border-radius: var(--border-radius-lg);
+        cursor: grab;
+        transition: all 0.2s ease;
+        background: white;
+        user-select: none;
+    }
+    
+    .component-item:hover {
+        border-color: var(--primary);
+        background: var(--primary-light);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow);
+    }
+    
+    .component-item:active {
+        cursor: grabbing;
+    }
+    
+    .component-icon {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--border-radius);
+        font-size: 1rem;
+        color: white;
+    }
+    
+    .component-content {
+        flex: 1;
+    }
+    
+    .component-name {
+        font-weight: 600;
+        color: var(--gray-900);
+        font-size: 0.875rem;
+        margin-bottom: var(--space-1);
+    }
+    
+    .component-desc {
+        font-size: 0.75rem;
+        color: var(--gray-600);
+        line-height: 1.4;
+    }
+    
+    /* Workspace */
+    .workspace {
+        grid-area: workspace;
+        background: white;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .workspace-header {
+        padding: var(--space-6) var(--space-8);
+        border-bottom: 1px solid var(--gray-200);
+        background: var(--gray-50);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 72px;
+    }
+    
+    .workspace-title {
+        font-weight: 600;
+        color: var(--gray-900);
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+    }
+    
+    .workspace-stats {
+        display: flex;
+        align-items: center;
+        gap: var(--space-4);
+        font-size: 0.875rem;
+        color: var(--gray-600);
+    }
+    
+    .canvas-container {
+        position: relative;
+        width: 100%;
+        height: calc(100vh - 160px);
+        background: 
+            radial-gradient(circle at 20px 20px, var(--gray-300) 1px, transparent 1px);
+        background-size: 20px 20px;
+        overflow: auto;
+        padding: var(--space-12);
+    }
+    
+    .canvas {
+        position: relative;
+        min-width: 100%;
+        min-height: 100%;
+    }
+    
+    /* Nodes */
+    .flow-node {
+        position: absolute;
+        width: 300px;
+        background: white;
+        border: 2px solid var(--gray-200);
+        border-radius: var(--border-radius-xl);
+        box-shadow: var(--shadow-lg);
+        cursor: move;
+        transition: all 0.2s ease;
+        user-select: none;
+    }
+    
+    .flow-node:hover {
+        box-shadow: var(--shadow-xl);
+        transform: translateY(-2px);
+    }
+    
+    .flow-node.selected {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1), var(--shadow-xl);
+    }
+    
+    .flow-node.dragging {
+        z-index: 1000;
+        transform: rotate(3deg);
+        box-shadow: var(--shadow-2xl);
+    }
+    
+    .node-header {
+        display: flex;
+        align-items: center;
+        gap: var(--space-4);
+        padding: var(--space-5);
+        border-bottom: 1px solid var(--gray-200);
+        background: var(--gray-50);
+        border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
+    }
+    
+    .node-icon {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--border-radius);
+        font-size: 1rem;
+        color: white;
+    }
+    
+    .node-title {
+        flex: 1;
+        font-weight: 600;
+        color: var(--gray-900);
+        font-size: 0.875rem;
+    }
+    
+    .node-actions {
+        display: flex;
+        gap: var(--space-1);
+    }
+    
+    .node-action {
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        border: none;
+        background: transparent;
+        color: var(--gray-500);
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .node-action:hover {
+        background: var(--gray-200);
+        color: var(--gray-700);
+    }
+    
+    .node-content {
+        padding: var(--space-6);
+    }
+    
+    .node-field {
+        margin-bottom: var(--space-4);
+    }
+    
+    .node-field:last-child {
+        margin-bottom: 0;
+    }
+    
+    .field-label {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--gray-700);
+        margin-bottom: var(--space-3);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    
+    .field-input {
+        width: 100%;
+        padding: var(--space-3) var(--space-4);
+        border: 1px solid var(--gray-300);
+        border-radius: var(--border-radius-lg);
+        font-size: 0.875rem;
+        font-family: inherit;
+        resize: vertical;
+        min-height: 42px;
+    }
+    
+    .field-input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    .node-connections {
+        display: flex;
+        justify-content: space-between;
+        padding: var(--space-3) var(--space-4);
+        border-top: 1px solid var(--gray-200);
+        background: var(--gray-50);
+    }
+    
+    .connection-point {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        border: 2px solid var(--gray-400);
+        background: white;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        position: relative;
+    }
+    
+    .connection-point:hover {
+        border-color: var(--primary);
+        transform: scale(1.2);
+    }
+    
+    .connection-point.input {
+        background: var(--success);
+        border-color: var(--success);
+    }
+    
+    .connection-point.output {
+        background: var(--primary);
+        border-color: var(--primary);
+    }
+    
+    /* Properties Panel */
+    .properties-panel {
+        grid-area: properties;
+        background: white;
+        overflow-y: auto;
+        border-left: 1px solid var(--gray-200);
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .properties-header {
+        padding: var(--space-8) var(--space-6);
+        border-bottom: 1px solid var(--gray-200);
+        background: var(--gray-50);
+        flex-shrink: 0;
+    }
+    
+    .properties-title {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: var(--gray-900);
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+    }
+    
+    .properties-content {
+        padding: var(--space-8) var(--space-6);
+        flex: 1;
+    }
+    
+    .property-section {
+        margin-bottom: var(--space-12);
+    }
+    
+    .section-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--gray-900);
+        margin-bottom: var(--space-6);
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+    }
+    
+    .property-group {
+        background: var(--gray-50);
+        border: 1px solid var(--gray-200);
+        border-radius: var(--border-radius-xl);
+        padding: var(--space-6);
+        margin-bottom: var(--space-6);
+    }
+    
+    .property-field {
+        margin-bottom: var(--space-6);
+    }
+    
+    .property-field:last-child {
+        margin-bottom: 0;
+    }
+    
+    .property-label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--gray-700);
+        margin-bottom: var(--space-3);
+    }
+    
+    .property-input {
+        width: 100%;
+        padding: var(--space-4);
+        border: 1px solid var(--gray-300);
+        border-radius: var(--border-radius-lg);
+        font-size: 0.875rem;
+        font-family: inherit;
+        background: white;
+    }
+    
+    .property-input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    .property-textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+    
+    .property-select {
+        cursor: pointer;
+    }
+    
+    /* Empty States */
+    .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        text-align: center;
+        color: var(--gray-500);
+        padding: var(--space-8);
+    }
+    
+    .empty-icon {
+        font-size: 4rem;
+        margin-bottom: var(--space-4);
+        color: var(--gray-300);
+    }
+    
+    .empty-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--gray-700);
+        margin-bottom: var(--space-2);
+    }
+    
+    .empty-description {
+        font-size: 0.875rem;
+        color: var(--gray-500);
+        max-width: 400px;
+        line-height: 1.6;
+    }
+    
+    /* Modals */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(4px);
+        padding: var(--space-4);
+    }
+    
+    .modal-content {
+        background: white;
+        border-radius: var(--border-radius-xl);
+        max-width: 600px;
+        width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: var(--shadow-2xl);
+        animation: modalSlideIn 0.3s ease;
+    }
+    
+    @keyframes modalSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px) scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+    
+    .modal-header {
+        padding: var(--space-6) var(--space-6) var(--space-4);
+        border-bottom: 1px solid var(--gray-200);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .modal-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--gray-900);
+        margin: 0;
+    }
+    
+    .modal-close {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        background: transparent;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        color: var(--gray-500);
+        font-size: 1.25rem;
+        transition: all 0.2s ease;
+    }
+    
+    .modal-close:hover {
+        background: var(--gray-100);
+        color: var(--gray-700);
+    }
+    
+    .modal-body {
+        padding: var(--space-6);
+    }
+    
+    .modal-footer {
+        padding: var(--space-4) var(--space-6) var(--space-6);
+        display: flex;
+        gap: var(--space-3);
+        justify-content: flex-end;
+    }
+    
+    /* Notifications */
+    .notification {
+        position: fixed;
+        top: var(--space-4);
+        right: var(--space-4);
+        background: white;
+        border: 1px solid var(--gray-200);
+        border-radius: var(--border-radius-lg);
+        padding: var(--space-4);
+        box-shadow: var(--shadow-lg);
+        z-index: 1100;
+        min-width: 300px;
+        animation: notificationSlideIn 0.3s ease;
+    }
+    
+    @keyframes notificationSlideIn {
+        from {
+            opacity: 0;
+            transform: translateX(100%);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    .notification.success {
+        border-left: 4px solid var(--success);
+    }
+    
+    .notification.error {
+        border-left: 4px solid var(--error);
+    }
+    
+    .notification.warning {
+        border-left: 4px solid var(--warning);
+    }
+    
+    .notification.info {
+        border-left: 4px solid var(--primary);
+    }
+    
+    /* Responsive */
+    @media (max-width: 1200px) {
+        .builder-container {
+            grid-template-columns: 280px 1fr 320px;
+        }
+    }
+    
+    @media (max-width: 1024px) {
+        .builder-container {
+            grid-template-areas: 
+                "header header"
+                "workspace properties";
+            grid-template-columns: 1fr 320px;
+        }
         
-        // Initialize FlowBuilder when DOM is ready
-        document.addEventListener('DOMContentLoaded', async function() {
-            try {
-                console.log('🚀 Initializing FlowBuilder...');
-                window.flowBuilder = new FlowBuilder();
-                console.log('✅ FlowBuilder initialized successfully');
-            } catch (error) {
-                console.warn('❌ FlowBuilder failed to initialize:', error);
-                console.log('🔧 Falling back to demo interface...');
-                // Fallback handled by the main script below
-            }
-        });
-    </script>
+        .sidebar {
+            display: none;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .builder-container {
+            grid-template-areas: 
+                "header"
+                "workspace";
+            grid-template-columns: 1fr;
+        }
+        
+        .properties-panel {
+            display: none;
+        }
+    }
+    
+    /* Drag and Drop */
+    .drag-preview {
+        position: fixed;
+        pointer-events: none;
+        z-index: 1000;
+        opacity: 0.8;
+        transform: rotate(5deg);
+    }
+    
+    .drop-zone {
+        border: 2px dashed var(--primary);
+        background: rgba(59, 130, 246, 0.05);
+        border-radius: var(--border-radius-lg);
+    }
+    
+    /* Component Type Styles */
+    .icon-message { background: #3b82f6; }
+    .icon-question { background: #8b5cf6; }
+    .icon-condition { background: #f59e0b; }
+    .icon-action { background: #ef4444; }
+    .icon-integration { background: #10b981; }
+    .icon-ai { background: #06b6d4; }
+    </style>
 </head>
 <body>
-    <!-- Navigation will be injected here -->
-    <div id="navigation-placeholder"></div>
-    
-    <!-- Onboarding Welcome Modal -->
-    <div id="welcomeModal" class="modal" style="display: block;">
-        <div class="modal-content" style="max-width: 600px;">
+    <div class="builder-container">
+        <!-- Header -->
+        <header class="builder-header">
+            <div class="header-left">
+                <div class="app-title">
+                    <i class="fas fa-project-diagram"></i>
+                    BotFlo Builder
+                </div>
+                <div class="project-info">
+                    <span id="projectName">Untitled Chatbot</span>
+                    <span>•</span>
+                    <span id="nodeCount">0 nodes</span>
+                    <span>•</span>
+                    <span id="lastSaved">Never saved</span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-secondary btn-sm" onclick="undoAction()">
+                    <i class="fas fa-undo"></i>
+                    Undo
+                </button>
+                <button class="btn btn-secondary btn-sm" onclick="redoAction()">
+                    <i class="fas fa-redo"></i>
+                    Redo
+                </button>
+                <button class="btn btn-secondary" onclick="testChatbot()">
+                    <i class="fas fa-play"></i>
+                    Test
+                </button>
+                <button class="btn btn-primary" onclick="saveChatbot()">
+                    <i class="fas fa-save"></i>
+                    Save
+                </button>
+                <button class="btn btn-success" onclick="publishChatbot()">
+                    <i class="fas fa-rocket"></i>
+                    Publish
+                </button>
+            </div>
+        </header>
+
+        <!-- Sidebar - Component Library -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">
+                    <i class="fas fa-cube"></i>
+                    Components
+                </div>
+                <div class="component-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search components..." id="componentSearch">
+                </div>
+            </div>
+            <div class="component-categories">
+                <div class="component-category">
+                    <div class="category-title">Messages</div>
+                    <div class="component-item" draggable="true" data-type="message">
+                        <div class="component-icon icon-message">
+                            <i class="fas fa-comment"></i>
+                        </div>
+                        <div class="component-content">
+                            <div class="component-name">Text Message</div>
+                            <div class="component-desc">Send a text message to users</div>
+                        </div>
+                    </div>
+                    <div class="component-item" draggable="true" data-type="question">
+                        <div class="component-icon icon-question">
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                        <div class="component-content">
+                            <div class="component-name">Question</div>
+                            <div class="component-desc">Ask users a question with options</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="component-category">
+                    <div class="category-title">Logic</div>
+                    <div class="component-item" draggable="true" data-type="condition">
+                        <div class="component-icon icon-condition">
+                            <i class="fas fa-code-branch"></i>
+                        </div>
+                        <div class="component-content">
+                            <div class="component-name">Condition</div>
+                            <div class="component-desc">Branch flow based on conditions</div>
+                        </div>
+                    </div>
+                    <div class="component-item" draggable="true" data-type="delay">
+                        <div class="component-icon icon-action">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="component-content">
+                            <div class="component-name">Delay</div>
+                            <div class="component-desc">Add a pause in the conversation</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="component-category">
+                    <div class="category-title">Actions</div>
+                    <div class="component-item" draggable="true" data-type="webhook">
+                        <div class="component-icon icon-integration">
+                            <i class="fas fa-link"></i>
+                        </div>
+                        <div class="component-content">
+                            <div class="component-name">Webhook</div>
+                            <div class="component-desc">Send data to external services</div>
+                        </div>
+                    </div>
+                    <div class="component-item" draggable="true" data-type="email">
+                        <div class="component-icon icon-action">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="component-content">
+                            <div class="component-name">Send Email</div>
+                            <div class="component-desc">Send email notifications</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="component-category">
+                    <div class="category-title">AI & Integrations</div>
+                    <div class="component-item" draggable="true" data-type="ai-response">
+                        <div class="component-icon icon-ai">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="component-content">
+                            <div class="component-name">AI Response</div>
+                            <div class="component-desc">Generate AI-powered responses</div>
+                        </div>
+                    </div>
+                    <div class="component-item" draggable="true" data-type="api-call">
+                        <div class="component-icon icon-integration">
+                            <i class="fas fa-cloud"></i>
+                        </div>
+                        <div class="component-content">
+                            <div class="component-name">API Call</div>
+                            <div class="component-desc">Make external API requests</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Workspace -->
+        <main class="workspace">
+            <div class="workspace-header">
+                <div class="workspace-title">
+                    <i class="fas fa-sitemap"></i>
+                    Conversation Flow
+                </div>
+                <div class="workspace-stats">
+                    <span>Zoom: <span id="zoomLevel">100%</span></span>
+                    <button class="btn btn-sm btn-secondary" onclick="fitToScreen()">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                        Fit to Screen
+                    </button>
+                </div>
+            </div>
+            <div class="canvas-container" id="canvasContainer">
+                <div class="canvas" id="canvas">
+                    <div class="empty-state" id="emptyState">
+                        <div class="empty-icon">
+                            <i class="fas fa-project-diagram"></i>
+                        </div>
+                        <div class="empty-title">Start Building Your Chatbot</div>
+                        <div class="empty-description">
+                            Drag components from the left panel to create your conversation flow.
+                            Start with a message component to welcome your users.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Properties Panel -->
+        <aside class="properties-panel">
+            <div class="properties-header">
+                <div class="properties-title">
+                    <i class="fas fa-cogs"></i>
+                    Properties
+                </div>
+            </div>
+            <div class="properties-content" id="propertiesContent">
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <i class="fas fa-mouse-pointer"></i>
+                    </div>
+                    <div class="empty-title">No Selection</div>
+                    <div class="empty-description">
+                        Select a node to edit its properties and configure its behavior.
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Test Modal -->
+    <div id="testModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content" style="max-width: 800px;">
             <div class="modal-header">
-                <h3>🚀 Welcome to Advanced Flow Builder</h3>
+                <h3 class="modal-title">Test Your Chatbot</h3>
+                <button class="modal-close" onclick="closeTestModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="display: grid; grid-template-columns: 1fr 400px; gap: 2rem; height: 500px;">
+                    <div>
+                        <h4 style="margin-bottom: 1rem;">Flow Visualization</h4>
+                        <div id="testFlowPreview" style="
+                            border: 1px solid var(--gray-300); 
+                            border-radius: var(--border-radius-lg); 
+                            padding: 1rem; 
+                            height: 100%; 
+                            background: var(--gray-50);
+                            overflow: auto;
+                        ">
+                            <!-- Flow preview will be generated here -->
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: 1rem;">Live Chat Test</h4>
+                        <div id="testChatContainer" style="
+                            border: 1px solid var(--gray-300); 
+                            border-radius: var(--border-radius-lg); 
+                            height: 100%; 
+                            display: flex; 
+                            flex-direction: column;
+                            background: white;
+                        ">
+                            <div id="testChatMessages" style="
+                                flex: 1; 
+                                padding: 1rem; 
+                                overflow-y: auto;
+                                border-bottom: 1px solid var(--gray-200);
+                            ">
+                                <!-- Chat messages will appear here -->
+                            </div>
+                            <div style="padding: 1rem; display: flex; gap: 0.5rem;">
+                                <input type="text" id="testChatInput" placeholder="Type your message..." style="
+                                    flex: 1; 
+                                    padding: 0.5rem; 
+                                    border: 1px solid var(--gray-300); 
+                                    border-radius: var(--border-radius);
+                                ">
+                                <button onclick="sendTestMessage()" style="
+                                    background: var(--primary); 
+                                    color: white; 
+                                    border: none; 
+                                    padding: 0.5rem 1rem; 
+                                    border-radius: var(--border-radius);
+                                    cursor: pointer;
+                                ">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeTestModal()">Close</button>
+                <button class="btn btn-primary" onclick="exportChatbot()">
+                    <i class="fas fa-download"></i>
+                    Export Chatbot
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Welcome Modal -->
+    <div id="welcomeModal" class="modal-overlay" style="display: flex;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">🚀 Welcome to BotFlo Builder</h3>
+                <button class="modal-close" onclick="closeWelcomeModal()">&times;</button>
             </div>
             <div class="modal-body">
                 <div style="text-align: center; margin-bottom: 2rem;">
                     <div style="font-size: 4rem; margin-bottom: 1rem;">🤖</div>
-                    <h4>Ready to build something amazing?</h4>
-                    <p style="color: var(--gray-600); margin-bottom: 2rem;">
-                        This is your professional drag-and-drop builder for creating sophisticated AI chatbots. 
-                        Let's get you started with a quick tour!
+                    <h4 style="margin-bottom: 1rem;">Build Professional Chatbots</h4>
+                    <p style="color: var(--gray-600); line-height: 1.6;">
+                        Create sophisticated AI-powered chatbots with our visual flow builder. 
+                        Drag, drop, and connect components to build conversations that engage your users.
                     </p>
                 </div>
 
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
-                    <div style="text-align: center; padding: 1rem; background: var(--gray-50); border-radius: 0.5rem;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                    <div style="text-align: center; padding: 1.5rem 1rem; background: var(--gray-50); border-radius: var(--border-radius-lg);">
                         <div style="font-size: 2rem; margin-bottom: 0.5rem;">📦</div>
-                        <h5>Components</h5>
-                        <p style="font-size: 0.8rem; color: var(--gray-600);">Drag from left panel</p>
+                        <h5 style="margin-bottom: 0.5rem;">Components</h5>
+                        <p style="font-size: 0.875rem; color: var(--gray-600); margin: 0;">Drag from left panel</p>
                     </div>
-                    <div style="text-align: center; padding: 1rem; background: var(--gray-50); border-radius: 0.5rem;">
+                    <div style="text-align: center; padding: 1.5rem 1rem; background: var(--gray-50); border-radius: var(--border-radius-lg);">
                         <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎨</div>
-                        <h5>Canvas</h5>
-                        <p style="font-size: 0.8rem; color: var(--gray-600);">Drop here to build</p>
+                        <h5 style="margin-bottom: 0.5rem;">Canvas</h5>
+                        <p style="font-size: 0.875rem; color: var(--gray-600); margin: 0;">Build your flow here</p>
                     </div>
-                    <div style="text-align: center; padding: 1rem; background: var(--gray-50); border-radius: 0.5rem;">
+                    <div style="text-align: center; padding: 1.5rem 1rem; background: var(--gray-50); border-radius: var(--border-radius-lg);">
                         <div style="font-size: 2rem; margin-bottom: 0.5rem;">⚙️</div>
-                        <h5>Properties</h5>
-                        <p style="font-size: 0.8rem; color: var(--gray-600);">Configure on right</p>
+                        <h5 style="margin-bottom: 0.5rem;">Properties</h5>
+                        <p style="font-size: 0.875rem; color: var(--gray-600); margin: 0;">Configure on right</p>
                     </div>
                 </div>
 
-                <div id="welcomeOptions">
-                    <h5 style="margin-bottom: 1rem;">How would you like to start?</h5>
-                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <div style="text-align: center;">
+                    <h5 style="margin-bottom: 1rem;">Ready to get started?</h5>
+                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
                         <button class="btn btn-primary" onclick="startFromScratch()">
                             <i class="fas fa-plus"></i>
-                            Start from Scratch
+                            Start Building
+                        </button>
+                        <button class="btn btn-secondary" onclick="loadTemplate()">
+                            <i class="fas fa-magic"></i>
+                            Use Template
+                        </button>
+                        <button class="btn btn-secondary" onclick="takeTour()">
+                            <i class="fas fa-question-circle"></i>
+                            Take Tour
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notificationContainer"></div>
+
+    <script>
+    // BotFlo Advanced Flow Builder - Complete Implementation
+    class BotFlowBuilder {
+        constructor() {
+            this.nodes = new Map();
+            this.connections = new Map();
+            this.selectedNode = null;
+            this.draggedComponent = null;
+            this.nodeCounter = 0;
+            this.canvas = document.getElementById('canvas');
+            this.canvasContainer = document.getElementById('canvasContainer');
+            this.propertiesContent = document.getElementById('propertiesContent');
+            this.emptyState = document.getElementById('emptyState');
+            
+            this.chatbotData = {
+                name: 'Untitled Chatbot',
+                nodes: [],
+                connections: [],
+                settings: {
+                    welcomeMessage: 'Hello! How can I help you today?',
+                    fallbackMessage: 'I didn\'t understand that. Could you try again?',
+                    theme: 'default'
+                }
+            };
+            
+            this.history = [];
+            this.historyIndex = -1;
+            
+            this.init();
+        }
+        
+        init() {
+            this.setupEventListeners();
+            this.updateStats();
+            console.log('✅ BotFlow Builder initialized');
+        }
+        
+        setupEventListeners() {
+            // Drag and drop for components
+            const componentItems = document.querySelectorAll('.component-item');
+            componentItems.forEach(item => {
+                item.addEventListener('dragstart', this.handleComponentDragStart.bind(this));
+            });
+            
+            // Canvas drop events
+            this.canvas.addEventListener('dragover', this.handleCanvasDragOver.bind(this));
+            this.canvas.addEventListener('drop', this.handleCanvasDrop.bind(this));
+            
+            // Component search
+            const searchInput = document.getElementById('componentSearch');
+            searchInput.addEventListener('input', this.handleComponentSearch.bind(this));
+            
+            // Click outside to deselect
+            document.addEventListener('click', this.handleDocumentClick.bind(this));
+            
+            // Test chat input
+            const testChatInput = document.getElementById('testChatInput');
+            if (testChatInput) {
+                testChatInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        this.sendTestMessage();
+                    }
+                });
+            }
+        }
+        
+        handleComponentDragStart(e) {
+            this.draggedComponent = {
+                type: e.target.getAttribute('data-type'),
+                name: e.target.querySelector('.component-name').textContent
+            };
+            e.dataTransfer.effectAllowed = 'copy';
+        }
+        
+        handleCanvasDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'copy';
+        }
+        
+        handleCanvasDrop(e) {
+            e.preventDefault();
+            if (!this.draggedComponent) return;
+            
+            const rect = this.canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left + this.canvasContainer.scrollLeft;
+            const y = e.clientY - rect.top + this.canvasContainer.scrollTop;
+            
+            this.createNode(this.draggedComponent.type, x, y);
+            this.draggedComponent = null;
+        }
+        
+        handleComponentSearch(e) {
+            const query = e.target.value.toLowerCase();
+            const components = document.querySelectorAll('.component-item');
+            
+            components.forEach(component => {
+                const name = component.querySelector('.component-name').textContent.toLowerCase();
+                const desc = component.querySelector('.component-desc').textContent.toLowerCase();
+                const match = name.includes(query) || desc.includes(query);
+                component.style.display = match ? 'flex' : 'none';
+            });
+        }
+        
+        handleDocumentClick(e) {
+            if (!e.target.closest('.flow-node')) {
+                this.selectNode(null);
+            }
+        }
+        
+        createNode(type, x, y) {
+            const nodeId = `node-${++this.nodeCounter}`;
+            const node = {
+                id: nodeId,
+                type: type,
+                x: x,
+                y: y,
+                data: this.getDefaultNodeData(type)
+            };
+            
+            this.nodes.set(nodeId, node);
+            this.renderNode(node);
+            this.selectNode(nodeId);
+            this.updateStats();
+            this.saveToHistory();
+            
+            // Hide empty state
+            if (this.emptyState) {
+                this.emptyState.style.display = 'none';
+            }
+            
+            this.showNotification(`${this.getNodeTypeLabel(type)} component added`, 'success');
+        }
+        
+        getDefaultNodeData(type) {
+            const defaults = {
+                'message': {
+                    title: 'Text Message',
+                    content: 'Hello! How can I help you today?',
+                    delay: 0
+                },
+                'question': {
+                    title: 'Question',
+                    content: 'What would you like to do?',
+                    options: ['Option 1', 'Option 2', 'Option 3']
+                },
+                'condition': {
+                    title: 'Condition',
+                    variable: 'user_input',
+                    operator: 'equals',
+                    value: ''
+                },
+                'webhook': {
+                    title: 'Webhook',
+                    url: 'https://api.example.com/webhook',
+                    method: 'POST',
+                    headers: {}
+                },
+                'email': {
+                    title: 'Send Email',
+                    to: '',
+                    subject: 'New message from chatbot',
+                    template: 'Hello, you have a new message.'
+                },
+                'ai-response': {
+                    title: 'AI Response',
+                    prompt: 'Generate a helpful response based on the user\'s message',
+                    model: 'gpt-3.5-turbo',
+                    maxTokens: 150
+                },
+                'api-call': {
+                    title: 'API Call',
+                    url: 'https://api.example.com/data',
+                    method: 'GET',
+                    headers: {}
+                },
+                'delay': {
+                    title: 'Delay',
+                    duration: 2000,
+                    message: 'Please wait...'
+                }
+            };
+            
+            return defaults[type] || { title: 'Unknown Component' };
+        }
+        
+        getNodeTypeLabel(type) {
+            const labels = {
+                'message': 'Text Message',
+                'question': 'Question',
+                'condition': 'Condition',
+                'webhook': 'Webhook',
+                'email': 'Send Email',
+                'ai-response': 'AI Response',
+                'api-call': 'API Call',
+                'delay': 'Delay'
+            };
+            return labels[type] || type;
+        }
+        
+        getNodeIcon(type) {
+            const icons = {
+                'message': 'fas fa-comment',
+                'question': 'fas fa-question-circle',
+                'condition': 'fas fa-code-branch',
+                'webhook': 'fas fa-link',
+                'email': 'fas fa-envelope',
+                'ai-response': 'fas fa-brain',
+                'api-call': 'fas fa-cloud',
+                'delay': 'fas fa-clock'
+            };
+            return icons[type] || 'fas fa-cube';
+        }
+        
+        renderNode(node) {
+            const nodeElement = document.createElement('div');
+            nodeElement.className = 'flow-node';
+            nodeElement.id = node.id;
+            nodeElement.style.left = node.x + 'px';
+            nodeElement.style.top = node.y + 'px';
+            
+            const iconClass = this.getNodeIcon(node.type);
+            const iconColorClass = `icon-${node.type.replace('-', '')}`;
+            
+            nodeElement.innerHTML = `
+                <div class="node-header">
+                    <div class="node-icon ${iconColorClass}">
+                        <i class="${iconClass}"></i>
+                    </div>
+                    <div class="node-title">${node.data.title}</div>
+                    <div class="node-actions">
+                        <button class="node-action" onclick="builder.duplicateNode('${node.id}')" title="Duplicate">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                        <button class="node-action" onclick="builder.deleteNode('${node.id}')" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="node-content">
+                    ${this.renderNodeContent(node)}
+                </div>
+                <div class="node-connections">
+                    <div class="connection-point input" title="Input" data-node="${node.id}" data-type="input"></div>
+                    <div class="connection-point output" title="Output" data-node="${node.id}" data-type="output"></div>
+                </div>
+            `;
+            
+            // Add event listeners
+            nodeElement.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.selectNode(node.id);
+            });
+            
+            // Make draggable
+            this.makeDraggable(nodeElement, node);
+            
+            this.canvas.appendChild(nodeElement);
+        }
+        
+        renderNodeContent(node) {
+            switch (node.type) {
+                case 'message':
+                    return `
+                        <div class="node-field">
+                            <div class="field-label">Message</div>
+                            <div class="field-input" style="min-height: auto; padding: 8px; background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 4px;">
+                                ${this.truncateText(node.data.content, 50)}
+                            </div>
+                        </div>
+                    `;
+                case 'question':
+                    return `
+                        <div class="node-field">
+                            <div class="field-label">Question</div>
+                            <div class="field-input" style="min-height: auto; padding: 8px; background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 4px;">
+                                ${this.truncateText(node.data.content, 50)}
+                            </div>
+                        </div>
+                        <div class="node-field">
+                            <div class="field-label">Options (${node.data.options.length})</div>
+                            <div style="display: flex; flex-wrap: wrap; gap: 4px;">
+                                ${node.data.options.slice(0, 3).map(opt => 
+                                    `<span style="background: var(--primary-light); color: var(--primary); padding: 2px 6px; border-radius: 4px; font-size: 0.75rem;">${this.truncateText(opt, 15)}</span>`
+                                ).join('')}
+                                ${node.data.options.length > 3 ? '<span style="color: var(--gray-500); font-size: 0.75rem;">...</span>' : ''}
+                            </div>
+                        </div>
+                    `;
+                case 'condition':
+                    return `
+                        <div class="node-field">
+                            <div class="field-label">Condition</div>
+                            <div style="font-size: 0.75rem; color: var(--gray-600);">
+                                ${node.data.variable} ${node.data.operator} "${node.data.value}"
+                            </div>
+                        </div>
+                    `;
+                case 'webhook':
+                    return `
+                        <div class="node-field">
+                            <div class="field-label">Webhook URL</div>
+                            <div style="font-size: 0.75rem; color: var(--gray-600); word-break: break-all;">
+                                ${this.truncateText(node.data.url, 40)}
+                            </div>
+                        </div>
+                    `;
+                case 'email':
+                    return `
+                        <div class="node-field">
+                            <div class="field-label">Email To</div>
+                            <div style="font-size: 0.75rem; color: var(--gray-600);">
+                                ${node.data.to || 'Not configured'}
+                            </div>
+                        </div>
+                    `;
+                case 'ai-response':
+                    return `
+                        <div class="node-field">
+                            <div class="field-label">AI Model</div>
+                            <div style="font-size: 0.75rem; color: var(--gray-600);">
+                                ${node.data.model}
+                            </div>
+                        </div>
+                    `;
+                case 'api-call':
+                    return `
+                        <div class="node-field">
+                            <div class="field-label">API Endpoint</div>
+                            <div style="font-size: 0.75rem; color: var(--gray-600); word-break: break-all;">
+                                ${this.truncateText(node.data.url, 40)}
+                            </div>
+                        </div>
+                    `;
+                case 'delay':
+                    return `
+                        <div class="node-field">
+                            <div class="field-label">Duration</div>
+                            <div style="font-size: 0.75rem; color: var(--gray-600);">
+                                ${node.data.duration / 1000}s
+                            </div>
+                        </div>
+                    `;
+                default:
+                    return '<div style="color: var(--gray-500); font-size: 0.75rem;">Configure in properties panel</div>';
+            }
+        }
+        
+        truncateText(text, maxLength) {
+            return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+        }
+        
+        makeDraggable(element, node) {
+            let isDragging = false;
+            let startX, startY, initialX, initialY;
+            
+            element.addEventListener('mousedown', (e) => {
+                if (e.target.closest('.node-action')) return;
+                
+                isDragging = true;
+                startX = e.clientX;
+                startY = e.clientY;
+                initialX = node.x;
+                initialY = node.y;
+                
+                element.classList.add('dragging');
+                e.preventDefault();
+            });
+            
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                
+                const deltaX = e.clientX - startX;
+                const deltaY = e.clientY - startY;
+                
+                node.x = initialX + deltaX;
+                node.y = initialY + deltaY;
+                
+                element.style.left = node.x + 'px';
+                element.style.top = node.y + 'px';
+            });
+            
+            document.addEventListener('mouseup', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    element.classList.remove('dragging');
+                    this.saveToHistory();
+                }
+            });
+        }
+        
+        selectNode(nodeId) {
+            // Remove previous selection
+            document.querySelectorAll('.flow-node.selected').forEach(node => {
+                node.classList.remove('selected');
+            });
+            
+            this.selectedNode = nodeId;
+            
+            if (nodeId) {
+                const nodeElement = document.getElementById(nodeId);
+                if (nodeElement) {
+                    nodeElement.classList.add('selected');
+                }
+                this.showNodeProperties(nodeId);
+            } else {
+                this.showEmptyProperties();
+            }
+        }
+        
+        showNodeProperties(nodeId) {
+            const node = this.nodes.get(nodeId);
+            if (!node) return;
+            
+            this.propertiesContent.innerHTML = `
+                <div class="property-section">
+                    <div class="section-title">
+                        <i class="${this.getNodeIcon(node.type)}"></i>
+                        ${this.getNodeTypeLabel(node.type)}
+                    </div>
+                    
+                    <div class="property-group">
+                        <div class="property-field">
+                            <label class="property-label">Node Title</label>
+                            <input type="text" class="property-input" value="${node.data.title}" 
+                                   onchange="builder.updateNodeProperty('${nodeId}', 'title', this.value)">
+                        </div>
+                        ${this.renderNodePropertyFields(node)}
+                    </div>
+                </div>
+                
+                <div class="property-section">
+                    <div class="section-title">
+                        <i class="fas fa-link"></i>
+                        Connections
+                    </div>
+                    <div class="property-group">
+                        <p style="font-size: 0.875rem; color: var(--gray-600); margin: 0;">
+                            Click and drag between connection points to link nodes together.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="property-section">
+                    <div class="section-title">
+                        <i class="fas fa-trash"></i>
+                        Actions
+                    </div>
+                    <div class="property-group">
+                        <button class="btn btn-secondary" onclick="builder.duplicateNode('${nodeId}')" style="width: 100%; margin-bottom: 0.5rem;">
+                            <i class="fas fa-copy"></i>
+                            Duplicate Node
+                        </button>
+                        <button class="btn btn-secondary" onclick="builder.deleteNode('${nodeId}')" style="width: 100%; color: var(--error); border-color: var(--error);">
+                            <i class="fas fa-trash"></i>
+                            Delete Node
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+        
+        renderNodePropertyFields(node) {
+            switch (node.type) {
+                case 'message':
+                    return `
+                        <div class="property-field">
+                            <label class="property-label">Message Content</label>
+                            <textarea class="property-input property-textarea" 
+                                      onchange="builder.updateNodeProperty('${node.id}', 'content', this.value)">${node.data.content}</textarea>
+                        </div>
+                        <div class="property-field">
+                            <label class="property-label">Delay (seconds)</label>
+                            <input type="number" class="property-input" value="${node.data.delay / 1000}" min="0" step="0.5"
+                                   onchange="builder.updateNodeProperty('${node.id}', 'delay', this.value * 1000)">
+                        </div>
+                    `;
+                case 'question':
+                    return `
+                        <div class="property-field">
+                            <label class="property-label">Question Text</label>
+                            <textarea class="property-input property-textarea" 
+                                      onchange="builder.updateNodeProperty('${node.id}', 'content', this.value)">${node.data.content}</textarea>
+                        </div>
+                        <div class="property-field">
+                            <label class="property-label">Answer Options (one per line)</label>
+                            <textarea class="property-input property-textarea" 
+                                      onchange="builder.updateNodeProperty('${node.id}', 'options', this.value.split('\\n').filter(o => o.trim()))">${node.data.options.join('\n')}</textarea>
+                        </div>
+                    `;
+                case 'condition':
+                    return `
+                        <div class="property-field">
+                            <label class="property-label">Variable</label>
+                            <input type="text" class="property-input" value="${node.data.variable}"
+                                   onchange="builder.updateNodeProperty('${node.id}', 'variable', this.value)">
+                        </div>
+                        <div class="property-field">
+                            <label class="property-label">Operator</label>
+                            <select class="property-input property-select" 
+                                    onchange="builder.updateNodeProperty('${node.id}', 'operator', this.value)">
+                                <option value="equals" ${node.data.operator === 'equals' ? 'selected' : ''}>Equals</option>
+                                <option value="contains" ${node.data.operator === 'contains' ? 'selected' : ''}>Contains</option>
+                                <option value="starts_with" ${node.data.operator === 'starts_with' ? 'selected' : ''}>Starts With</option>
+                                <option value="ends_with" ${node.data.operator === 'ends_with' ? 'selected' : ''}>Ends With</option>
+                                <option value="greater_than" ${node.data.operator === 'greater_than' ? 'selected' : ''}>Greater Than</option>
+                                <option value="less_than" ${node.data.operator === 'less_than' ? 'selected' : ''}>Less Than</option>
+                            </select>
+                        </div>
+                        <div class="property-field">
+                            <label class="property-label">Value</label>
+                            <input type="text" class="property-input" value="${node.data.value}"
+                                   onchange="builder.updateNodeProperty('${node.id}', 'value', this.value)">
+                        </div>
+                    `;
+                case 'webhook':
+                    return `
+                        <div class="property-field">
+                            <label class="property-label">Webhook URL</label>
+                            <input type="url" class="property-input" value="${node.data.url}"
+                                   onchange="builder.updateNodeProperty('${node.id}', 'url', this.value)">
+                        </div>
+                        <div class="property-field">
+                            <label class="property-label">HTTP Method</label>
+                            <select class="property-input property-select" 
+                                    onchange="builder.updateNodeProperty('${node.id}', 'method', this.value)">
+                                <option value="POST" ${node.data.method === 'POST' ? 'selected' : ''}>POST</option>
+                                <option value="GET" ${node.data.method === 'GET' ? 'selected' : ''}>GET</option>
+                                <option value="PUT" ${node.data.method === 'PUT' ? 'selected' : ''}>PUT</option>
+                                <option value="DELETE" ${node.data.method === 'DELETE' ? 'selected' : ''}>DELETE</option>
+                            </select>
+                        </div>
+                    `;
+                case 'email':
+                    return `
+                        <div class="property-field">
+                            <label class="property-label">Send To (Email)</label>
+                            <input type="email" class="property-input" value="${node.data.to}"
+                                   onchange="builder.updateNodeProperty('${node.id}', 'to', this.value)">
+                        </div>
+                        <div class="property-field">
+                            <label class="property-label">Subject</label>
+                            <input type="text" class="property-input" value="${node.data.subject}"
+                                   onchange="builder.updateNodeProperty('${node.id}', 'subject', this.value)">
+                        </div>
+                        <div class="property-field">
+                            <label class="property-label">Email Template</label>
+                            <textarea class="property-input property-textarea" 
+                                      onchange="builder.updateNodeProperty('${node.id}', 'template', this.value)">${node.data.template}</textarea>
+                        </div>
+                    `;
+                case 'ai-response':
+                    return `
+                        <div class="property-field">
+                            <label class="property-label">AI Model</label>
+                            <select class="property-input property-select" 
+                                    onchange="builder.updateNodeProperty('${node.id}', 'model', this.value)">
+                                <option value="gpt-3.5-turbo" ${node.data.model === 'gpt-3.5-turbo' ? 'selected' : ''}>GPT-3.5 Turbo</option>
+                                <option value="gpt-4" ${node.data.model === 'gpt-4' ? 'selected' : ''}>GPT-4</option>
+                                <option value="claude-3" ${node.data.model === 'claude-3' ? 'selected' : ''}>Claude 3</option>
+                            </select>
+                        </div>
+                        <div class="property-field">
+                            <label class="property-label">Prompt Template</label>
+                            <textarea class="property-input property-textarea" 
+                                      onchange="builder.updateNodeProperty('${node.id}', 'prompt', this.value)">${node.data.prompt}</textarea>
+                        </div>
+                        <div class="property-field">
+                            <label class="property-label">Max Tokens</label>
+                            <input type="number" class="property-input" value="${node.data.maxTokens}" min="10" max="4000"
+                                   onchange="builder.updateNodeProperty('${node.id}', 'maxTokens', parseInt(this.value))">
+                        </div>
+                    `;
+                case 'api-call':
+                    return `
+                        <div class="property-field">
+                            <label class="property-label">API URL</label>
+                            <input type="url" class="property-input" value="${node.data.url}"
+                                   onchange="builder.updateNodeProperty('${node.id}', 'url', this.value)">
+                        </div>
+                        <div class="property-field">
+                            <label class="property-label">HTTP Method</label>
+                            <select class="property-input property-select" 
+                                    onchange="builder.updateNodeProperty('${node.id}', 'method', this.value)">
+                                <option value="GET" ${node.data.method === 'GET' ? 'selected' : ''}>GET</option>
+                                <option value="POST" ${node.data.method === 'POST' ? 'selected' : ''}>POST</option>
+                                <option value="PUT" ${node.data.method === 'PUT' ? 'selected' : ''}>PUT</option>
+                                <option value="DELETE" ${node.data.method === 'DELETE' ? 'selected' : ''}>DELETE</option>
+                            </select>
+                        </div>
+                    `;
+                case 'delay':
+                    return `
+                        <div class="property-field">
+                            <label class="property-label">Delay Duration (seconds)</label>
+                            <input type="number" class="property-input" value="${node.data.duration / 1000}" min="0.1" step="0.1"
+                                   onchange="builder.updateNodeProperty('${node.id}', 'duration', this.value * 1000)">
+                        </div>
+                        <div class="property-field">
+                            <label class="property-label">Loading Message</label>
+                            <input type="text" class="property-input" value="${node.data.message}"
+                                   onchange="builder.updateNodeProperty('${node.id}', 'message', this.value)">
+                        </div>
+                    `;
+                default:
+                    return '<p style="color: var(--gray-500); font-size: 0.875rem;">No properties available for this component.</p>';
+            }
+        }
+        
+        showEmptyProperties() {
+            this.propertiesContent.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <i class="fas fa-mouse-pointer"></i>
+                    </div>
+                    <div class="empty-title">No Selection</div>
+                    <div class="empty-description">
+                        Select a node to edit its properties and configure its behavior.
+                    </div>
+                </div>
+            `;
+        }
+        
+        updateNodeProperty(nodeId, property, value) {
+            const node = this.nodes.get(nodeId);
+            if (!node) return;
+            
+            node.data[property] = value;
+            
+            // Re-render the node content
+            const nodeElement = document.getElementById(nodeId);
+            if (nodeElement) {
+                const contentElement = nodeElement.querySelector('.node-content');
+                contentElement.innerHTML = this.renderNodeContent(node);
+            }
+            
+            this.saveToHistory();
+        }
+        
+        duplicateNode(nodeId) {
+            const originalNode = this.nodes.get(nodeId);
+            if (!originalNode) return;
+            
+            const newNode = {
+                ...originalNode,
+                id: `node-${++this.nodeCounter}`,
+                x: originalNode.x + 20,
+                y: originalNode.y + 20,
+                data: { ...originalNode.data }
+            };
+            
+            this.nodes.set(newNode.id, newNode);
+            this.renderNode(newNode);
+            this.selectNode(newNode.id);
+            this.updateStats();
+            this.saveToHistory();
+            
+            this.showNotification('Node duplicated', 'success');
+        }
+        
+        deleteNode(nodeId) {
+            if (!this.nodes.has(nodeId)) return;
+            
+            // Remove the node element
+            const nodeElement = document.getElementById(nodeId);
+            if (nodeElement) {
+                nodeElement.remove();
+            }
+            
+            // Remove from nodes map
+            this.nodes.delete(nodeId);
+            
+            // Remove any connections involving this node
+            for (const [connId, connection] of this.connections) {
+                if (connection.from === nodeId || connection.to === nodeId) {
+                    this.connections.delete(connId);
+                }
+            }
+            
+            // Deselect if this was the selected node
+            if (this.selectedNode === nodeId) {
+                this.selectNode(null);
+            }
+            
+            this.updateStats();
+            this.saveToHistory();
+            
+            // Show empty state if no nodes
+            if (this.nodes.size === 0 && this.emptyState) {
+                this.emptyState.style.display = 'flex';
+            }
+            
+            this.showNotification('Node deleted', 'success');
+        }
+        
+        updateStats() {
+            const nodeCount = this.nodes.size;
+            const nodeCountElement = document.getElementById('nodeCount');
+            if (nodeCountElement) {
+                nodeCountElement.textContent = `${nodeCount} node${nodeCount !== 1 ? 's' : ''}`;
+            }
+        }
+        
+        saveToHistory() {
+            const state = {
+                nodes: Array.from(this.nodes.entries()),
+                connections: Array.from(this.connections.entries())
+            };
+            
+            // Remove future history if we're not at the end
+            if (this.historyIndex < this.history.length - 1) {
+                this.history = this.history.slice(0, this.historyIndex + 1);
+            }
+            
+            this.history.push(JSON.parse(JSON.stringify(state)));
+            this.historyIndex = this.history.length - 1;
+            
+            // Limit history size
+            if (this.history.length > 50) {
+                this.history.shift();
+                this.historyIndex--;
+            }
+        }
+        
+        undo() {
+            if (this.historyIndex > 0) {
+                this.historyIndex--;
+                this.loadFromHistory();
+            }
+        }
+        
+        redo() {
+            if (this.historyIndex < this.history.length - 1) {
+                this.historyIndex++;
+                this.loadFromHistory();
+            }
+        }
+        
+        loadFromHistory() {
+            if (this.historyIndex < 0 || this.historyIndex >= this.history.length) return;
+            
+            const state = this.history[this.historyIndex];
+            
+            // Clear current nodes
+            this.nodes.clear();
+            this.connections.clear();
+            this.canvas.innerHTML = '';
+            
+            // Restore nodes
+            state.nodes.forEach(([id, node]) => {
+                this.nodes.set(id, node);
+                this.renderNode(node);
+            });
+            
+            // Restore connections
+            state.connections.forEach(([id, connection]) => {
+                this.connections.set(id, connection);
+                // TODO: Render connections
+            });
+            
+            this.updateStats();
+            this.selectNode(null);
+            
+            // Show/hide empty state
+            if (this.nodes.size === 0 && this.emptyState) {
+                this.emptyState.style.display = 'flex';
+            } else if (this.emptyState) {
+                this.emptyState.style.display = 'none';
+            }
+        }
+        
+        showNotification(message, type = 'info') {
+            const container = document.getElementById('notificationContainer');
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            
+            const icons = {
+                success: 'fas fa-check-circle',
+                error: 'fas fa-exclamation-circle',
+                warning: 'fas fa-exclamation-triangle',
+                info: 'fas fa-info-circle'
+            };
+            
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <i class="${icons[type]}" style="color: var(--${type === 'info' ? 'primary' : type});"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            container.appendChild(notification);
+            
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 3000);
+        }
+        
+        // Chat testing functionality
+        simulateChat(startNodeId = null) {
+            const testMessages = document.getElementById('testChatMessages');
+            testMessages.innerHTML = '';
+            
+            // Start with welcome message or first node
+            const firstNode = startNodeId ? this.nodes.get(startNodeId) : this.nodes.values().next().value;
+            if (firstNode) {
+                this.processNode(firstNode, testMessages);
+            }
+        }
+        
+        processNode(node, messagesContainer) {
+            switch (node.type) {
+                case 'message':
+                    this.addChatMessage(node.data.content, 'bot', messagesContainer);
+                    break;
+                case 'question':
+                    this.addChatMessage(node.data.content, 'bot', messagesContainer);
+                    // Add option buttons
+                    const optionsDiv = document.createElement('div');
+                    optionsDiv.style.cssText = 'margin: 0.5rem 0; display: flex; flex-direction: column; gap: 0.25rem;';
+                    node.data.options.forEach(option => {
+                        const btn = document.createElement('button');
+                        btn.textContent = option;
+                        btn.style.cssText = 'padding: 0.5rem; border: 1px solid var(--primary); background: white; color: var(--primary); border-radius: 4px; cursor: pointer; text-align: left;';
+                        btn.onclick = () => {
+                            this.addChatMessage(option, 'user', messagesContainer);
+                            optionsDiv.remove();
+                        };
+                        optionsDiv.appendChild(btn);
+                    });
+                    messagesContainer.appendChild(optionsDiv);
+                    break;
+                case 'ai-response':
+                    this.addChatMessage('*AI thinking...*', 'bot', messagesContainer);
+                    setTimeout(() => {
+                        const aiResponse = this.generateMockAIResponse(node.data.prompt);
+                        messagesContainer.lastChild.textContent = aiResponse;
+                    }, 1000);
+                    break;
+                default:
+                    this.addChatMessage(`[${node.type} executed]`, 'system', messagesContainer);
+            }
+        }
+        
+        addChatMessage(content, sender, container) {
+            const messageDiv = document.createElement('div');
+            messageDiv.style.cssText = `
+                margin: 0.5rem 0; 
+                padding: 0.75rem; 
+                border-radius: 8px; 
+                max-width: 80%;
+                ${sender === 'user' ? 
+                    'background: var(--primary); color: white; margin-left: auto; text-align: right;' : 
+                    sender === 'system' ? 
+                    'background: var(--gray-200); color: var(--gray-600); font-style: italic; text-align: center; margin: 0.5rem auto;' :
+                    'background: var(--gray-100); color: var(--gray-800);'
+                }
+            `;
+            messageDiv.textContent = content;
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        generateMockAIResponse(prompt) {
+            const responses = [
+                "I understand your request. Let me help you with that.",
+                "Based on what you've told me, here's what I recommend...",
+                "That's a great question! Here's my take on it:",
+                "I'd be happy to assist you with this matter.",
+                "Let me provide you with some helpful information about that."
+            ];
+            return responses[Math.floor(Math.random() * responses.length)];
+        }
+        
+        // Export functionality
+        exportChatbotData() {
+            const exportData = {
+                name: this.chatbotData.name,
+                version: '1.0',
+                created: new Date().toISOString(),
+                nodes: Array.from(this.nodes.values()),
+                connections: Array.from(this.connections.values()),
+                settings: this.chatbotData.settings
+            };
+            
+            return exportData;
+        }
+        
+        generateEmbedCode() {
+            const data = this.exportChatbotData();
+            return `<!-- BotFlo Chatbot Embed -->
+<div id="botflo-chatbot"></div>
+<script>
+window.BotFloConfig = ${JSON.stringify(data, null, 2)};
+</script>
+<script src="https://cdn.botflo.ai/embed.js"></script>`;
+        }
+    }
+    
+    // Global functions
+    let builder;
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        builder = new BotFlowBuilder();
+        
+        // Initialize with welcome modal
+        setTimeout(() => {
+            // Auto-close welcome modal for demo - remove this in production
+            // closeWelcomeModal();
+        }, 1000);
+    });
+    
+    // Header actions
+    function undoAction() {
+        builder.undo();
+        builder.showNotification('Undo performed', 'info');
+    }
+    
+    function redoAction() {
+        builder.redo();
+        builder.showNotification('Redo performed', 'info');
+    }
+    
+    function testChatbot() {
+        if (builder.nodes.size === 0) {
+            builder.showNotification('Add some components first to test your chatbot', 'warning');
+            return;
+        }
+        
+        document.getElementById('testModal').style.display = 'flex';
+        
+        // Generate flow preview
+        const flowPreview = document.getElementById('testFlowPreview');
+        flowPreview.innerHTML = `
+            <div style="text-align: center; color: var(--gray-600);">
+                <h4>Flow Structure</h4>
+                <div style="margin: 1rem 0;">
+                    ${Array.from(builder.nodes.values()).map(node => `
+                        <div style="
+                            background: white; 
+                            border: 1px solid var(--gray-300); 
+                            border-radius: 8px; 
+                            padding: 0.75rem; 
+                            margin: 0.5rem 0;
+                            text-align: left;
+                        ">
+                            <strong>${node.data.title}</strong><br>
+                            <small style="color: var(--gray-500);">${builder.getNodeTypeLabel(node.type)}</small>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+        
+        // Start chat simulation
+        builder.simulateChat();
+    }
+    
+    function closeTestModal() {
+        document.getElementById('testModal').style.display = 'none';
+    }
+    
+    function sendTestMessage() {
+        const input = document.getElementById('testChatInput');
+        const message = input.value.trim();
+        if (!message) return;
+        
+        const messagesContainer = document.getElementById('testChatMessages');
+        builder.addChatMessage(message, 'user', messagesContainer);
+        
+        // Simulate bot response
+        setTimeout(() => {
+            const responses = [
+                "Thanks for your message! How else can I help?",
+                "I understand. Let me know if you need anything else.",
+                "That's helpful to know. Is there anything specific you'd like to do?",
+                "Got it! What would you like to do next?"
+            ];
+            const response = responses[Math.floor(Math.random() * responses.length)];
+            builder.addChatMessage(response, 'bot', messagesContainer);
+        }, 500);
+        
+        input.value = '';
+    }
+    
+    function saveChatbot() {
+        const data = builder.exportChatbotData();
+        localStorage.setItem('botflo-chatbot', JSON.stringify(data));
+        
+        const lastSaved = document.getElementById('lastSaved');
+        if (lastSaved) {
+            lastSaved.textContent = 'Just now';
+        }
+        
+        builder.showNotification('Chatbot saved successfully!', 'success');
+    }
+    
+    function publishChatbot() {
+        if (builder.nodes.size === 0) {
+            builder.showNotification('Add components to your chatbot before publishing', 'warning');
+            return;
+        }
+        
+        const embedCode = builder.generateEmbedCode();
+        
+        // Show publish modal with embed code
+        const modal = document.createElement('div');
+        modal.className = 'modal-overlay';
+        modal.innerHTML = `
+            <div class="modal-content" style="max-width: 800px;">
+                <div class="modal-header">
+                    <h3 class="modal-title">🚀 Publish Your Chatbot</h3>
+                    <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p style="margin-bottom: 1rem; color: var(--gray-600);">
+                        Your chatbot is ready! Copy the embed code below and paste it into your website.
+                    </p>
+                    <div style="background: var(--gray-50); border: 1px solid var(--gray-300); border-radius: 8px; padding: 1rem; margin: 1rem 0;">
+                        <label style="font-weight: 600; margin-bottom: 0.5rem; display: block;">Embed Code:</label>
+                        <textarea readonly style="width: 100%; height: 200px; font-family: monospace; font-size: 0.875rem; border: none; background: transparent; resize: vertical;">${embedCode}</textarea>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                        <div style="text-align: center; padding: 1rem; background: var(--gray-50); border-radius: 8px;">
+                            <strong>Nodes:</strong> ${builder.nodes.size}
+                        </div>
+                        <div style="text-align: center; padding: 1rem; background: var(--gray-50); border-radius: 8px;">
+                            <strong>Status:</strong> Ready to deploy
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="this.closest('.modal-overlay').remove()">Close</button>
+                    <button class="btn btn-primary" onclick="navigator.clipboard.writeText(\`${embedCode.replace(/`/g, '\\`')}\`).then(() => builder.showNotification('Embed code copied!', 'success'))">
+                        <i class="fas fa-copy"></i>
+                        Copy Embed Code
+                    </button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        
+        builder.showNotification('Chatbot published successfully!', 'success');
+    }
+    
+    function exportChatbot() {
+        const data = builder.exportChatbotData();
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${data.name.replace(/\s+/g, '-').toLowerCase()}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        builder.showNotification('Chatbot exported successfully!', 'success');
+    }
+    
+    function fitToScreen() {
+        builder.showNotification('Fit to screen - feature available in Pro version', 'info');
+    }
+    
+    // Welcome modal functions
+    function closeWelcomeModal() {
+        document.getElementById('welcomeModal').style.display = 'none';
+    }
+    
+    function startFromScratch() {
+        closeWelcomeModal();
+        builder.showNotification('🎉 Welcome to BotFlo! Drag components from the left to start building.', 'success');
+    }
+    
+    function loadTemplate() {
+        closeWelcomeModal();
+        
+        // Create a simple message node as a template start
+        builder.createNode('message', 200, 100);
+        
+        builder.showNotification('✨ Template loaded! Customize it to fit your needs.', 'success');
+    }
+    
+    function takeTour() {
+        closeWelcomeModal();
+        
+        const tourSteps = [
+            { element: '.sidebar', message: '📦 This is your component library. Drag components to the canvas to build your chatbot flow.' },
+            { element: '.canvas', message: '🎨 This is your workspace canvas. Drop components here and connect them to create conversation flows.' },
+            { element: '.properties-panel', message: '⚙️ The properties panel lets you configure each component when you select it.' },
+            { element: '.header-actions', message: '🚀 Use these buttons to test, save, and publish your chatbot when ready.' }
+        ];
+        
+        let currentStep = 0;
+        
+        function showTourStep() {
+            if (currentStep >= tourSteps.length) {
+                builder.showNotification('🎉 Tour complete! Start building your chatbot now.', 'success');
+                return;
+            }
+            
+            const step = tourSteps[currentStep];
+            const element = document.querySelector(step.element);
+            
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                setTimeout(() => {
+                    builder.showNotification(step.message, 'info');
+                    currentStep++;
+                    
+                    setTimeout(showTourStep, 3000);
+                }, 500);
+            } else {
+                currentStep++;
+                showTourStep();
+            }
+        }
+        
+        showTourStep();
+    }
+    </script>
+</body>
+</html>
                         </button>
                         <button class="btn btn-secondary" onclick="startWithTemplate()">
                             <i class="fas fa-magic"></i>
@@ -267,6 +2449,407 @@
         </div>
     </div>
 
+    <style>
+    /* Fallback CSS to ensure page works even if external CSS fails */
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: #f8fafc;
+        min-height: 100vh;
+    }
+    
+    .main-container {
+        display: grid;
+        grid-template-columns: 280px 1fr 320px;
+        height: calc(100vh - 60px);
+        gap: 1px;
+        background: #e2e8f0;
+    }
+    
+    .sidebar, .properties-panel {
+        background: white;
+        overflow-y: auto;
+    }
+    
+    .workspace {
+        background: white;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .builder-header {
+        background: white;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 0.75rem 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 60px;
+        box-sizing: border-box;
+    }
+    
+    .btn {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+    
+    .btn-primary {
+        background: #3b82f6;
+        color: white;
+    }
+    
+    .btn-primary:hover {
+        background: #2563eb;
+    }
+    
+    .btn-secondary {
+        background: #f1f5f9;
+        color: #475569;
+        border: 1px solid #cbd5e1;
+    }
+    
+    .btn-secondary:hover {
+        background: #e2e8f0;
+    }
+    
+    .btn-success {
+        background: #10b981;
+        color: white;
+    }
+    
+    .btn-info {
+        background: #0ea5e9;
+        color: white;
+    }
+    
+    .btn-warning {
+        background: #d97706;
+        color: white;
+    }
+    
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 1300;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(4px);
+    }
+
+    .modal-content {
+        background: white;
+        border-radius: 12px;
+        max-width: 500px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        animation: modalSlideIn 0.3s ease;
+    }
+
+    @keyframes modalSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px) scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+    
+    .modal-header {
+        padding: 1.5rem 1.5rem 1rem;
+        border-bottom: 1px solid #e2e8f0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .modal-body {
+        padding: 1.5rem;
+    }
+    
+    .modal-footer {
+        padding: 1rem 1.5rem 1.5rem;
+        display: flex;
+        gap: 0.75rem;
+        justify-content: flex-end;
+    }
+    
+    .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        text-align: center;
+        color: #64748b;
+        padding: 2rem;
+    }
+    
+    .empty-state-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+    }
+    
+    .component-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: white;
+    }
+    
+    .component-item:hover {
+        border-color: #3b82f6;
+        background: #f0f9ff;
+    }
+    
+    .demo-node {
+        background: white;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        width: 200px;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .demo-node:hover {
+        border-color: #667eea;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+    }
+    
+    .demo-node.selected {
+        border-color: #667eea;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+    
+    .node-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem;
+        background: #667eea;
+        color: white;
+        border-radius: 10px 10px 0 0;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+    
+    .node-content {
+        padding: 1rem;
+    }
+    
+    .canvas-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at 20px 20px, #e2e8f0 1px, transparent 1px);
+        background-size: 20px 20px;
+    }
+    
+    .template-option {
+        text-align: center;
+        padding: 1.5rem 1rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: white;
+    }
+    
+    .template-option:hover {
+        border-color: #3b82f6;
+        background: #f0f9ff;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+    }
+    
+    .template-option h4 {
+        margin: 0.5rem 0 0.25rem 0;
+        color: #1e293b;
+    }
+    
+    .template-option p {
+        margin: 0;
+        color: #64748b;
+        font-size: 0.875rem;
+    }
+    
+    .modal-close {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #64748b;
+        padding: 0;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: all 0.2s;
+    }
+    
+    .modal-close:hover {
+        background: #f1f5f9;
+        color: #1e293b;
+    }
+    
+    .demo-badge {
+        background: linear-gradient(45deg, #f59e0b, #d97706);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-left: 1rem;
+        animation: pulse 2s infinite;
+    }
+    
+    .demo-indicator {
+        font-size: 0.75rem;
+        margin-left: 0.25rem;
+    }
+    
+    .quick-btn {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 0.5rem;
+        cursor: pointer;
+        color: #64748b;
+        transition: all 0.2s;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .quick-btn:hover {
+        background: #f8fafc;
+        border-color: #3b82f6;
+        color: #3b82f6;
+    }
+    
+    .header-left, .header-center, .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    
+    .chatbot-name {
+        font-weight: 700;
+        color: #1e293b;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .quick-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+    }
+    
+    /* Welcome Modal specific styling */
+    #welcomeModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 1500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(4px);
+    }
+    
+    #welcomeModal .modal-content {
+        background: white;
+        border-radius: 16px;
+        width: 90%;
+        max-width: 600px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+        animation: modalSlideIn 0.4s ease;
+        margin: 20px;
+    }
+    
+    #welcomeModal .modal-header h3 {
+        margin: 0;
+        color: #1e293b;
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+    
+    #welcomeModal .modal-body h4 {
+        margin: 0 0 0.5rem 0;
+        color: #1e293b;
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+    
+    #welcomeModal .modal-body h5 {
+        margin: 0 0 0.25rem 0;
+        color: #1e293b;
+        font-size: 1rem;
+        font-weight: 600;
+    }
+    
+    #welcomeModal .btn {
+        min-width: 160px;
+        justify-content: center;
+    }
+    
+    #welcomeModal .modal-body p {
+        margin: 0;
+        line-height: 1.6;
+    }
+    
+    @media (max-width: 1024px) {
+        .main-container {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto 1fr auto;
+        }
+        
+        .sidebar, .properties-panel {
+            max-height: 300px;
+        }
+    }
+    </style>
+    
     <style>
     .modal-overlay {
         position: fixed;
@@ -604,12 +3187,11 @@
                 // Show error to user
                 const notification = document.getElementById('notification');
                 if (notification) {
-                    notification.innerHTML = `
-                        <div class="notification-content error">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            Failed to initialize Flow Builder: ${error.message}
-                        </div>
-                    `;
+                    notification.innerHTML = 
+                        '<div class="notification-content error">' +
+                            '<i class="fas fa-exclamation-triangle"></i>' +
+                            'Failed to initialize Flow Builder: ' + error.message +
+                        '</div>';
                     notification.style.display = 'block';
                 }
             }
@@ -699,12 +3281,11 @@
         function showMessage(message, type = 'info') {
             const notification = document.getElementById('notification');
             if (notification) {
-                notification.innerHTML = `
-                    <div class="notification-content ${type}">
-                        <i class="fas fa-info-circle"></i>
-                        ${message}
-                    </div>
-                `;
+                notification.innerHTML = 
+                    '<div class="notification-content ' + type + '">' +
+                        '<i class="fas fa-info-circle"></i>' +
+                        '<span>' + message + '</span>' +
+                    '</div>';
                 notification.style.display = 'block';
                 setTimeout(() => {
                     notification.style.display = 'none';
@@ -729,7 +3310,7 @@
             const price = plan === 'monthly' ? '$29/month' : '$290/year';
             
             // Show upgrade process
-            showMessage(`🚀 Starting upgrade to ${price}...`, 'info');
+            showMessage('🚀 Starting upgrade to ' + price + '...', 'info');
             
             // Simulate upgrade process
             setTimeout(() => {
@@ -840,34 +3421,33 @@
         window.showNodeLimitWarning = () => {
             const warning = document.createElement('div');
             warning.className = 'node-limit-warning';
-            warning.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
-                    <span style="font-size: 1.5rem;">🎯</span>
-                    <strong>Demo Limit Reached!</strong>
-                </div>
-                <p style="margin: 0 0 1rem 0; line-height: 1.4;">
-                    You've created ${window.DEMO_CONFIG.maxNodes} nodes. Upgrade to Pro for unlimited nodes and advanced features!
-                </p>
-                <div style="display: flex; gap: 0.75rem;">
-                    <button onclick="this.parentElement.parentElement.remove()" style="
-                        background: rgba(255,255,255,0.2);
-                        color: white;
-                        border: 1px solid rgba(255,255,255,0.3);
-                        padding: 0.5rem 1rem;
-                        border-radius: 6px;
-                        cursor: pointer;
-                    ">Continue Demo</button>
-                    <button onclick="showUpgradeModal(); this.parentElement.parentElement.remove();" style="
-                        background: white;
-                        color: #d97706;
-                        border: none;
-                        padding: 0.5rem 1rem;
-                        border-radius: 6px;
-                        cursor: pointer;
-                        font-weight: 600;
-                    ">Upgrade Now</button>
-                </div>
-            `;
+            warning.innerHTML = 
+                '<div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">' +
+                    '<span style="font-size: 1.5rem;">🎯</span>' +
+                    '<strong>Demo Limit Reached!</strong>' +
+                '</div>' +
+                '<p style="margin: 0 0 1rem 0; line-height: 1.4;">' +
+                    'You\'ve created ' + window.DEMO_CONFIG.maxNodes + ' nodes. Upgrade to Pro for unlimited nodes and advanced features!' +
+                '</p>' +
+                '<div style="display: flex; gap: 0.75rem;">' +
+                    '<button onclick="this.parentElement.parentElement.remove()" style="' +
+                        'background: rgba(255,255,255,0.2);' +
+                        'color: white;' +
+                        'border: 1px solid rgba(255,255,255,0.3);' +
+                        'padding: 0.5rem 1rem;' +
+                        'border-radius: 6px;' +
+                        'cursor: pointer;' +
+                    '">Continue Demo</button>' +
+                    '<button onclick="showUpgradeModal(); this.parentElement.parentElement.remove();" style="' +
+                        'background: white;' +
+                        'color: #d97706;' +
+                        'border: none;' +
+                        'padding: 0.5rem 1rem;' +
+                        'border-radius: 6px;' +
+                        'cursor: pointer;' +
+                        'font-weight: 600;' +
+                    '">Upgrade Now</button>' +
+                '</div>';
             document.body.appendChild(warning);
             
             // Auto-remove after 10 seconds
@@ -878,6 +3458,189 @@
             }, 10000);
         };
 
+        // Welcome modal functions
+        window.startFromScratch = () => {
+            closeWelcomeModal();
+            showMessage('🚀 Starting with a blank canvas! Drag components from the left panel to begin.', 'success');
+        };
+        
+        window.startWithTemplate = () => {
+            closeWelcomeModal();
+            showTemplateModal();
+        };
+        
+        window.takeTour = () => {
+            closeWelcomeModal();
+            showMessage('👋 Welcome! This is the Advanced Flow Builder. Drag components from the left panel to the workspace in the center.', 'info');
+        };
+        
+        window.closeWelcomeModal = () => {
+            const modal = document.getElementById('welcomeModal');
+            if (modal) modal.style.display = 'none';
+        };
+        
+        window.showTemplateModal = () => {
+            // Create template selection modal
+            const templateModal = document.createElement('div');
+            templateModal.className = 'modal-overlay';
+            templateModal.style.zIndex = '1400';
+            templateModal.innerHTML = '<div class="modal-content" style="max-width: 700px;"><div class="modal-header"><h3>🎯 Choose a Template</h3><button class="modal-close" onclick="this.closest(\'.modal-overlay\').remove()">&times;</button></div><div class="modal-body"><p>Start with a pre-built template and customize it to your needs.</p></div></div>';
+                <div class="modal-content" style="max-width: 700px;">
+                    <div class="modal-header">
+                        <h3>🎯 Choose a Template</h3>
+                        <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p style="margin-bottom: 2rem; color: #64748b;">
+                            Start with a pre-built template and customize it to your needs.
+                        </p>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                            <div class="template-option" onclick="selectTemplate('customer-service')">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">�</div>
+                                <h4>Customer Service</h4>
+                                <p>FAQ and support automation</p>
+                            </div>
+                            <div class="template-option" onclick="selectTemplate('lead-generation')">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎯</div>
+                                <h4>Lead Generation</h4>
+                                <p>Capture and qualify leads</p>
+                            </div>
+                            <div class="template-option" onclick="selectTemplate('booking')">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">📅</div>
+                                <h4>Appointment Booking</h4>
+                                <p>Schedule meetings automatically</p>
+                            </div>
+                            <div class="template-option" onclick="selectTemplate('ecommerce')">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🛒</div>
+                                <h4>E-commerce Support</h4>
+                                <p>Product help and orders</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(templateModal);
+        };
+        
+        window.selectTemplate = (templateType) => {
+            // Close template modal
+            document.querySelector('.modal-overlay[style*="1400"]')?.remove();
+            
+            const templateNames = {
+                'customer-service': 'Customer Service Bot',
+                'lead-generation': 'Lead Generation Bot',
+                'booking': 'Appointment Booking Bot',
+                'ecommerce': 'E-commerce Support Bot'
+            };
+            
+            showMessage('✅ ' + templateNames[templateType] + ' template loaded! You can now customize the flow.', 'success');
+        };
+        
+        // Basic message/notification system
+        window.showMessage = (message, type = 'info') => {
+            const notification = document.getElementById('notification') || createNotificationElement();
+            
+            const typeColors = {
+                'info': '#0ea5e9',
+                'success': '#10b981',
+                'warning': '#d97706',
+                'error': '#dc2626'
+            };
+            
+            notification.innerHTML = `
+                <div style="
+                    background: ${typeColors[type]};
+                    color: white;
+                    padding: 1rem 1.5rem;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                ">
+                    <i class="fas fa-info-circle"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            notification.style.display = 'block';
+            notification.style.position = 'fixed';
+            notification.style.top = '20px';
+            notification.style.right = '20px';
+            notification.style.zIndex = '1500';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 4000);
+        };
+        
+        function createNotificationElement() {
+            const notification = document.createElement('div');
+            notification.id = 'notification';
+            document.body.appendChild(notification);
+            return notification;
+        }
+        
+        // Header action functions
+        window.handleTestChatbot = () => {
+            showMessage('🧪 Testing your chatbot... In Pro version, this opens a live chat window!', 'info');
+        };
+        
+        window.handleSaveChatbot = () => {
+            showMessage('💾 Saving your chatbot... Upgrade to Pro to save and manage multiple bots!', 'warning');
+        };
+        
+        window.handleDeployChatbot = () => {
+            showMessage('🚀 Ready to deploy? Upgrade to Pro for one-click deployment to your website!', 'warning');
+        };
+        
+        window.handlePreviewChatbot = () => {
+            showMessage('👁️ Preview mode activated! This would show your chatbot in action.', 'info');
+        };
+        
+        // Workspace functions
+        window.undoAction = () => {
+            showMessage('↶ Undo functionality available in Pro version!', 'info');
+        };
+        
+        window.redoAction = () => {
+            showMessage('↷ Redo functionality available in Pro version!', 'info');
+        };
+        
+        window.zoomIn = () => {
+            showMessage('🔍 Zoom controls available in Pro version!', 'info');
+        };
+        
+        window.zoomOut = () => {
+            showMessage('🔍 Zoom controls available in Pro version!', 'info');
+        };
+        
+        window.fitToScreen = () => {
+            showMessage('📏 Fit to screen available in Pro version!', 'info');
+        };
+        
+        // Upgrade modal functions
+        window.showUpgradeModal = () => {
+            const modal = document.getElementById('upgradeModal');
+            if (modal) modal.style.display = 'flex';
+        };
+        
+        window.closeUpgradeModal = () => {
+            const modal = document.getElementById('upgradeModal');
+            if (modal) modal.style.display = 'none';
+        };
+        
+        window.startUpgrade = () => {
+            showMessage('🎉 Redirecting to checkout... This would open our payment page!', 'success');
+            closeUpgradeModal();
+        };
+        
+        // Pro access check
+        window.checkProAccess = () => {
+            // In a real implementation, this would check user's subscription status
+            return false; // For demo, always return false
+        };
+        
         // Free trial continuation
         window.startFreeTrial = () => {
             closeUpgradeModal();
@@ -886,14 +3649,31 @@
         
         // Initialize Flow Builder when DOM is ready
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize shared navigation
+            if (typeof ModernBotFloNavigation !== 'undefined') {
+                new ModernBotFloNavigation();
+            }
+            
             // Check for template parameters
             checkForTemplate();
             
             // Give the ES6 module a chance to load first
             setTimeout(() => {
-                if (!window.flowBuilder) {
+                if (!window.flowBuilder || window.flowBuilderError) {
                     console.log('🔧 Initializing demo flow builder interface...');
                     initializeDemoBuilder();
+                    
+                    // Show demo mode indicators
+                    const demoBadge = document.getElementById('demoModeBadge');
+                    if (demoBadge) demoBadge.style.display = 'inline';
+                    
+                    // Show demo indicators on buttons
+                    const indicators = ['testDemo', 'saveDemo', 'deployDemo'];
+                    indicators.forEach(id => {
+                        const element = document.getElementById(id);
+                        if (element) element.style.display = 'inline';
+                    });
+                    
                 } else {
                     console.log('✅ Using full FlowBuilder implementation');
                 }
