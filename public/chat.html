@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 Chat with BotFlo AI - Live Demo</title>
+    <meta name="description" content="Try BotFlo AI chatbot technology with our live interactive demo. Experience intelligent conversations powered by advanced AI.">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#1e40af">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="BotFlo">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="alternate icon" href="/favicon.ico">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/favicon.svg">
+    
+    <!-- Global App Styles -->
+    <link rel="stylesheet" href="app-global.css">
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        .chat-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: calc(var(--header-height) + var(--space-8)) var(--space-4) var(--space-8);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-header {
+            text-align: center;
+            margin-bottom: var(--space-8);
+        }
+        
+        .chat-header h1 {
+            font-size: var(--text-3xl);
+            font-weight: 800;
+            color: var(--gray-900);
+            margin-bottom: var(--space-4);
+        }
+        
+        .chat-interface {
+            background: var(--white);
+            border-radius: var(--border-radius-xl);
+            box-shadow: var(--shadow-lg);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-height: 600px;
+            overflow: hidden;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: var(--space-6);
+            overflow-y: auto;
+            background: var(--gray-50);
+        }
+        
+        .message {
+            margin-bottom: var(--space-4);
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-3);
+        }
+        
+        .message.user {
+            flex-direction: row-reverse;
+        }
+        
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--border-radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-lg);
+        }
+        
+        .message.bot .message-avatar {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .message.user .message-avatar {
+            background: var(--gray-600);
+            color: white;
+        }
+        
+        .message-content {
+            background: var(--white);
+            padding: var(--space-3) var(--space-4);
+            border-radius: var(--border-radius-lg);
+            max-width: 70%;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .message.user .message-content {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .chat-input-container {
+            padding: var(--space-6);
+            background: var(--white);
+            border-top: 1px solid var(--gray-200);
+        }
+        
+        .chat-input-form {
+            display: flex;
+            gap: var(--space-3);
+            align-items: center;
+        }
+        
+        .chat-input {
+            flex: 1;
+            padding: var(--space-3) var(--space-4);
+            border: 2px solid var(--gray-300);
+            border-radius: var(--border-radius-lg);
+            font-size: var(--text-base);
+            resize: none;
+            min-height: 60px;
+        }
+        
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+        }
+        
+        .send-button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--border-radius-lg);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-base);
+            height: 60px;
+        }
+        
+        .send-button:hover:not(:disabled) {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+        
+        .send-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .typing-indicator {
+            display: none;
+            padding: var(--space-3);
+            color: var(--gray-500);
+            font-style: italic;
+        }
+        
+        .quick-actions {
+            display: flex;
+            gap: var(--space-2);
+            margin-bottom: var(--space-4);
+            flex-wrap: wrap;
+        }
+        
+        .quick-action {
+            background: var(--gray-100);
+            border: 1px solid var(--gray-300);
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--border-radius-lg);
+            font-size: var(--text-sm);
+            cursor: pointer;
+            transition: all var(--transition-base);
+        }
+        
+        .quick-action:hover {
+            background: var(--primary);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation will be injected here -->
+
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>🤖 Chat with BotFlo AI</h1>
+            <p>Experience our AI chatbot technology. Ask questions about our platform, pricing, or features!</p>
+        </div>
+        
+        <div class="chat-interface">
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot">
+                    <div class="message-avatar">🤖</div>
+                    <div class="message-content">
+                        Hello! I'm BotFlo AI, your virtual assistant. I'm here to help you learn about our chatbot platform, answer questions about pricing, features, and guide you through building your own AI chatbot. What would you like to know?
+                    </div>
+                </div>
+            </div>
+            
+            <div class="typing-indicator" id="typingIndicator">
+                BotFlo AI is typing...
+            </div>
+            
+            <div class="chat-input-container">
+                <div class="quick-actions">
+                    <button class="quick-action" onclick="sendQuickMessage('How much does it cost?')">💰 Pricing</button>
+                    <button class="quick-action" onclick="sendQuickMessage('Show me features')">⚡ Features</button>
+                    <button class="quick-action" onclick="sendQuickMessage('How do I get started?')">🚀 Get Started</button>
+                    <button class="quick-action" onclick="sendQuickMessage('Can I try a demo?')">🎮 Demo</button>
+                </div>
+                
+                <form class="chat-input-form" id="chatForm">
+                    <textarea 
+                        class="chat-input" 
+                        id="messageInput" 
+                        placeholder="Type your message here..." 
+                        rows="1"
+                        maxlength="500"
+                    ></textarea>
+                    <button type="submit" class="send-button" id="sendButton">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation and App Scripts -->
+    <script src="app-navigation.js"></script>
+    
+    <script>
+        // Initialize navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                if (typeof BotFloApp !== 'undefined') {
+                    new BotFloApp();
+                }
+            }, 100);
+        });
+        
+        // Chat functionality
+        const chatMessages = document.getElementById('chatMessages');
+        const messageInput = document.getElementById('messageInput');
+        const chatForm = document.getElementById('chatForm');
+        const sendButton = document.getElementById('sendButton');
+        const typingIndicator = document.getElementById('typingIndicator');
+        
+        chatForm.addEventListener('submit', handleSubmit);
+        messageInput.addEventListener('input', autoResize);
+        messageInput.addEventListener('keydown', handleKeyDown);
+        
+        function handleSubmit(e) {
+            e.preventDefault();
+            const message = messageInput.value.trim();
+            if (message) {
+                sendMessage(message);
+                messageInput.value = '';
+                autoResize();
+            }
+        }
+        
+        function handleKeyDown(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSubmit(e);
+            }
+        }
+        
+        function autoResize() {
+            messageInput.style.height = 'auto';
+            messageInput.style.height = Math.min(messageInput.scrollHeight, 120) + 'px';
+        }
+        
+        function sendMessage(message) {
+            addMessage(message, 'user');
+            showTyping();
+            
+            // Simulate AI response
+            setTimeout(() => {
+                hideTyping();
+                const response = generateResponse(message);
+                addMessage(response, 'bot');
+            }, 1000 + Math.random() * 2000);
+        }
+        
+        function sendQuickMessage(message) {
+            sendMessage(message);
+        }
+        
+        function addMessage(content, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.textContent = sender === 'bot' ? '🤖' : '👤';
+            
+            const messageContent = document.createElement('div');
+            messageContent.className = 'message-content';
+            messageContent.textContent = content;
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(messageContent);
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        function showTyping() {
+            typingIndicator.style.display = 'block';
+            sendButton.disabled = true;
+        }
+        
+        function hideTyping() {
+            typingIndicator.style.display = 'none';
+            sendButton.disabled = false;
+        }
+        
+        function generateResponse(message) {
+            const lowerMessage = message.toLowerCase();
+            
+            if (lowerMessage.includes('price') || lowerMessage.includes('cost') || lowerMessage.includes('pricing')) {
+                return "Our chatbots start at $0 for the Starter plan (up to 3 bots, 100 conversations/month). Professional plans start at $29/month with unlimited bots and 10,000 conversations. Enterprise plans at $99/month include advanced AI models and dedicated support. Would you like to see our full pricing page?";
+            }
+            
+            if (lowerMessage.includes('feature') || lowerMessage.includes('what can')) {
+                return "BotFlo offers powerful features including: 🎨 Visual Flow Builder, 🌐 Website Content Scraping, 🧠 Advanced NLP & AI, 📊 Analytics Dashboard, 🔌 API Integrations, 📱 Mobile-First Design, and 🎮 Gamified Character Creator. Which feature interests you most?";
+            }
+            
+            if (lowerMessage.includes('start') || lowerMessage.includes('begin') || lowerMessage.includes('how')) {
+                return "Getting started is easy! 1️⃣ Choose a builder (Website Scraper for quick setup, Character Creator for fun, or Advanced Builder for complex flows). 2️⃣ Customize your bot's personality and responses. 3️⃣ Train it with your content. 4️⃣ Deploy to your website. Want me to guide you to our builders page?";
+            }
+            
+            if (lowerMessage.includes('demo') || lowerMessage.includes('try') || lowerMessage.includes('test')) {
+                return "Absolutely! You can try our live demo right now. We have three ways to experience BotFlo: 🌐 Website Scraper (instant bot from any URL), 🎮 Character Creator (build a game-like AI companion), or 🔧 Advanced Flow Builder (professional drag-and-drop interface). Which would you prefer to try?";
+            }
+            
+            if (lowerMessage.includes('help') || lowerMessage.includes('support')) {
+                return "I'm here to help! You can ask me about pricing, features, getting started, or technical questions. For complex issues, our human support team is available via email at hello@botflo.ai. What specific question can I answer for you?";
+            }
+            
+            if (lowerMessage.includes('ai') || lowerMessage.includes('intelligent')) {
+                return "Our AI technology uses advanced natural language processing, sentiment analysis, and context understanding. We integrate with leading AI models and continuously learn from interactions to provide more intelligent responses. Your bots can handle complex conversations, multiple languages, and integrate with your existing systems!";
+            }
+            
+            // Default responses
+            const defaultResponses = [
+                "That's an interesting question! BotFlo can help you create intelligent chatbots for customer service, sales, support, and engagement. Would you like to know more about our specific features?",
+                "I'd love to help you with that! BotFlo specializes in making AI chatbot creation accessible to everyone. What aspect of chatbot development interests you most?",
+                "Great question! Our platform is designed to help businesses like yours create professional AI chatbots quickly. Would you like me to show you our pricing options or demo our builders?",
+                "Thanks for asking! BotFlo offers multiple ways to build chatbots depending on your needs and technical expertise. Can I help you choose the right builder for your project?"
+            ];
+            
+            return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
+        }
+    </script>
+</body>
+</html>

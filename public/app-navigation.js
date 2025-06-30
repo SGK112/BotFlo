@@ -50,10 +50,7 @@ class BotFloApp {
                         font-weight: 800;
                         font-size: var(--font-size-xl);
                     ">
-                        <i class="fas fa-robot" style="
-                            color: var(--primary);
-                            font-size: var(--font-size-2xl);
-                        "></i>
+                        <span style="font-size: 1.5rem;">🤖</span>
                         BotFlo
                     </a>
 
@@ -64,7 +61,7 @@ class BotFloApp {
                         gap: var(--space-8);
                     ">
                         <nav style="display: flex; gap: var(--space-6);">
-                            <a href="/marketplace-new.html" class="nav-link ${this.isActive('/marketplace') ? 'active' : ''}" style="
+                            <a href="/marketplace-unified.html" class="nav-link ${this.isActive('/marketplace') ? 'active' : ''}" style="
                                 text-decoration: none;
                                 color: var(--gray-600);
                                 font-weight: 500;
@@ -73,6 +70,16 @@ class BotFloApp {
                                 border-bottom: 2px solid transparent;
                             ">
                                 <i class="fas fa-store"></i> Store
+                            </a>
+                            <a href="/builders.html" class="nav-link ${this.isActive('/builders') ? 'active' : ''}" style="
+                                text-decoration: none;
+                                color: var(--gray-600);
+                                font-weight: 500;
+                                transition: all var(--transition-base);
+                                padding: var(--space-2) 0;
+                                border-bottom: 2px solid transparent;
+                            ">
+                                <i class="fas fa-robot"></i> Builders
                             </a>
                             <a href="/dashboard.html" class="nav-link ${this.isActive('/dashboard') ? 'active' : ''}" style="
                                 text-decoration: none;
@@ -98,7 +105,7 @@ class BotFloApp {
                         
                         <!-- CTA Buttons -->
                         <div style="display: flex; gap: var(--space-3); align-items: center;">
-                            <button class="cart-btn" onclick="window.location.href='/marketplace-new.html#cart'" style="
+                            <button class="cart-btn" onclick="window.location.href='/marketplace-unified.html#cart'" style="
                                 background: none;
                                 border: none;
                                 color: var(--gray-600);
@@ -160,7 +167,7 @@ class BotFloApp {
                 ">
                     <div style="padding: var(--space-4);">
                         <nav style="display: flex; flex-direction: column; gap: var(--space-4);">
-                            <a href="/marketplace-new.html" style="
+                            <a href="/marketplace-unified.html" style="
                                 display: flex;
                                 align-items: center;
                                 gap: var(--space-3);
@@ -229,7 +236,7 @@ class BotFloApp {
                         <i class="fas fa-home"></i>
                         <span>Home</span>
                     </a>
-                    <a href="/marketplace-new.html" class="mobile-nav-item ${this.isActive('/marketplace') ? 'active' : ''}">
+                    <a href="/marketplace-unified.html" class="mobile-nav-item ${this.isActive('/marketplace') ? 'active' : ''}">
                         <i class="fas fa-store"></i>
                         <span>Store</span>
                     </a>
@@ -309,7 +316,7 @@ class BotFloApp {
                         <div>
                             <h4 style="color: white; margin-bottom: var(--space-4);">Quick Links</h4>
                             <nav style="display: flex; flex-direction: column; gap: var(--space-2);">
-                                <a href="/marketplace-new.html" style="color: var(--gray-400); text-decoration: none;">Chatbot Store</a>
+                                <a href="/marketplace-unified.html" style="color: var(--gray-400); text-decoration: none;">Chatbot Store</a>
                                 <a href="/dashboard.html" style="color: var(--gray-400); text-decoration: none;">Dashboard</a>
                                 <a href="/customize.html" style="color: var(--gray-400); text-decoration: none;">Customize</a>
                                 <a href="/pricing.html" style="color: var(--gray-400); text-decoration: none;">Pricing</a>

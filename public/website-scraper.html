@@ -3,51 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website Scraper Bot Builder - BotFlo.ai</title>
+    <title>🤖 Website Scraper Bot Builder - BotFlo.ai</title>
     <meta name="description" content="Enter any website URL and automatically generate a smart chatbot with your site's content. Perfect for customer support and lead generation.">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#1e40af">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="BotFlo">
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="alternate icon" href="/favicon.ico">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/favicon.svg">
     
-    <!-- Shared Navigation -->
-    <link rel="stylesheet" href="shared-nav-new.css">
-    <script src="shared-nav-new.js"></script>
+    <!-- Global App Styles -->
+    <link rel="stylesheet" href="app-global.css">
     
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <style>
-        :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --primary-light: #818cf8;
-            --secondary: #06b6d4;
-            --accent: #f59e0b;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --error: #ef4444;
-            --white: #ffffff;
-            --gray-50: #f8fafc;
-            --gray-100: #f1f5f9;
-            --gray-200: #e2e8f0;
-            --gray-300: #cbd5e1;
-            --gray-400: #94a3b8;
-            --gray-500: #64748b;
-            --gray-600: #475569;
-            --gray-700: #334155;
-            --gray-800: #1e293b;
-            --gray-900: #0f172a;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
+        /* Website Scraper Specific Styles */
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             line-height: 1.6;
             color: var(--gray-800);
             background: var(--gray-50);
@@ -61,7 +40,7 @@
 
         /* Header */
         .header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            background: var(--gradient-hero);
             color: white;
             padding: 3rem 0;
             text-align: center;
@@ -469,8 +448,7 @@
     </style>
 </head>
 <body>
-    <!-- Navigation will be injected here -->
-    <div id="navigation-placeholder"></div>
+    <!-- Navigation will be injected by app-navigation.js -->
 
     <!-- Demo Mode Banner -->
     <div class="demo-banner" id="demoBanner" style="display: none;">
@@ -480,7 +458,7 @@
     <!-- Header -->
     <section class="header">
         <div class="container">
-            <h1>🌐 Website Scraper Bot Builder</h1>
+            <h1>🤖 Website Scraper Bot Builder</h1>
             <p>Enter any website URL and we'll automatically create a smart chatbot with your site's content. Perfect for customer support and lead generation.</p>
         </div>
     </section>
@@ -815,27 +793,249 @@
             document.getElementById('chatbotName').textContent = businessName;
         }
 
-        function handleChatInput(event) {
+        // Initialize Advanced NLP System
+        let botNLP = null;
+
+        function initializeBotNLP() {
+            // Get business info from form
+            const businessInfo = {
+                businessName: document.getElementById('businessName').value,
+                contactEmail: document.getElementById('contactEmail').value,
+                contactPhone: document.getElementById('contactPhone').value,
+                businessHours: document.getElementById('businessHours').value,
+                businessAddress: document.getElementById('businessAddress').value,
+                specialInstructions: document.getElementById('specialInstructions').value
+            };
+
+            // Initialize NLP with scraped content and business info
+            botNLP = {
+                scrapedContent: scrapedData,
+                businessInfo: businessInfo,
+                conversationHistory: [],
+                
+                async processInput(userInput, sessionId = 'default') {
+                    const cleanInput = userInput.toLowerCase().trim();
+                    
+                    // Simple intent detection
+                    let intent = this.detectIntent(cleanInput);
+                    let response = await this.generateResponse(intent, cleanInput);
+                    
+                    return {
+                        intent: intent.name,
+                        response: response,
+                        suggestions: this.generateSuggestions(intent)
+                    };
+                },
+                
+                detectIntent(input) {
+                    const intents = [
+                        {
+                            name: 'greeting',
+                            keywords: ['hello', 'hi', 'hey', 'good morning', 'good afternoon'],
+                            confidence: 0.9
+                        },
+                        {
+                            name: 'pricing',
+                            keywords: ['price', 'cost', 'how much', 'pricing', 'fee', 'rate'],
+                            confidence: 0.8
+                        },
+                        {
+                            name: 'contact',
+                            keywords: ['contact', 'phone', 'email', 'address', 'location', 'reach'],
+                            confidence: 0.9
+                        },
+                        {
+                            name: 'hours',
+                            keywords: ['hours', 'open', 'closed', 'schedule', 'time', 'availability'],
+                            confidence: 0.8
+                        },
+                        {
+                            name: 'services',
+                            keywords: ['service', 'product', 'offer', 'provide', 'do', 'specialize'],
+                            confidence: 0.8
+                        },
+                        {
+                            name: 'about',
+                            keywords: ['about', 'who', 'company', 'business', 'experience', 'history'],
+                            confidence: 0.7
+                        }
+                    ];
+                    
+                    let bestMatch = { name: 'general', confidence: 0.3 };
+                    
+                    intents.forEach(intent => {
+                        const matches = intent.keywords.filter(keyword => input.includes(keyword));
+                        if (matches.length > 0) {
+                            const confidence = (matches.length / intent.keywords.length) * intent.confidence;
+                            if (confidence > bestMatch.confidence) {
+                                bestMatch = { ...intent, confidence };
+                            }
+                        }
+                    });
+                    
+                    return bestMatch;
+                },
+                
+                async generateResponse(intent, input) {
+                    const responses = {
+                        greeting: [
+                            `Hello! I'm ${this.businessInfo.businessName || 'your website'} assistant. How can I help you today?`,
+                            `Hi there! Thanks for visiting ${this.businessInfo.businessName || 'our website'}. What can I help you with?`,
+                            `Welcome! I'm here to help you with any questions about ${this.businessInfo.businessName || 'our services'}.`
+                        ],
+                        pricing: [
+                            `I'd be happy to help with pricing information. ${this.findRelevantContent('pricing', 'cost', 'price')}`,
+                            `For specific pricing details, please contact us at ${this.businessInfo.contactEmail || 'our contact information'}.`,
+                            `Our pricing varies based on your specific needs. ${this.businessInfo.contactPhone ? `Give us a call at ${this.businessInfo.contactPhone}` : 'Please contact us'} for a personalized quote.`
+                        ],
+                        contact: [
+                            this.getContactInfo(),
+                            `You can reach us in several ways: ${this.getContactInfo()}`,
+                            `Here's how to get in touch: ${this.getContactInfo()}`
+                        ],
+                        hours: [
+                            this.businessInfo.businessHours ? 
+                                `Our business hours are: ${this.businessInfo.businessHours}` : 
+                                "Please contact us for our current business hours.",
+                            this.businessInfo.businessHours ? 
+                                `We're open ${this.businessInfo.businessHours}. Feel free to visit or call during these times!` :
+                                "For our current hours of operation, please give us a call or check our website."
+                        ],
+                        services: [
+                            this.findRelevantContent('service', 'product', 'offer') || 
+                            "We offer a range of professional services. What specifically are you interested in learning about?",
+                            this.findRelevantContent('specialize', 'expertise', 'provide') ||
+                            "I'd be happy to tell you about our services. What type of assistance are you looking for?"
+                        ],
+                        about: [
+                            this.findRelevantContent('about', 'company', 'experience') ||
+                            `${this.businessInfo.businessName || 'We'} are dedicated to providing excellent service to our customers.`,
+                            this.findRelevantContent('history', 'founded', 'established') ||
+                            "We're a professional business focused on meeting our customers' needs."
+                        ],
+                        general: [
+                            "That's a great question! Let me help you with that.",
+                            this.findRelevantContent(input) || "I'd be happy to help you with that. Could you be more specific about what you're looking for?",
+                            "I want to make sure I give you the best information. Could you tell me more about what you need?"
+                        ]
+                    };
+                    
+                    const intentResponses = responses[intent.name] || responses.general;
+                    const randomResponse = intentResponses[Math.floor(Math.random() * intentResponses.length)];
+                    
+                    // Add special instructions if relevant
+                    if (this.businessInfo.specialInstructions && intent.confidence > 0.6) {
+                        return randomResponse + " " + this.businessInfo.specialInstructions;
+                    }
+                    
+                    return randomResponse;
+                },
+                
+                findRelevantContent(...keywords) {
+                    if (!this.scrapedContent || !this.scrapedContent.pages) return '';
+                    
+                    for (let page of this.scrapedContent.pages) {
+                        const content = (page.title + ' ' + page.content).toLowerCase();
+                        if (keywords.some(keyword => content.includes(keyword.toLowerCase()))) {
+                            // Return first relevant sentence
+                            const sentences = page.content.split('.').filter(s => s.trim().length > 20);
+                            for (let sentence of sentences) {
+                                if (keywords.some(keyword => sentence.toLowerCase().includes(keyword.toLowerCase()))) {
+                                    return sentence.trim() + '.';
+                                }
+                            }
+                            return page.content.substring(0, 100) + '...';
+                        }
+                    }
+                    return '';
+                },
+                
+                getContactInfo() {
+                    const contact = [];
+                    if (this.businessInfo.contactEmail) contact.push(`Email: ${this.businessInfo.contactEmail}`);
+                    if (this.businessInfo.contactPhone) contact.push(`Phone: ${this.businessInfo.contactPhone}`);
+                    if (this.businessInfo.businessAddress) contact.push(`Address: ${this.businessInfo.businessAddress}`);
+                    
+                    return contact.length > 0 ? contact.join(', ') : 'Please check our website for contact information.';
+                },
+                
+                generateSuggestions(intent) {
+                    const suggestions = {
+                        greeting: ["What services do you offer?", "How can I contact you?", "What are your business hours?"],
+                        pricing: ["Do you offer discounts?", "What payment methods do you accept?", "Can I get a custom quote?"],
+                        contact: ["What are your business hours?", "Where are you located?", "Do you offer consultations?"],
+                        services: ["Tell me about your experience", "Do you offer guarantees?", "Can you provide references?"],
+                        general: ["Tell me about your services", "How can I contact you?", "What makes you different?"]
+                    };
+                    
+                    return suggestions[intent.name] || suggestions.general;
+                }
+            };
+        }
+
+        async function handleChatInput(event) {
             if (event.key === 'Enter') {
                 const input = document.getElementById('chatInput');
                 const message = input.value.trim();
                 if (message) {
+                    // Initialize NLP if not already done
+                    if (!botNLP) {
+                        initializeBotNLP();
+                    }
+                    
                     addChatMessage(message, false);
                     input.value = '';
                     
-                    // Simulate bot response
-                    setTimeout(() => {
-                        const responses = [
-                            "Thanks for your question! Based on our website content, I can help you with that.",
-                            "I'd be happy to help! Let me check our information for you.",
-                            "Great question! According to our website, here's what I can tell you...",
-                            "I can definitely help with that! Would you like me to connect you with our team for more details?"
-                        ];
-                        const response = responses[Math.floor(Math.random() * responses.length)];
-                        addChatMessage(response, true);
-                    }, 1000 + Math.random() * 2000);
+                    // Show typing indicator
+                    const typingDiv = document.createElement('div');
+                    typingDiv.className = 'chat-message bot typing';
+                    typingDiv.innerHTML = '💭 Thinking...';
+                    document.getElementById('chatMessages').appendChild(typingDiv);
+                    
+                    // Process with advanced NLP
+                    try {
+                        const result = await botNLP.processInput(message);
+                        
+                        // Remove typing indicator
+                        typingDiv.remove();
+                        
+                        // Add bot response
+                        addChatMessage(result.response, true);
+                        
+                        // Add suggestions if available
+                        if (result.suggestions && result.suggestions.length > 0) {
+                            const suggestionsDiv = document.createElement('div');
+                            suggestionsDiv.className = 'chat-suggestions';
+                            suggestionsDiv.innerHTML = `
+                                <div style="font-size: 0.8rem; color: #666; margin: 0.5rem 0;">Quick suggestions:</div>
+                                ${result.suggestions.map(suggestion => 
+                                    `<button class="suggestion-btn" onclick="useSuggestion('${suggestion}')" style="
+                                        background: rgba(30, 64, 175, 0.1);
+                                        border: 1px solid rgba(30, 64, 175, 0.3);
+                                        border-radius: 1rem;
+                                        padding: 0.25rem 0.5rem;
+                                        margin: 0.25rem;
+                                        font-size: 0.8rem;
+                                        color: #1e40af;
+                                        cursor: pointer;
+                                    ">${suggestion}</button>`
+                                ).join('')}
+                            `;
+                            document.getElementById('chatMessages').appendChild(suggestionsDiv);
+                        }
+                        
+                    } catch (error) {
+                        // Remove typing indicator and show error
+                        typingDiv.remove();
+                        addChatMessage("I'm having trouble processing that right now. Please try again or contact us directly.", true);
+                    }
                 }
             }
+        }
+
+        function useSuggestion(suggestion) {
+            document.getElementById('chatInput').value = suggestion;
+            handleChatInput({ key: 'Enter' });
         }
 
         function addChatMessage(message, isBot) {
@@ -900,5 +1100,8 @@
         // Initialize
         updateSteps(1);
     </script>
+    
+    <!-- Load Navigation -->
+    <script src="app-navigation.js"></script>
 </body>
 </html>

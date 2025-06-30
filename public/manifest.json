@@ -1,11 +1,11 @@
 {
-  "name": "BotFlo - AI Chatbot Builder",
-  "short_name": "BotFlo",
-  "description": "Build and deploy AI chatbots in minutes. Purchase ready-made chatbots, customize with your content, and deploy instantly.",
+  "name": "🤖 BotFlo - Professional Chatbot Store",
+  "short_name": "🤖 BotFlo",
+  "description": "Purchase professional chatbots, customize with your content, and start generating revenue instantly. Mobile-first chatbot marketplace.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#6366f1",
-  "theme_color": "#6366f1",
+  "background_color": "#1e40af",
+  "theme_color": "#1e40af",
   "orientation": "portrait-primary",
   "scope": "/",
   "icons": [
@@ -39,7 +39,7 @@
       "name": "Marketplace",
       "short_name": "Store",
       "description": "Browse and purchase chatbots",
-      "url": "/marketplace-new.html",
+      "url": "/marketplace-unified.html",
       "icons": [
         {
           "src": "/favicon.svg",

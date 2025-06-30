@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 Navigation Test - BotFlo</title>
+    <link rel="stylesheet" href="app-global.css">
+</head>
+<body>
+    <h1 style="padding: 100px 20px; text-align: center;">Navigation Test</h1>
+    <p style="text-align: center;">This is a test to verify navigation is working.</p>
+
+    <script src="app-navigation.js"></script>
+    <script>
+        console.log('Script loaded');
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded');
+            if (typeof BotFloApp !== 'undefined') {
+                console.log('BotFloApp found, initializing...');
+                new BotFloApp();
+            } else {
+                console.log('BotFloApp not found');
+            }
+        });
+    </script>
+</body>
+</html>

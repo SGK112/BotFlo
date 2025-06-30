@@ -1,27 +1,44 @@
-# BotFlo.ai - Advanced No-Code AI Chatbot Builder Platform 🤖
+# 🤖 BotFlo.ai - Advanced AI-Powered Chatbot Platform
 
-A powerful, professional-grade chatbot builder with drag-and-drop functionality, AI integration, and real-time customization.
+A revolutionary, revenue-ready chatbot platform with intelligent NLP, web scraping, and desktop + mobile optimized design. Create smart chatbots that understand context, sentiment, and your business content.
 
-## 🚀 Live Demo
+## 🚀 Live Platform
 
-### 🌐 Local Development Platform
-- **� Main Platform**: `http://localhost:3000` (when server is running)
-- **📋 Enhanced Designer**: `http://localhost:3000/enhanced-chatbot-designer.html`
-- **🎯 Marketplace**: `http://localhost:3000/botflo-marketplace.html`
+### 🌐 Main Application
+- **🏠 Homepage**: `https://cuddly-broccoli-5gx5wx67vqqfpprr-3000.app.github.dev/`
+- **� Marketplace**: `https://cuddly-broccoli-5gx5wx67vqqfpprr-3000.app.github.dev/marketplace-unified.html`
+- **🤖 Smart Website Scraper**: `https://cuddly-broccoli-5gx5wx67vqqfpprr-3000.app.github.dev/website-scraper.html`
+- **� Dashboard**: `https://cuddly-broccoli-5gx5wx67vqqfpprr-3000.app.github.dev/dashboard.html`
+- **⚙️ Customization**: `https://cuddly-broccoli-5gx5wx67vqqfpprr-3000.app.github.dev/customize.html`
 
-### 🛠️ Builder Options (Local)
-- **🚀 Enhanced Designer**: `http://localhost:3000/enhanced-chatbot-designer.html`
-- **🔧 Visual Builder**: `http://localhost:3000/visual-bot-builder-enhanced.html` 
-- **🎯 Bot Marketplace**: `http://localhost:3000/botflo-marketplace.html`
-- **📋 Features Overview**: `http://localhost:3000/features.html`
+### 🛠️ Local Development
+- **� Main Platform**: `http://localhost:3000`
+- **🔧 All Features**: Available at localhost with full functionality
 
-### 🆕 New Platform Features (Extracted)
-- **Advanced AI Builder**: `http://localhost:3001` (from extracted platform)
-- **Bot Marketplace**: Ready-to-deploy chatbot templates
-- **Payment Integration**: Stripe integration for bot purchases
-- **File Upload Support**: PDF, CSV, image processing
+## 🧠 Intelligent Features
 
-## ✨ Features
+### 🎯 Advanced NLP Engine
+- **Intent Recognition**: Automatically detects user intent with confidence scoring
+- **Sentiment Analysis**: Understands emotional context (positive, negative, neutral)
+- **Context Awareness**: Maintains conversation context across interactions
+- **Entity Extraction**: Identifies key information from user messages
+- **Smart Suggestions**: Provides relevant follow-up questions
+
+### � Web Content Integration
+- **Automatic Scraping**: Enter any website URL to extract content
+- **Content Analysis**: AI analyzes and creates relevant responses
+- **Business Info Integration**: Automatically includes contact details and hours
+- **Dynamic Responses**: Generates contextual answers based on scraped data
+- **Semantic Matching**: Finds relevant content using advanced algorithms
+
+### 💻 Desktop + Mobile Optimized
+- **Responsive Design**: Seamless experience on desktop, tablet, and mobile
+- **PC-Friendly Interface**: Optimized layouts for larger screens
+- **Touch Interactions**: Mobile-first touch interface
+- **PWA Ready**: Install as native app on any device
+- **Adaptive UI**: Components adjust to screen size and input method
+
+## ✨ Platform Features
 
 - **🎨 Enhanced Visual Designer** - Real-time chatbot customization with instant preview
 - **🔧 Advanced Flow Builder** - Modular drag-and-drop chatbot flow creation

@@ -1,5 +1,5 @@
 /**
- * Bot NLP - Natural Language Processing for bots
+ * Bot NLP - Advanced Natural Language Processing for intelligent bots
  */
 
 class BotNLP {
@@ -8,6 +8,11 @@ class BotNLP {
         this.intents = new Map();
         this.entities = new Map();
         this.keywords = new Map();
+        this.context = new Map();
+        this.scrapedContent = config.scrapedContent || {};
+        this.businessInfo = config.businessInfo || {};
+        this.conversationHistory = [];
+        this.sentimentAnalyzer = new SentimentAnalyzer();
         
         this.initializeNLP();
     }
@@ -348,6 +353,348 @@ class BotNLP {
             timestamp: new Date(),
             wordCount: message.split(/\s+/).length
         };
+    }
+
+    /**
+     * Process user input with advanced context understanding
+     */
+    async processInput(userInput, sessionId = 'default') {
+        const cleanInput = this.preprocessText(userInput);
+        const sentiment = this.sentimentAnalyzer.analyze(cleanInput);
+        const intent = this.detectIntent(cleanInput);
+        const entities = this.extractEntities(cleanInput);
+        const context = this.getContext(sessionId);
+        
+        // Update conversation history
+        this.addToHistory(sessionId, userInput, 'user');
+        
+        // Generate intelligent response based on scraped content and context
+        const response = await this.generateResponse(intent, entities, context, sentiment);
+        
+        this.addToHistory(sessionId, response, 'bot');
+        this.updateContext(sessionId, intent, entities);
+        
+        return {
+            intent: intent.name,
+            confidence: intent.confidence,
+            entities,
+            sentiment,
+            response,
+            suggestions: this.generateSuggestions(intent, context)
+        };
+    }
+
+    /**
+     * Generate intelligent response using scraped content
+     */
+    async generateResponse(intent, entities, context, sentiment) {
+        // Check if we have specific content about the query
+        const relevantContent = this.findRelevantContent(intent.query);
+        
+        if (relevantContent.length > 0) {
+            return this.createContentBasedResponse(relevantContent, intent, sentiment);
+        }
+        
+        // Fall back to intent-based responses
+        return this.createIntentBasedResponse(intent, entities, context, sentiment);
+    }
+
+    /**
+     * Find relevant content from scraped website data
+     */
+    findRelevantContent(query) {
+        const queryWords = this.tokenize(query.toLowerCase());
+        const relevantContent = [];
+        
+        // Search through scraped pages
+        if (this.scrapedContent.pages) {
+            this.scrapedContent.pages.forEach(page => {
+                const pageText = (page.title + ' ' + page.content).toLowerCase();
+                const score = this.calculateRelevanceScore(queryWords, pageText);
+                
+                if (score > 0.3) {
+                    relevantContent.push({
+                        ...page,
+                        relevanceScore: score
+                    });
+                }
+            });
+        }
+        
+        // Sort by relevance
+        return relevantContent.sort((a, b) => b.relevanceScore - a.relevanceScore);
+    }
+
+    /**
+     * Calculate relevance score between query and content
+     */
+    calculateRelevanceScore(queryWords, content) {
+        const contentWords = this.tokenize(content);
+        const commonWords = queryWords.filter(word => 
+            contentWords.includes(word) && word.length > 2
+        );
+        
+        const exactMatches = commonWords.length;
+        const semanticMatches = this.findSemanticMatches(queryWords, contentWords);
+        
+        return (exactMatches * 2 + semanticMatches) / (queryWords.length + contentWords.length / 10);
+    }
+
+    /**
+     * Find semantic matches using keyword similarity
+     */
+    findSemanticMatches(queryWords, contentWords) {
+        const semanticGroups = {
+            price: ['cost', 'pricing', 'fee', 'charge', 'rate', 'expense'],
+            contact: ['phone', 'email', 'address', 'location', 'reach', 'call'],
+            product: ['service', 'offering', 'solution', 'item', 'good'],
+            time: ['hours', 'schedule', 'availability', 'open', 'closed'],
+            help: ['support', 'assistance', 'aid', 'guidance', 'advice']
+        };
+        
+        let matches = 0;
+        queryWords.forEach(qWord => {
+            Object.values(semanticGroups).forEach(group => {
+                if (group.includes(qWord)) {
+                    contentWords.forEach(cWord => {
+                        if (group.includes(cWord)) matches++;
+                    });
+                }
+            });
+        });
+        
+        return matches;
+    }
+
+    /**
+     * Create response based on relevant content
+     */
+    createContentBasedResponse(relevantContent, intent, sentiment) {
+        const topContent = relevantContent[0];
+        
+        // Customize response based on sentiment
+        let prefix = '';
+        if (sentiment.score < -0.3) {
+            prefix = "I understand your concern. ";
+        } else if (sentiment.score > 0.3) {
+            prefix = "Great question! ";
+        }
+        
+        // Extract key information from content
+        const keyInfo = this.extractKeyInformation(topContent.content);
+        
+        let response = prefix;
+        
+        if (keyInfo.length > 0) {
+            response += `Based on our ${topContent.title.toLowerCase()}, ${keyInfo}`;
+        } else {
+            response += `According to our ${topContent.title.toLowerCase()}: ${topContent.content.substring(0, 150)}...`;
+        }
+        
+        // Add business contact info if relevant
+        if (intent.name === 'contact' && this.businessInfo.contactEmail) {
+            response += ` You can reach us at ${this.businessInfo.contactEmail}`;
+            if (this.businessInfo.contactPhone) {
+                response += ` or call ${this.businessInfo.contactPhone}`;
+            }
+        }
+        
+        return response;
+    }
+
+    /**
+     * Extract key information from content
+     */
+    extractKeyInformation(content) {
+        const sentences = content.split(/[.!?]+/).filter(s => s.trim().length > 10);
+        
+        // Look for sentences with key indicators
+        const keyIndicators = ['we offer', 'our services', 'we provide', 'available', 'includes', 'features'];
+        
+        for (let sentence of sentences) {
+            const lowerSentence = sentence.toLowerCase();
+            if (keyIndicators.some(indicator => lowerSentence.includes(indicator))) {
+                return sentence.trim();
+            }
+        }
+        
+        // Return first substantial sentence
+        return sentences[0]?.trim() || '';
+    }
+
+    /**
+     * Update conversation context
+     */
+    updateContext(sessionId, intent, entities) {
+        if (!this.context.has(sessionId)) {
+            this.context.set(sessionId, {
+                lastIntent: null,
+                entities: new Map(),
+                topics: [],
+                timestamp: Date.now()
+            });
+        }
+        
+        const context = this.context.get(sessionId);
+        context.lastIntent = intent.name;
+        context.timestamp = Date.now();
+        
+        // Store entities
+        entities.forEach(entity => {
+            context.entities.set(entity.type, entity.value);
+        });
+        
+        // Track conversation topics
+        if (!context.topics.includes(intent.name)) {
+            context.topics.push(intent.name);
+        }
+    }
+
+    /**
+     * Generate helpful suggestions based on context
+     */
+    generateSuggestions(intent, context) {
+        const suggestions = [];
+        
+        // Context-based suggestions
+        if (intent.name === 'greeting') {
+            suggestions.push(
+                "What services do you offer?",
+                "How can I contact you?",
+                "What are your business hours?"
+            );
+        } else if (intent.name === 'pricing') {
+            suggestions.push(
+                "Do you offer discounts?",
+                "What payment methods do you accept?",
+                "Can I get a custom quote?"
+            );
+        } else if (intent.name === 'information') {
+            suggestions.push(
+                "Tell me more about your experience",
+                "What makes you different?",
+                "Can you show me examples?"
+            );
+        }
+        
+        // Add business-specific suggestions based on scraped content
+        if (this.scrapedContent.pages) {
+            const pageTypes = this.scrapedContent.pages.map(p => p.title.toLowerCase());
+            
+            if (pageTypes.includes('services') || pageTypes.includes('products')) {
+                suggestions.push("What services do you provide?");
+            }
+            if (pageTypes.includes('about')) {
+                suggestions.push("Tell me about your company");
+            }
+            if (pageTypes.includes('portfolio') || pageTypes.includes('gallery')) {
+                suggestions.push("Can I see your work?");
+            }
+        }
+        
+        return suggestions.slice(0, 3); // Limit to 3 suggestions
+    }
+
+    /**
+     * Add message to conversation history
+     */
+    addToHistory(sessionId, message, sender) {
+        if (!this.conversationHistory[sessionId]) {
+            this.conversationHistory[sessionId] = [];
+        }
+        
+        this.conversationHistory[sessionId].push({
+            message,
+            sender,
+            timestamp: Date.now()
+        });
+        
+        // Keep only last 20 messages per session
+        if (this.conversationHistory[sessionId].length > 20) {
+            this.conversationHistory[sessionId] = this.conversationHistory[sessionId].slice(-20);
+        }
+    }
+
+    /**
+     * Get conversation context
+     */
+    getContext(sessionId) {
+        return this.context.get(sessionId) || {
+            lastIntent: null,
+            entities: new Map(),
+            topics: [],
+            timestamp: Date.now()
+        };
+    }
+
+    /**
+     * Preprocess text for analysis
+     */
+    preprocessText(text) {
+        return text
+            .toLowerCase()
+            .replace(/[^\w\s]/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim();
+    }
+
+    /**
+     * Tokenize text into words
+     */
+    tokenize(text) {
+        return text.split(/\s+/).filter(word => word.length > 0);
+    }
+
+    /**
+     * Simple Sentiment Analyzer
+     */
+    class SentimentAnalyzer {
+        constructor() {
+            this.positiveWords = [
+                'good', 'great', 'excellent', 'amazing', 'wonderful', 'fantastic', 'love', 'like',
+                'awesome', 'perfect', 'outstanding', 'brilliant', 'superb', 'impressive', 'satisfied',
+                'happy', 'pleased', 'delighted', 'thrilled', 'excited', 'thank', 'thanks', 'grateful'
+            ];
+            
+            this.negativeWords = [
+                'bad', 'terrible', 'awful', 'horrible', 'hate', 'dislike', 'problem', 'issue',
+                'wrong', 'error', 'broken', 'failed', 'disappointed', 'frustrated', 'angry',
+                'upset', 'confused', 'difficult', 'hard', 'impossible', 'worst', 'useless'
+            ];
+        }
+        
+        analyze(text) {
+            const words = text.toLowerCase().split(/\s+/);
+            let score = 0;
+            let positiveCount = 0;
+            let negativeCount = 0;
+            
+            words.forEach(word => {
+                if (this.positiveWords.includes(word)) {
+                    score += 1;
+                    positiveCount++;
+                } else if (this.negativeWords.includes(word)) {
+                    score -= 1;
+                    negativeCount++;
+                }
+            });
+            
+            // Normalize score
+            const totalSentimentWords = positiveCount + negativeCount;
+            const normalizedScore = totalSentimentWords > 0 ? score / totalSentimentWords : 0;
+            
+            return {
+                score: normalizedScore,
+                magnitude: totalSentimentWords,
+                label: this.getLabel(normalizedScore)
+            };
+        }
+        
+        getLabel(score) {
+            if (score > 0.3) return 'positive';
+            if (score < -0.3) return 'negative';
+            return 'neutral';
+        }
     }
 }
 

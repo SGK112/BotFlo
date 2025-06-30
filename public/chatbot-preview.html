@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 Chatbot Preview - BotFlo.ai</title>
+    <meta name="description" content="Preview and test your chatbot before deployment. See how your AI assistant will interact with customers.">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#1e40af">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="BotFlo">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="alternate icon" href="/favicon.ico">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/favicon.svg">
+    
+    <!-- Global App Styles -->
+    <link rel="stylesheet" href="app-global.css">
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        .preview-container {
+            padding: calc(var(--header-height) + var(--space-8)) var(--space-4) var(--space-8);
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: 100vh;
+        }
+        
+        .preview-header {
+            text-align: center;
+            margin-bottom: var(--space-8);
+        }
+        
+        .preview-header h1 {
+            font-size: var(--text-3xl);
+            font-weight: 800;
+            color: var(--gray-900);
+            margin-bottom: var(--space-4);
+        }
+        
+        .preview-content {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: var(--space-8);
+            align-items: start;
+        }
+        
+        .preview-main {
+            background: var(--white);
+            border-radius: var(--border-radius-xl);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+        
+        .preview-toolbar {
+            background: var(--gray-100);
+            padding: var(--space-4);
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .preview-modes {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .mode-btn {
+            padding: var(--space-2) var(--space-4);
+            border: 1px solid var(--gray-300);
+            background: var(--white);
+            border-radius: var(--border-radius-md);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            font-size: var(--text-sm);
+        }
+        
+        .mode-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .preview-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .action-btn {
+            padding: var(--space-2) var(--space-4);
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-md);
+            cursor: pointer;
+            font-size: var(--text-sm);
+            transition: all var(--transition-base);
+        }
+        
+        .action-btn:hover {
+            background: var(--primary-dark);
+        }
+        
+        .preview-frame {
+            background: var(--gray-50);
+            height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .device-frame {
+            background: var(--white);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-xl);
+            width: 100%;
+            height: 100%;
+            max-width: 400px;
+            max-height: 600px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .device-frame.desktop {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: var(--border-radius-md);
+        }
+        
+        .chatbot-widget {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--white);
+        }
+        
+        .widget-header {
+            background: var(--primary);
+            color: white;
+            padding: var(--space-4);
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+        
+        .widget-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--white);
+            color: var(--primary);
+            border-radius: var(--border-radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-lg);
+        }
+        
+        .widget-info h3 {
+            margin: 0;
+            font-size: var(--text-base);
+            font-weight: 600;
+        }
+        
+        .widget-info p {
+            margin: 0;
+            font-size: var(--text-sm);
+            opacity: 0.9;
+        }
+        
+        .widget-messages {
+            flex: 1;
+            padding: var(--space-4);
+            overflow-y: auto;
+            background: var(--gray-50);
+        }
+        
+        .preview-sidebar {
+            background: var(--white);
+            border-radius: var(--border-radius-xl);
+            box-shadow: var(--shadow-lg);
+            padding: var(--space-6);
+        }
+        
+        .sidebar-section {
+            margin-bottom: var(--space-6);
+        }
+        
+        .sidebar-section h3 {
+            font-size: var(--text-lg);
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: var(--space-4);
+        }
+        
+        .settings-group {
+            margin-bottom: var(--space-4);
+        }
+        
+        .settings-group label {
+            display: block;
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: var(--space-2);
+        }
+        
+        .settings-input {
+            width: 100%;
+            padding: var(--space-3);
+            border: 1px solid var(--gray-300);
+            border-radius: var(--border-radius-md);
+            font-size: var(--text-sm);
+        }
+        
+        .color-picker {
+            width: 100%;
+            height: 40px;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--border-radius-md);
+            cursor: pointer;
+        }
+        
+        .test-messages {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+        
+        .test-message {
+            padding: var(--space-2) var(--space-3);
+            background: var(--gray-100);
+            border-radius: var(--border-radius-md);
+            cursor: pointer;
+            font-size: var(--text-sm);
+            transition: all var(--transition-base);
+        }
+        
+        .test-message:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        @media (max-width: 1024px) {
+            .preview-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .preview-sidebar {
+                order: -1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation will be injected here -->
+
+    <div class="preview-container">
+        <div class="preview-header">
+            <h1>🤖 Chatbot Preview</h1>
+            <p>Test and customize your chatbot before deployment</p>
+        </div>
+        
+        <div class="preview-content">
+            <div class="preview-main">
+                <div class="preview-toolbar">
+                    <div class="preview-modes">
+                        <button class="mode-btn active" data-mode="mobile">📱 Mobile</button>
+                        <button class="mode-btn" data-mode="desktop">💻 Desktop</button>
+                        <button class="mode-btn" data-mode="widget">🪟 Widget</button>
+                    </div>
+                    
+                    <div class="preview-actions">
+                        <button class="action-btn" onclick="resetChat()">
+                            <i class="fas fa-redo"></i> Reset
+                        </button>
+                        <button class="action-btn" onclick="exportBot()">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                        <button class="action-btn" onclick="deployBot()">
+                            <i class="fas fa-rocket"></i> Deploy
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="preview-frame" id="previewFrame">
+                    <div class="device-frame" id="deviceFrame">
+                        <div class="chatbot-widget">
+                            <div class="widget-header">
+                                <div class="widget-avatar" id="botAvatar">🤖</div>
+                                <div class="widget-info">
+                                    <h3 id="botName">BotFlo Assistant</h3>
+                                    <p>Online • Ready to help</p>
+                                </div>
+                            </div>
+                            
+                            <div class="widget-messages" id="widgetMessages">
+                                <div class="message bot">
+                                    <div class="message-content">
+                                        Hi! I'm your AI assistant. How can I help you today?
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="widget-input">
+                                <form id="testChatForm" style="display: flex; padding: var(--space-3); gap: var(--space-2);">
+                                    <input type="text" id="testInput" placeholder="Type a message..." style="flex: 1; padding: var(--space-2); border: 1px solid var(--gray-300); border-radius: var(--border-radius-md);">
+                                    <button type="submit" style="background: var(--primary); color: white; border: none; padding: var(--space-2) var(--space-4); border-radius: var(--border-radius-md); cursor: pointer;">Send</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="preview-sidebar">
+                <div class="sidebar-section">
+                    <h3>🎨 Appearance</h3>
+                    
+                    <div class="settings-group">
+                        <label for="botNameInput">Bot Name</label>
+                        <input type="text" id="botNameInput" class="settings-input" value="BotFlo Assistant" onchange="updateBotName()">
+                    </div>
+                    
+                    <div class="settings-group">
+                        <label for="botAvatarInput">Bot Avatar (Emoji)</label>
+                        <input type="text" id="botAvatarInput" class="settings-input" value="🤖" onchange="updateBotAvatar()">
+                    </div>
+                    
+                    <div class="settings-group">
+                        <label for="primaryColor">Primary Color</label>
+                        <input type="color" id="primaryColor" class="color-picker" value="#1e40af" onchange="updatePrimaryColor()">
+                    </div>
+                </div>
+                
+                <div class="sidebar-section">
+                    <h3>🧪 Test Messages</h3>
+                    <div class="test-messages">
+                        <div class="test-message" onclick="sendTestMessage('Hello!')">Hello!</div>
+                        <div class="test-message" onclick="sendTestMessage('What can you do?')">What can you do?</div>
+                        <div class="test-message" onclick="sendTestMessage('I need help with pricing')">Pricing question</div>
+                        <div class="test-message" onclick="sendTestMessage('How do I get started?')">Getting started</div>
+                        <div class="test-message" onclick="sendTestMessage('Thank you!')">Thank you!</div>
+                    </div>
+                </div>
+                
+                <div class="sidebar-section">
+                    <h3>📊 Analytics</h3>
+                    <div style="font-size: var(--text-sm); color: var(--gray-600);">
+                        <p><strong>Test Messages:</strong> <span id="messageCount">1</span></p>
+                        <p><strong>Avg Response Time:</strong> 1.2s</p>
+                        <p><strong>Success Rate:</strong> 95%</p>
+                    </div>
+                </div>
+                
+                <div class="sidebar-section">
+                    <button class="action-btn" style="width: 100%;" onclick="goToCustomize()">
+                        <i class="fas fa-edit"></i> Customize Further
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation and App Scripts -->
+    <script src="app-navigation.js"></script>
+    
+    <script>
+        // Initialize navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                if (typeof BotFloApp !== 'undefined') {
+                    new BotFloApp();
+                }
+            }, 100);
+            
+            setupPreviewMode();
+        });
+        
+        let messageCount = 1;
+        
+        // Preview mode switching
+        function setupPreviewMode() {
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    const mode = btn.dataset.mode;
+                    const deviceFrame = document.getElementById('deviceFrame');
+                    
+                    deviceFrame.className = `device-frame ${mode}`;
+                });
+            });
+        }
+        
+        // Test chat functionality
+        document.getElementById('testChatForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const input = document.getElementById('testInput');
+            const message = input.value.trim();
+            if (message) {
+                sendTestMessage(message);
+                input.value = '';
+            }
+        });
+        
+        function sendTestMessage(message) {
+            addTestMessage(message, 'user');
+            
+            // Simulate bot response
+            setTimeout(() => {
+                const response = generateTestResponse(message);
+                addTestMessage(response, 'bot');
+            }, 1000);
+        }
+        
+        function addTestMessage(content, sender) {
+            const messagesContainer = document.getElementById('widgetMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            messageDiv.innerHTML = `<div class="message-content">${content}</div>`;
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            messageCount++;
+            document.getElementById('messageCount').textContent = messageCount;
+        }
+        
+        function generateTestResponse(message) {
+            const responses = [
+                "Thanks for testing! I'm working perfectly and ready to help your customers.",
+                "Great question! I can handle all sorts of inquiries about your business.",
+                "I'm designed to provide helpful, accurate responses based on your content.",
+                "Perfect! This is exactly the kind of conversation I excel at.",
+                "I'm learning from every interaction to serve your customers better."
+            ];
+            
+            return responses[Math.floor(Math.random() * responses.length)];
+        }
+        
+        // Customization functions
+        function updateBotName() {
+            const name = document.getElementById('botNameInput').value;
+            document.getElementById('botName').textContent = name;
+        }
+        
+        function updateBotAvatar() {
+            const avatar = document.getElementById('botAvatarInput').value;
+            document.getElementById('botAvatar').textContent = avatar;
+        }
+        
+        function updatePrimaryColor() {
+            const color = document.getElementById('primaryColor').value;
+            document.documentElement.style.setProperty('--primary', color);
+        }
+        
+        // Action functions
+        function resetChat() {
+            const messagesContainer = document.getElementById('widgetMessages');
+            messagesContainer.innerHTML = `
+                <div class="message bot">
+                    <div class="message-content">
+                        Hi! I'm your AI assistant. How can I help you today?
+                    </div>
+                </div>
+            `;
+            messageCount = 1;
+            document.getElementById('messageCount').textContent = messageCount;
+        }
+        
+        function exportBot() {
+            alert('Export functionality coming soon! You\'ll be able to download your bot configuration and embed code.');
+        }
+        
+        function deployBot() {
+            if (confirm('Ready to deploy your chatbot? This will make it live on your website.')) {
+                window.location.href = '/dashboard.html';
+            }
+        }
+        
+        function goToCustomize() {
+            window.location.href = '/customize.html';
+        }
+    </script>
+</body>
+</html>

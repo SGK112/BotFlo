@@ -1,23 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
   <defs>
-    <!-- Enhanced gradient for robot with sparkle effect -->
+    <!-- Professional gradient for robot -->
     <linearGradient id="robotGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#667eea"/>
-      <stop offset="30%" stop-color="#764ba2"/>
-      <stop offset="70%" stop-color="#8b5cf6"/>
-      <stop offset="100%" stop-color="#FFD700"/>
+      <stop offset="0%" stop-color="#1e40af"/>
+      <stop offset="50%" stop-color="#0d9488"/>
+      <stop offset="100%" stop-color="#ea580c"/>
     </linearGradient>
     
     <!-- Body gradient -->
     <linearGradient id="bodyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#4f46e5"/>
-      <stop offset="50%" stop-color="#7c3aed"/>
-      <stop offset="100%" stop-color="#1e40af"/>
+      <stop offset="0%" stop-color="#1e40af"/>
+      <stop offset="50%" stop-color="#1e3a8a"/>
+      <stop offset="100%" stop-color="#0d9488"/>
     </linearGradient>
     
     <!-- Sparkle gradient -->
     <linearGradient id="sparkleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#FFD700"/>
+      <stop offset="0%" stop-color="#ea580c"/>
       <stop offset="50%" stop-color="#FFF"/>
       <stop offset="100%" stop-color="#FFD700"/>
     </linearGradient>
