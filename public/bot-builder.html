@@ -1,0 +1,1598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 BotFlo Builder - Create Your AI Chatbot</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="BotFlo Builder">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="alternate icon" href="/favicon.ico">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="app-global.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Flow Builder Styles -->
+    <link rel="stylesheet" href="flow-builder/css/base.css">
+    <link rel="stylesheet" href="flow-builder/css/layout.css">
+    <link rel="stylesheet" href="flow-builder/css/components.css">
+    <link rel="stylesheet" href="flow-builder/css/workspace.css">
+    <link rel="stylesheet" href="flow-builder/css/properties.css">
+    <link rel="stylesheet" href="flow-builder/css/animations.css">
+    
+    <!-- Builder Redirect System -->
+    <script src="builder-redirect.js"></script>
+    
+    <style>
+        :root {
+            --builder-primary: #6366f1;
+            --builder-secondary: #f1f5f9;
+            --builder-accent: #10b981;
+            --builder-warning: #f59e0b;
+            --builder-danger: #ef4444;
+            --builder-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --builder-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--builder-secondary);
+            overflow: hidden;
+        }
+
+        /* Header */
+        .builder-header {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--builder-shadow);
+            z-index: 1000;
+            position: relative;
+        }
+
+        .builder-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 700;
+            color: var(--builder-primary);
+            text-decoration: none;
+        }
+
+        .builder-logo {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--builder-primary), var(--builder-accent));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .builder-title {
+            font-size: 1.25rem;
+        }
+
+        .builder-nav {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .builder-tab {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: transparent;
+            color: #64748b;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .builder-tab.active {
+            color: var(--builder-primary);
+            background: #f1f5f9;
+        }
+
+        .builder-tab:hover {
+            color: var(--builder-primary);
+            background: #f8fafc;
+        }
+
+        .builder-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid transparent;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--builder-shadow);
+        }
+
+        .btn.primary {
+            background: var(--builder-primary);
+            color: white;
+            border-color: var(--builder-primary);
+        }
+
+        .btn.success {
+            background: var(--builder-accent);
+            color: white;
+            border-color: var(--builder-accent);
+        }
+
+        .btn.outline {
+            border-color: #d1d5db;
+            color: #374151;
+            background: white;
+        }
+
+        /* Main Content */
+        .builder-container {
+            height: calc(100vh - 70px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .builder-modes {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .mode-selector {
+            display: flex;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+
+        .mode-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            background: transparent;
+            color: #64748b;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .mode-btn.active {
+            background: var(--builder-primary);
+            color: white;
+        }
+
+        .mode-btn:not(.active):hover {
+            background: #e2e8f0;
+            color: #374151;
+        }
+
+        .builder-content {
+            flex: 1;
+            display: flex;
+            background: #f8fafc;
+        }
+
+        /* Quick Start Mode */
+        .quick-start-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .quick-start-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            width: 100%;
+            margin: 2rem 0;
+        }
+
+        .quick-option {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--builder-shadow);
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quick-option:hover {
+            border-color: var(--builder-primary);
+            transform: translateY(-2px);
+            box-shadow: var(--builder-shadow-lg);
+        }
+
+        .quick-option-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--builder-primary), var(--builder-accent));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            margin: 0 auto 1rem;
+        }
+
+        .quick-option h3 {
+            margin: 0 0 0.5rem 0;
+            color: #1f2937;
+        }
+
+        .quick-option p {
+            margin: 0 0 1rem 0;
+            color: #6b7280;
+            line-height: 1.5;
+        }
+
+        .quick-option-features {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+            text-align: left;
+        }
+
+        .quick-option-features li {
+            padding: 0.25rem 0;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quick-option-features li::before {
+            content: '✓';
+            color: var(--builder-accent);
+            font-weight: bold;
+        }
+
+        /* Flow Builder Integration */
+        .flow-builder-container {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 300px 1fr 320px;
+            gap: 1px;
+            background: #e2e8f0;
+        }
+
+        .panel {
+            background: white;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Website Scraper */
+        .scraper-container {
+            flex: 1;
+            padding: 2rem;
+            background: white;
+            overflow-y: auto;
+        }
+
+        .scraper-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--builder-primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .progress-container {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--builder-primary), var(--builder-accent));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-steps {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+
+        .progress-step {
+            padding: 0.5rem 0;
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .progress-step.active {
+            color: var(--builder-primary);
+        }
+
+        .progress-step.completed {
+            color: var(--builder-accent);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .flow-builder-container {
+                grid-template-columns: 250px 1fr 280px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .builder-modes {
+                overflow-x: auto;
+                padding: 1rem 0.5rem;
+            }
+            
+            .quick-start-options {
+                grid-template-columns: 1fr;
+                padding: 0 1rem;
+            }
+            
+            .flow-builder-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr auto;
+            }
+        }
+
+        /* Hidden states */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Loading states */
+        .loading {
+            position: relative;
+            pointer-events: none;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid #e2e8f0;
+            border-top-color: var(--builder-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Training Interface Styles */
+        .training-results {
+            padding: 2rem;
+        }
+
+        .training-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .training-header h3 {
+            margin: 0;
+            color: #1f2937;
+            font-size: 1.75rem;
+        }
+
+        .training-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--builder-primary);
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+
+        .data-type-section {
+            margin: 2rem 0;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .data-type-section h4 {
+            background: #f8fafc;
+            padding: 1rem;
+            margin: 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .training-examples {
+            padding: 1rem;
+        }
+
+        .training-example {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .example-input {
+            margin-bottom: 0.5rem;
+            color: #1f2937;
+        }
+
+        .example-output {
+            margin-bottom: 0.5rem;
+            color: #4b5563;
+        }
+
+        .example-meta {
+            font-size: 0.75rem;
+            color: #9ca3af;
+        }
+
+        .more-examples {
+            text-align: center;
+            color: #6b7280;
+            font-style: italic;
+            padding: 1rem;
+        }
+
+        .training-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .training-empty {
+            text-align: center;
+            padding: 3rem;
+            color: #6b7280;
+        }
+
+        .training-empty i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #fbbf24;
+        }
+
+        /* Test Interface Styles */
+        .test-interface {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .chat-container {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+            background: white;
+        }
+
+        .chat-messages {
+            height: 400px;
+            overflow-y: auto;
+            padding: 1rem;
+            background: #f8fafc;
+        }
+
+        .bot-message, .user-message {
+            margin-bottom: 1rem;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            max-width: 80%;
+        }
+
+        .bot-message {
+            background: white;
+            border: 1px solid #e2e8f0;
+            margin-right: auto;
+        }
+
+        .user-message {
+            background: var(--builder-primary);
+            color: white;
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 1rem;
+            border-top: 1px solid #e2e8f0;
+            background: white;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            margin-right: 0.5rem;
+        }
+
+        .chat-input button {
+            padding: 0.75rem 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Builder Header -->
+    <header class="builder-header">
+        <a href="/" class="builder-brand">
+            <div class="builder-logo">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="builder-title">BotFlo Builder</div>
+        </a>
+
+        <nav class="builder-nav">
+            <button class="builder-tab active" data-tab="build">
+                <i class="fas fa-hammer"></i>
+                Build
+            </button>
+            <button class="builder-tab" data-tab="train">
+                <i class="fas fa-brain"></i>
+                Train
+            </button>
+            <button class="builder-tab" data-tab="test">
+                <i class="fas fa-play"></i>
+                Test
+            </button>
+            <button class="builder-tab" data-tab="deploy">
+                <i class="fas fa-rocket"></i>
+                Deploy
+            </button>
+        </nav>
+
+        <div class="builder-actions">
+            <button class="btn outline" id="saveBtn">
+                <i class="fas fa-save"></i>
+                Save
+            </button>
+            <button class="btn primary" id="upgradeBtn">
+                <i class="fas fa-crown"></i>
+                Upgrade
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="builder-container">
+        <!-- Build Mode Selection -->
+        <div class="builder-modes">
+            <div class="mode-selector">
+                <button class="mode-btn active" data-mode="quick-start">
+                    <i class="fas fa-bolt"></i>
+                    Quick Start
+                </button>
+                <button class="mode-btn" data-mode="scraper">
+                    <i class="fas fa-globe"></i>
+                    Website Import
+                </button>
+                <button class="mode-btn" data-mode="flow-builder">
+                    <i class="fas fa-project-diagram"></i>
+                    Flow Builder
+                </button>
+                <button class="mode-btn" data-mode="templates">
+                    <i class="fas fa-layer-group"></i>
+                    Templates
+                </button>
+            </div>
+            
+            <div style="margin-left: auto; display: flex; align-items: center; gap: 1rem;">
+                <span style="color: #6b7280; font-size: 0.875rem;">
+                    <i class="fas fa-info-circle"></i>
+                    Choose your preferred building method
+                </span>
+            </div>
+        </div>
+
+        <!-- Builder Content -->
+        <div class="builder-content">
+            <!-- Quick Start Mode -->
+            <div id="quick-start-mode" class="quick-start-container">
+                <h1>🚀 Create Your AI Chatbot</h1>
+                <p style="font-size: 1.125rem; color: #6b7280; max-width: 600px;">
+                    Choose how you'd like to build your chatbot. Each method is designed for different needs and skill levels.
+                </p>
+
+                <div class="quick-start-options">
+                    <div class="quick-option" data-action="use-template">
+                        <div class="quick-option-icon">
+                            <i class="fas fa-layer-group"></i>
+                        </div>
+                        <h3>Start with Template</h3>
+                        <p>Choose from professionally designed chatbot templates for common use cases.</p>
+                        <ul class="quick-option-features">
+                            <li>Pre-built conversation flows</li>
+                            <li>Industry-specific templates</li>
+                            <li>Ready in 5 minutes</li>
+                            <li>Fully customizable</li>
+                        </ul>
+                        <button class="btn primary" style="width: 100%; margin-top: 1rem;">
+                            Browse Templates
+                        </button>
+                    </div>
+
+                    <div class="quick-option" data-action="import-website">
+                        <div class="quick-option-icon">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <h3>Import from Website</h3>
+                        <p>Automatically create a chatbot from your existing website content.</p>
+                        <ul class="quick-option-features">
+                            <li>AI-powered content analysis</li>
+                            <li>Automatic training data</li>
+                            <li>Instant deployment</li>
+                            <li>Smart Q&A generation</li>
+                        </ul>
+                        <button class="btn primary" style="width: 100%; margin-top: 1rem;">
+                            Import Website
+                        </button>
+                    </div>
+
+                    <div class="quick-option" data-action="advanced-builder">
+                        <div class="quick-option-icon">
+                            <i class="fas fa-project-diagram"></i>
+                        </div>
+                        <h3>Advanced Flow Builder</h3>
+                        <p>Build complex conversational flows with our visual drag-and-drop editor.</p>
+                        <ul class="quick-option-features">
+                            <li>Visual flow designer</li>
+                            <li>Conditional logic</li>
+                            <li>API integrations</li>
+                            <li>Advanced features</li>
+                        </ul>
+                        <button class="btn primary" style="width: 100%; margin-top: 1rem;">
+                            Open Builder
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Website Scraper Mode -->
+            <div id="scraper-mode" class="scraper-container hidden">
+                <div class="scraper-form">
+                    <h2><i class="fas fa-globe"></i> Import from Website</h2>
+                    <p style="color: #6b7280; margin-bottom: 2rem;">
+                        Enter your website URL and we'll automatically analyze your content to create a smart chatbot.
+                    </p>
+
+                    <form id="website-scraper-form">
+                        <div class="form-group">
+                            <label class="form-label" for="website-url">
+                                <i class="fas fa-link"></i>
+                                Website URL
+                            </label>
+                            <input 
+                                type="url" 
+                                id="website-url" 
+                                class="form-input" 
+                                placeholder="https://yourwebsite.com"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="chatbot-name">
+                                <i class="fas fa-robot"></i>
+                                Chatbot Name
+                            </label>
+                            <input 
+                                type="text" 
+                                id="chatbot-name" 
+                                class="form-input" 
+                                placeholder="My Website Assistant"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="chatbot-description">
+                                <i class="fas fa-align-left"></i>
+                                Description (Optional)
+                            </label>
+                            <textarea 
+                                id="chatbot-description" 
+                                class="form-input form-textarea" 
+                                placeholder="Describe what your chatbot should help users with..."
+                            ></textarea>
+                        </div>
+
+                        <button type="submit" class="btn primary" style="width: 100%;">
+                            <i class="fas fa-magic"></i>
+                            Create Chatbot from Website
+                        </button>
+                    </form>
+
+                    <div id="scraper-progress" class="progress-container">
+                        <h3><i class="fas fa-cog fa-spin"></i> Creating Your Chatbot</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress-fill"></div>
+                        </div>
+                        <ul class="progress-steps">
+                            <li class="progress-step" id="step-analyze">
+                                <i class="fas fa-search"></i>
+                                Analyzing website content
+                            </li>
+                            <li class="progress-step" id="step-extract">
+                                <i class="fas fa-download"></i>
+                                Extracting key information
+                            </li>
+                            <li class="progress-step" id="step-train">
+                                <i class="fas fa-brain"></i>
+                                Training AI model
+                            </li>
+                            <li class="progress-step" id="step-deploy">
+                                <i class="fas fa-rocket"></i>
+                                Deploying chatbot
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Flow Builder Mode -->
+            <div id="flow-builder-mode" class="flow-builder-container hidden">
+                <!-- Component Library Panel -->
+                <div id="component-library" class="panel">
+                    <!-- Populated by Flow Builder -->
+                </div>
+                
+                <!-- Main Workspace -->
+                <div id="main-workspace" class="panel">
+                    <!-- Populated by Flow Builder -->
+                </div>
+                
+                <!-- Properties Panel -->
+                <div id="properties-panel" class="panel">
+                    <!-- Populated by Flow Builder -->
+                </div>
+            </div>
+
+            <!-- Templates Mode -->
+            <div id="templates-mode" class="quick-start-container hidden">
+                <h2>🎨 Chatbot Templates</h2>
+                <p style="color: #6b7280; margin-bottom: 2rem;">
+                    Start with professionally designed templates and customize them for your needs.
+                </p>
+                
+                <div id="templates-grid" class="quick-start-options">
+                    <!-- Templates will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="app-navigation.js"></script>
+    <script type="module">
+        import { FlowBuilder } from './flow-builder/js/FlowBuilder.js';
+        
+        // Application state
+        let currentMode = 'quick-start';
+        let flowBuilderApp = null;
+        let isFlowBuilderInitialized = false;
+
+        // Initialize the unified builder
+        document.addEventListener('DOMContentLoaded', async () => {
+            setupEventListeners();
+            loadTemplates();
+            
+            // Get mode from URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const mode = urlParams.get('mode') || 'quick-start';
+            
+            if (mode !== 'quick-start') {
+                switchMode(mode);
+            }
+        });
+
+        function setupEventListeners() {
+            // Mode switching
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const mode = btn.dataset.mode;
+                    switchMode(mode);
+                });
+            });
+
+            // Quick start actions
+            document.querySelectorAll('.quick-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    const action = option.dataset.action;
+                    handleQuickAction(action);
+                });
+            });
+
+            // Website scraper form
+            document.getElementById('website-scraper-form').addEventListener('submit', handleWebsiteScraping);
+
+            // Header actions
+            document.getElementById('saveBtn').addEventListener('click', handleSave);
+            document.getElementById('upgradeBtn').addEventListener('click', handleUpgrade);
+        }
+
+        async function switchMode(mode) {
+            currentMode = mode;
+
+            // Update mode buttons
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.mode === mode);
+            });
+
+            // Hide all mode containers
+            document.querySelectorAll('[id$="-mode"]').forEach(container => {
+                container.classList.add('hidden');
+            });
+
+            // Show selected mode
+            const modeContainer = document.getElementById(`${mode}-mode`);
+            if (modeContainer) {
+                modeContainer.classList.remove('hidden');
+            }
+
+            // Initialize flow builder if needed
+            if (mode === 'flow-builder' && !isFlowBuilderInitialized) {
+                await initializeFlowBuilder();
+            }
+
+            // Update URL
+            const url = new URL(window.location);
+            url.searchParams.set('mode', mode);
+            window.history.replaceState({}, '', url);
+        }
+
+        async function initializeFlowBuilder() {
+            try {
+                console.log('Initializing Flow Builder...');
+                flowBuilderApp = new FlowBuilder();
+                await flowBuilderApp.init();
+                isFlowBuilderInitialized = true;
+                console.log('Flow Builder initialized successfully');
+            } catch (error) {
+                console.error('Failed to initialize Flow Builder:', error);
+                alert('Failed to load Flow Builder. Please try again.');
+            }
+        }
+
+        function handleQuickAction(action) {
+            switch (action) {
+                case 'use-template':
+                    switchMode('templates');
+                    break;
+                case 'import-website':
+                    switchMode('scraper');
+                    break;
+                case 'advanced-builder':
+                    switchMode('flow-builder');
+                    break;
+            }
+        }
+
+        async function handleWebsiteScraping(event) {
+            event.preventDefault();
+            
+            const form = event.target;
+            const formData = new FormData(form);
+            const websiteUrl = formData.get('website-url') || document.getElementById('website-url').value;
+            const chatbotName = formData.get('chatbot-name') || document.getElementById('chatbot-name').value;
+            const description = formData.get('chatbot-description') || document.getElementById('chatbot-description').value;
+
+            if (!websiteUrl || !chatbotName) {
+                alert('Please fill in the required fields.');
+                return;
+            }
+
+            try {
+                // Show progress
+                document.getElementById('scraper-progress').style.display = 'block';
+                form.style.display = 'none';
+
+                // Simulate website scraping process
+                await simulateWebsiteScraping(websiteUrl, chatbotName, description);
+
+            } catch (error) {
+                console.error('Website scraping failed:', error);
+                alert('Failed to create chatbot from website. Please try again.');
+                
+                // Reset form
+                document.getElementById('scraper-progress').style.display = 'none';
+                form.style.display = 'block';
+            }
+        }
+
+        async function simulateWebsiteScraping(url, name, description) {
+            const steps = [
+                { id: 'step-analyze', duration: 2000, progress: 25 },
+                { id: 'step-extract', duration: 3000, progress: 50 },
+                { id: 'step-train', duration: 4000, progress: 75 },
+                { id: 'step-deploy', duration: 2000, progress: 100 }
+            ];
+
+            for (const step of steps) {
+                // Update step status
+                document.getElementById(step.id).classList.add('active');
+                
+                // Update progress bar
+                document.getElementById('progress-fill').style.width = `${step.progress}%`;
+                
+                // Wait for step duration
+                await new Promise(resolve => setTimeout(resolve, step.duration));
+                
+                // Mark step as completed
+                document.getElementById(step.id).classList.remove('active');
+                document.getElementById(step.id).classList.add('completed');
+            }
+
+            // Success! Redirect to chat interface
+            setTimeout(() => {
+                alert(`🎉 Success! Your chatbot "${name}" has been created and is ready to use.`);
+                
+                // In a real implementation, you would:
+                // 1. Actually scrape the website
+                // 2. Process the content with AI
+                // 3. Train a model
+                // 4. Deploy the chatbot
+                // 5. Redirect to the chat interface
+                
+                window.location.href = `/chatbot.html?bot=${encodeURIComponent(name)}`;
+            }, 1000);
+        }
+
+        async function handleWebsiteImport() {
+            const websiteUrl = document.getElementById('website-url').value.trim();
+            
+            if (!websiteUrl) {
+                showNotification('Please enter a website URL', 'error');
+                return;
+            }
+            
+            // Validate URL
+            try {
+                new URL(websiteUrl);
+            } catch {
+                showNotification('Please enter a valid URL', 'error');
+                return;
+            }
+            
+            showNotification('🌐 Starting website analysis...', 'info');
+            
+            try {
+                // Show loading state
+                const importButton = document.querySelector('[onclick="handleWebsiteImport()"]');
+                if (importButton) {
+                    importButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
+                    importButton.disabled = true;
+                }
+                
+                // Call the scraper API (mock for now since we don't have backend)
+                await new Promise(resolve => setTimeout(resolve, 3000)); // Simulate API call
+                
+                // Mock training data for demo
+                const mockTrainingData = [
+                    {
+                        type: 'faq',
+                        input: 'What are your business hours?',
+                        output: 'We are open Monday through Friday, 9 AM to 6 PM EST.',
+                        confidence: 0.9
+                    },
+                    {
+                        type: 'feature',
+                        input: 'What services do you offer?',
+                        output: 'We offer comprehensive AI chatbot solutions, including custom bot development, training, and deployment.',
+                        confidence: 0.8
+                    },
+                    {
+                        type: 'contact',
+                        input: 'How can I contact you?',
+                        output: 'You can reach us via email at support@example.com or by phone at (555) 123-4567.',
+                        confidence: 0.9
+                    }
+                ];
+                
+                const mockChatbotConfig = {
+                    name: 'Website Assistant',
+                    knowledge: {
+                        sources: [websiteUrl]
+                    }
+                };
+                
+                // Display training results
+                displayTrainingResults(mockTrainingData, mockChatbotConfig);
+                showNotification('✅ Website analysis complete!', 'success');
+                
+                // Switch to train tab to show results
+                switchTab('train');
+                
+            } catch (error) {
+                console.error('Website import error:', error);
+                showNotification(`❌ Analysis failed: ${error.message}`, 'error');
+            } finally {
+                // Reset button
+                const importButton = document.querySelector('[onclick="handleWebsiteImport()"]');
+                if (importButton) {
+                    importButton.innerHTML = '<i class="fas fa-magic"></i> Analyze Website';
+                    importButton.disabled = false;
+                }
+            }
+        }
+
+        function loadTemplates() {
+            const templates = [
+                {
+                    id: 'customer-support',
+                    name: 'Customer Support',
+                    description: 'Handle common customer inquiries and support tickets',
+                    icon: 'fas fa-headset',
+                    features: ['FAQ automation', 'Ticket routing', 'Live chat handoff'],
+                    category: 'Business'
+                },
+                {
+                    id: 'ecommerce',
+                    name: 'E-commerce Assistant',
+                    description: 'Help customers find products and complete purchases',
+                    icon: 'fas fa-shopping-cart',
+                    features: ['Product recommendations', 'Order tracking', 'Payment support'],
+                    category: 'E-commerce'
+                },
+                {
+                    id: 'lead-generation',
+                    name: 'Lead Generation',
+                    description: 'Qualify leads and collect contact information',
+                    icon: 'fas fa-magnet',
+                    features: ['Lead qualification', 'Contact collection', 'CRM integration'],
+                    category: 'Marketing'
+                },
+                {
+                    id: 'appointment-booking',
+                    name: 'Appointment Booking',
+                    description: 'Schedule appointments and manage calendars',
+                    icon: 'fas fa-calendar-check',
+                    features: ['Calendar integration', 'Availability checking', 'Reminders'],
+                    category: 'Business'
+                }
+            ];
+
+            const templatesGrid = document.getElementById('templates-grid');
+            templatesGrid.innerHTML = templates.map(template => `
+                <div class="quick-option" data-template="${template.id}">
+                    <div class="quick-option-icon">
+                        <i class="${template.icon}"></i>
+                    </div>
+                    <h3>${template.name}</h3>
+                    <p>${template.description}</p>
+                    <ul class="quick-option-features">
+                        ${template.features.map(feature => `<li>${feature}</li>`).join('')}
+                    </ul>
+                    <button class="btn primary" style="width: 100%; margin-top: 1rem;" onclick="useTemplate('${template.id}')">
+                        Use Template
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        window.useTemplate = function(templateId) {
+            alert(`Loading ${templateId} template...`);
+            
+            // In a real implementation, this would:
+            // 1. Load the template configuration
+            // 2. Initialize the flow builder with the template
+            // 3. Switch to flow builder mode
+            
+            switchMode('flow-builder');
+        };
+
+        function handleSave() {
+            if (currentMode === 'flow-builder' && flowBuilderApp) {
+                flowBuilderApp.saveChatbot();
+            } else {
+                alert('Please build something first before saving!');
+            }
+        }
+
+        function handleUpgrade() {
+            // Use the unified builder redirect system for upgrade flow
+            if (window.BotFloBuilderRedirect) {
+                window.BotFloBuilderRedirect.handleUpgradeFlow('pro');
+            } else {
+                // Fallback to payment page
+                const returnUrl = encodeURIComponent(window.location.href);
+                window.location.href = `/payment.html?plan=pro&source=builder&return=${returnUrl}`;
+            }
+        }
+
+        function showUpgradeModal() {
+            const modal = document.createElement('div');
+            modal.id = 'upgrade-modal';
+            modal.innerHTML = `
+                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; display: flex; align-items: center; justify-content: center;" onclick="closeUpgradeModal()">
+                    <div style="background: white; border-radius: 12px; padding: 2rem; max-width: 500px; width: 90%;" onclick="event.stopPropagation()">
+                        <div style="text-align: center; margin-bottom: 2rem;">
+                            <div style="width: 64px; height: 64px; background: linear-gradient(135deg, #f59e0b, #d97706); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                                <i class="fas fa-crown" style="color: white; font-size: 2rem;"></i>
+                            </div>
+                            <h2 style="margin: 0 0 0.5rem 0;">Upgrade to Pro</h2>
+                            <p style="color: #6b7280; margin: 0;">Unlock unlimited chatbots and advanced features</p>
+                        </div>
+                        
+                        <div style="background: #f8fafc; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+                            <h3 style="margin: 0 0 1rem 0;">Pro Features:</h3>
+                            <ul style="list-style: none; padding: 0; margin: 0;">
+                                <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-check" style="color: #10b981;"></i>
+                                    Unlimited chatbots
+                                </li>
+                                <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-check" style="color: #10b981;"></i>
+                                    Advanced AI models
+                                </li>
+                                <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-check" style="color: #10b981;"></i>
+                                    API integrations
+                                </li>
+                                <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-check" style="color: #10b981;"></i>
+                                    Custom branding
+                                </li>
+                                <li style="padding: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-check" style="color: #10b981;"></i>
+                                    Priority support
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div style="display: flex; gap: 1rem;">
+                            <button onclick="closeUpgradeModal()" style="flex: 1; padding: 0.75rem; border: 1px solid #d1d5db; background: white; border-radius: 6px; cursor: pointer;">
+                                Maybe Later
+                            </button>
+                            <button onclick="handlePurchase()" style="flex: 1; padding: 0.75rem; background: #6366f1; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">
+                                Upgrade Now - $29/month
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        window.closeUpgradeModal = function() {
+            const modal = document.getElementById('upgrade-modal');
+            if (modal) {
+                modal.remove();
+            }
+        };
+
+        window.handlePurchase = function() {
+            closeUpgradeModal();
+            // Redirect to payment page
+            window.location.href = '/payment.html?plan=pro';
+        };
+
+        // Initialize builder based on URL parameters
+        function initializeBuilder() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const mode = urlParams.get('mode') || 'quick-start';
+            const source = urlParams.get('source') || 'direct';
+            const preset = urlParams.get('preset');
+            
+            // Set the initial mode
+            switchMode(mode);
+            
+            // Handle specific presets
+            if (preset === 'premade') {
+                const botId = urlParams.get('bot-id');
+                const botName = urlParams.get('bot-name');
+                if (botId && botName) {
+                    loadPremadeBot(botId, botName);
+                }
+            } else if (preset === 'template') {
+                const templateId = urlParams.get('template-id');
+                const templateName = urlParams.get('template-name');
+                if (templateId && templateName) {
+                    loadTemplate(templateId, templateName);
+                }
+            } else if (preset === 'website') {
+                const websiteUrl = urlParams.get('website-url');
+                if (websiteUrl) {
+                    startWebsiteImport(websiteUrl);
+                }
+            }
+            
+            // Update page title if provided
+            const title = urlParams.get('title');
+            if (title) {
+                document.title = title + ' - BotFlo';
+            }
+            
+            // Show welcome message based on source
+            showWelcomeMessage(source, preset);
+        }
+
+        function showWelcomeMessage(source, preset) {
+            let message = '🚀 Welcome to BotFlo Builder!';
+            
+            if (preset === 'premade') {
+                message = '🎯 Customizing your selected bot...';
+            } else if (preset === 'template') {
+                message = '📋 Loading template...';
+            } else if (preset === 'website') {
+                message = '🌐 Importing from website...';
+            } else if (source === 'advanced-builder') {
+                message = '⚡ Advanced Flow Builder loaded!';
+            }
+            
+            showNotification(message, 'success');
+        }
+
+        function loadPremadeBot(botId, botName) {
+            // Simulate loading a premade bot
+            showNotification(`Loading ${botName}...`, 'info');
+            
+            setTimeout(() => {
+                // Switch to Build tab to show the bot structure
+                switchTab('build');
+                showNotification(`${botName} loaded! You can now customize it.`, 'success');
+                
+                // Add some default bot structure for demo
+                const buildContent = document.getElementById('build-content');
+                buildContent.innerHTML = `
+                    <div class="bot-structure">
+                        <h3>🤖 ${botName}</h3>
+                        <div class="bot-flows">
+                            <div class="flow-item">
+                                <h4>Welcome Flow</h4>
+                                <p>Greets users and introduces the bot</p>
+                                <button class="btn btn-primary btn-sm" onclick="editFlow('welcome')">
+                                    <i class="fas fa-edit"></i> Edit Flow
+                                </button>
+                            </div>
+                            <div class="flow-item">
+                                <h4>Main Conversation Flow</h4>
+                                <p>Handles main user interactions</p>
+                                <button class="btn btn-primary btn-sm" onclick="editFlow('main')">
+                                    <i class="fas fa-edit"></i> Edit Flow
+                                </button>
+                            </div>
+                            <div class="flow-item">
+                                <h4>FAQ Flow</h4>
+                                <p>Answers frequently asked questions</p>
+                                <button class="btn btn-primary btn-sm" onclick="editFlow('faq')">
+                                    <i class="fas fa-edit"></i> Edit Flow
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }, 1500);
+        }
+
+        function loadTemplate(templateId, templateName) {
+            showNotification(`Loading ${templateName} template...`, 'info');
+            
+            setTimeout(() => {
+                switchTab('build');
+                showNotification(`${templateName} template loaded!`, 'success');
+                
+                // Add template structure
+                const buildContent = document.getElementById('build-content');
+                buildContent.innerHTML = `
+                    <div class="template-structure">
+                        <h3>📋 ${templateName}</h3>
+                        <p>This template includes pre-built flows for common use cases.</p>
+                        <div class="template-features">
+                            <div class="feature-item">
+                                <i class="fas fa-comments"></i>
+                                <span>Conversation Flows</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-robot"></i>
+                                <span>AI Responses</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-cog"></i>
+                                <span>Customizable Settings</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="switchMode('flow-builder')">
+                            <i class="fas fa-project-diagram"></i> Open Flow Builder
+                        </button>
+                    </div>
+                `;
+            }, 1500);
+        }
+
+        function startWebsiteImport(websiteUrl) {
+            switchMode('website-import');
+            document.getElementById('website-url').value = websiteUrl;
+            
+            showNotification(`Analyzing ${websiteUrl}...`, 'info');
+            setTimeout(() => {
+                handleWebsiteImport();
+            }, 1000);
+        }
+
+        function editFlow(flowType) {
+            // Switch to flow builder mode for editing specific flows
+            switchMode('flow-builder');
+            showNotification(`Opening ${flowType} flow in advanced editor...`, 'info');
+        }
+
+        function displayTrainingResults(trainingData, chatbotConfig) {
+            const trainContent = document.getElementById('train-content');
+            
+            if (!trainingData || trainingData.length === 0) {
+                trainContent.innerHTML = `
+                    <div class="training-empty">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <h3>No Training Data Found</h3>
+                        <p>We couldn't extract enough content from the website to train your chatbot.</p>
+                        <p>Try a different website or use the manual training option.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Group training data by type
+            const dataByType = {};
+            trainingData.forEach(item => {
+                if (!dataByType[item.type]) {
+                    dataByType[item.type] = [];
+                }
+                dataByType[item.type].push(item);
+            });
+            
+            trainContent.innerHTML = `
+                <div class="training-results">
+                    <div class="training-header">
+                        <h3>🧠 Training Data Extracted</h3>
+                        <p>Found ${trainingData.length} training examples from the website</p>
+                    </div>
+                    
+                    <div class="training-stats">
+                        <div class="stat-card">
+                            <div class="stat-number">${trainingData.length}</div>
+                            <div class="stat-label">Total Examples</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">${Object.keys(dataByType).length}</div>
+                            <div class="stat-label">Content Types</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">${chatbotConfig?.knowledge?.sources?.length || 1}</div>
+                            <div class="stat-label">Pages Analyzed</div>
+                        </div>
+                    </div>
+                    
+                    <div class="training-data">
+                        ${Object.entries(dataByType).map(([type, items]) => `
+                            <div class="data-type-section">
+                                <h4>${getTypeIcon(type)} ${type.charAt(0).toUpperCase() + type.slice(1)} (${items.length})</h4>
+                                <div class="training-examples">
+                                    ${items.slice(0, 3).map(item => `
+                                        <div class="training-example">
+                                            <div class="example-input">
+                                                <strong>Q:</strong> ${item.input}
+                                            </div>
+                                            <div class="example-output">
+                                                <strong>A:</strong> ${item.output.substring(0, 200)}${item.output.length > 200 ? '...' : ''}
+                                            </div>
+                                            <div class="example-meta">
+                                                Confidence: ${Math.round(item.confidence * 100)}%
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                    ${items.length > 3 ? `<div class="more-examples">+${items.length - 3} more examples</div>` : ''}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="training-actions">
+                        <button class="btn btn-primary" onclick="proceedWithTraining()">
+                            <i class="fas fa-rocket"></i> Train Chatbot
+                        </button>
+                        <button class="btn btn-secondary" onclick="editTrainingData()">
+                            <i class="fas fa-edit"></i> Edit Training Data
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getTypeIcon(type) {
+            const icons = {
+                'faq': '❓',
+                'feature': '⭐',
+                'content': '📄',
+                'contact': '📞',
+                'product': '🛍️',
+                'service': '🔧'
+            };
+            return icons[type] || '📝';
+        }
+
+        function proceedWithTraining() {
+            showNotification('🚀 Training your chatbot...', 'info');
+            
+            // Simulate training process
+            setTimeout(() => {
+                showNotification('✅ Training complete! Your chatbot is ready.', 'success');
+                switchTab('test');
+                
+                // Add a simple test interface
+                const testContent = document.getElementById('test-content');
+                testContent.innerHTML = `
+                    <div class="test-interface">
+                        <h3>🧪 Test Your Chatbot</h3>
+                        <div class="chat-container">
+                            <div class="chat-messages" id="chat-messages">
+                                <div class="bot-message">
+                                    Hello! I'm your new chatbot assistant. I've been trained on your website content. How can I help you?
+                                </div>
+                            </div>
+                            <div class="chat-input">
+                                <input type="text" id="chat-input" placeholder="Type your message..." onkeypress="if(event.key==='Enter') sendTestMessage()">
+                                <button onclick="sendTestMessage()" class="btn btn-primary">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }, 2000);
+        }
+
+        function editTrainingData() {
+            showNotification('📝 Training data editor would open here', 'info');
+        }
+
+        function sendTestMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            const messagesContainer = document.getElementById('chat-messages');
+            
+            // Add user message
+            messagesContainer.innerHTML += `
+                <div class="user-message">${message}</div>
+            `;
+            
+            input.value = '';
+            
+            // Simulate bot response
+            setTimeout(() => {
+                const responses = [
+                    "Based on the website content I've learned, I can help you with that!",
+                    "That's a great question! From what I know about the website...",
+                    "I can provide information about that based on my training data.",
+                    "Let me help you with that using the knowledge I've gained from the website."
+                ];
+                
+                const response = responses[Math.floor(Math.random() * responses.length)];
+                messagesContainer.innerHTML += `
+                    <div class="bot-message">${response}</div>
+                `;
+                
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }, 1000);
+            
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Initialize builder when page loads
+        document.addEventListener('DOMContentLoaded', initializeBuilder);
+    </script>
+</body>
+</html>

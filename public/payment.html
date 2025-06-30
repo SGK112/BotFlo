@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🛒 Payment & Cart - BotFlo</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="app-global.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Stripe Elements -->
+    <script src="https://js.stripe.com/v3/"></script>
+    
+    <style>
+        :root {
+            --payment-primary: #6366f1;
+            --payment-success: #10b981;
+            --payment-warning: #f59e0b;
+            --payment-danger: #ef4444;
+            --payment-gray: #6b7280;
+            --payment-light: #f8fafc;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--payment-light);
+            margin: 0;
+            padding: 0;
+        }
+
+        .payment-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .payment-main {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .payment-sidebar {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 2rem;
+        }
+
+        .payment-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .payment-logo {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--payment-primary), var(--payment-success));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .payment-title {
+            flex: 1;
+        }
+
+        .payment-title h1 {
+            margin: 0;
+            font-size: 1.75rem;
+            color: #1f2937;
+        }
+
+        .payment-title p {
+            margin: 0.25rem 0 0 0;
+            color: var(--payment-gray);
+        }
+
+        .payment-steps {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: var(--payment-light);
+            border-radius: 8px;
+        }
+
+        .payment-step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .payment-step.active {
+            background: var(--payment-primary);
+            color: white;
+        }
+
+        .payment-step.completed {
+            background: var(--payment-success);
+            color: white;
+        }
+
+        .payment-step:not(.active):not(.completed) {
+            color: var(--payment-gray);
+        }
+
+        .section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--payment-primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .cart-items {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .cart-item {
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--payment-primary), var(--payment-success));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .cart-item-details {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.25rem;
+        }
+
+        .cart-item-description {
+            font-size: 0.875rem;
+            color: var(--payment-gray);
+        }
+
+        .cart-item-price {
+            font-weight: 600;
+            color: var(--payment-primary);
+            font-size: 1.125rem;
+        }
+
+        .cart-total {
+            padding: 1rem;
+            background: var(--payment-light);
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .total-row.final {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: #1f2937;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .payment-method {
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .payment-method.active {
+            border-color: var(--payment-primary);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .payment-method:hover {
+            border-color: var(--payment-primary);
+        }
+
+        .payment-method-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .payment-method-name {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .stripe-element {
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            background: white;
+            margin-bottom: 1rem;
+        }
+
+        .stripe-element.focused {
+            border-color: var(--payment-primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .btn {
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn.primary {
+            background: var(--payment-primary);
+            color: white;
+        }
+
+        .btn.primary:hover:not(:disabled) {
+            background: #5855eb;
+            transform: translateY(-1px);
+        }
+
+        .btn.success {
+            background: var(--payment-success);
+            color: white;
+        }
+
+        .btn.full-width {
+            width: 100%;
+        }
+
+        .security-info {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .security-info h4 {
+            margin: 0 0 0.5rem 0;
+            color: #0369a1;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .security-info p {
+            margin: 0;
+            font-size: 0.875rem;
+            color: #0369a1;
+        }
+
+        .error-message {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .success-message {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .loading {
+            position: relative;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid transparent;
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .payment-container {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+            
+            .payment-main,
+            .payment-sidebar {
+                padding: 1.5rem;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .payment-steps {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            
+            .payment-methods {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Hide elements */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <!-- Main Payment Form -->
+        <div class="payment-main">
+            <!-- Header -->
+            <div class="payment-header">
+                <div class="payment-logo">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="payment-title">
+                    <h1>Complete Your Purchase</h1>
+                    <p>Secure payment processing with 256-bit encryption</p>
+                </div>
+            </div>
+
+            <!-- Payment Steps -->
+            <div class="payment-steps">
+                <div class="payment-step completed">
+                    <i class="fas fa-check"></i>
+                    Plan Selection
+                </div>
+                <div class="payment-step active">
+                    <i class="fas fa-credit-card"></i>
+                    Payment Details
+                </div>
+                <div class="payment-step">
+                    <i class="fas fa-rocket"></i>
+                    Confirmation
+                </div>
+            </div>
+
+            <!-- Customer Information -->
+            <div class="section">
+                <h2 class="section-title">
+                    <i class="fas fa-user"></i>
+                    Customer Information
+                </h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="first-name">First Name</label>
+                        <input type="text" id="first-name" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="last-name">Last Name</label>
+                        <input type="text" id="last-name" class="form-input" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="email">Email Address</label>
+                    <input type="email" id="email" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="company">Company (Optional)</label>
+                    <input type="text" id="company" class="form-input">
+                </div>
+            </div>
+
+            <!-- Payment Method Selection -->
+            <div class="section">
+                <h2 class="section-title">
+                    <i class="fas fa-credit-card"></i>
+                    Payment Method
+                </h2>
+                
+                <div class="payment-methods">
+                    <div class="payment-method active" data-method="card">
+                        <i class="fas fa-credit-card payment-method-icon"></i>
+                        <div class="payment-method-name">Credit Card</div>
+                    </div>
+                    <div class="payment-method" data-method="paypal">
+                        <i class="fab fa-paypal payment-method-icon"></i>
+                        <div class="payment-method-name">PayPal</div>
+                    </div>
+                    <div class="payment-method" data-method="apple-pay">
+                        <i class="fab fa-apple-pay payment-method-icon"></i>
+                        <div class="payment-method-name">Apple Pay</div>
+                    </div>
+                    <div class="payment-method" data-method="google-pay">
+                        <i class="fab fa-google-pay payment-method-icon"></i>
+                        <div class="payment-method-name">Google Pay</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Credit Card Form -->
+            <div class="section" id="card-payment-section">
+                <h2 class="section-title">
+                    <i class="fas fa-lock"></i>
+                    Card Details
+                </h2>
+                
+                <form id="payment-form">
+                    <div class="form-group">
+                        <label class="form-label">Card Number</label>
+                        <div id="card-number-element" class="stripe-element"></div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Expiry Date</label>
+                            <div id="card-expiry-element" class="stripe-element"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">CVC</label>
+                            <div id="card-cvc-element" class="stripe-element"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="card-name">Name on Card</label>
+                        <input type="text" id="card-name" class="form-input" required>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Alternative Payment Sections -->
+            <div class="section hidden" id="paypal-payment-section">
+                <h2 class="section-title">
+                    <i class="fab fa-paypal"></i>
+                    PayPal Payment
+                </h2>
+                <p style="color: #6b7280; margin-bottom: 1rem;">
+                    You'll be redirected to PayPal to complete your payment securely.
+                </p>
+                <div id="paypal-button-container"></div>
+            </div>
+
+            <!-- Billing Address -->
+            <div class="section">
+                <h2 class="section-title">
+                    <i class="fas fa-map-marker-alt"></i>
+                    Billing Address
+                </h2>
+                
+                <div class="form-group">
+                    <label class="form-label" for="address">Street Address</label>
+                    <input type="text" id="address" class="form-input" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="city">City</label>
+                        <input type="text" id="city" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="state">State/Province</label>
+                        <input type="text" id="state" class="form-input" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="zip">ZIP/Postal Code</label>
+                        <input type="text" id="zip" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="country">Country</label>
+                        <select id="country" class="form-input" required>
+                            <option value="">Select Country</option>
+                            <option value="US">United States</option>
+                            <option value="CA">Canada</option>
+                            <option value="GB">United Kingdom</option>
+                            <option value="AU">Australia</option>
+                            <option value="DE">Germany</option>
+                            <option value="FR">France</option>
+                            <option value="JP">Japan</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Complete Payment Button -->
+            <button id="complete-payment-btn" class="btn primary full-width">
+                <i class="fas fa-lock"></i>
+                Complete Secure Payment
+            </button>
+
+            <!-- Error/Success Messages -->
+            <div id="payment-errors" class="error-message hidden"></div>
+            <div id="payment-success" class="success-message hidden"></div>
+
+            <!-- Security Information -->
+            <div class="security-info">
+                <h4>
+                    <i class="fas fa-shield-alt"></i>
+                    Your payment is secure
+                </h4>
+                <p>
+                    We use industry-standard encryption and never store your payment information.
+                    All transactions are processed securely through Stripe.
+                </p>
+            </div>
+        </div>
+
+        <!-- Order Summary Sidebar -->
+        <div class="payment-sidebar">
+            <h2 class="section-title">
+                <i class="fas fa-shopping-cart"></i>
+                Order Summary
+            </h2>
+
+            <div class="cart-items" id="cart-items">
+                <!-- Cart items will be populated here -->
+            </div>
+
+            <div class="cart-total">
+                <div class="total-row">
+                    <span>Subtotal:</span>
+                    <span id="subtotal">$0.00</span>
+                </div>
+                <div class="total-row">
+                    <span>Tax:</span>
+                    <span id="tax">$0.00</span>
+                </div>
+                <div class="total-row">
+                    <span>Discount:</span>
+                    <span id="discount" style="color: var(--payment-success);">-$0.00</span>
+                </div>
+                <div class="total-row final">
+                    <span>Total:</span>
+                    <span id="total">$0.00</span>
+                </div>
+            </div>
+
+            <!-- Promo Code -->
+            <div style="margin-top: 1rem;">
+                <div class="form-group">
+                    <label class="form-label" for="promo-code">Promo Code</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="text" id="promo-code" class="form-input" placeholder="Enter code">
+                        <button id="apply-promo-btn" class="btn" style="background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; padding: 0.5rem 1rem;">
+                            Apply
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Money Back Guarantee -->
+            <div style="margin-top: 2rem; padding: 1rem; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; text-align: center;">
+                <div style="color: #166534; font-weight: 600; margin-bottom: 0.5rem;">
+                    <i class="fas fa-medal"></i>
+                    30-Day Money Back Guarantee
+                </div>
+                <div style="font-size: 0.875rem; color: #166534;">
+                    Not satisfied? Get a full refund within 30 days.
+                </div>
+            </div>
+
+            <!-- Payment Action Button -->
+            <div style="margin-top: 2rem;">
+                <button id="complete-payment-btn" class="btn" style="
+                    width: 100%;
+                    background: linear-gradient(135deg, var(--payment-primary), #4f46e5);
+                    color: white;
+                    font-size: 1.125rem;
+                    font-weight: 600;
+                    padding: 1rem 2rem;
+                    border: none;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    box-shadow: 0 4px 14px 0 rgba(99, 102, 241, 0.4);
+                " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(99, 102, 241, 0.5)';" onmouseout="this.style.transform=''; this.style.boxShadow='0 4px 14px 0 rgba(99, 102, 241, 0.4)';">
+                    <i class="fas fa-lock"></i>
+                    Complete Secure Payment
+                </button>
+                
+                <div style="text-align: center; margin-top: 1rem; font-size: 0.875rem; color: #6b7280;">
+                    <i class="fas fa-shield-alt"></i>
+                    Secured by 256-bit SSL encryption
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Initialize Stripe (use test key for demo)
+        const stripe = Stripe('pk_test_51234567890abcdef'); // Replace with your actual publishable key
+        const elements = stripe.elements();
+
+        // Cart and pricing data
+        const cart = {
+            items: [],
+            subtotal: 0,
+            tax: 0,
+            discount: 0,
+            total: 0
+        };
+
+        // Available plans
+        const plans = {
+            'free': {
+                id: 'free',
+                name: 'Free Plan',
+                description: 'Perfect for getting started',
+                price: 0,
+                icon: 'fas fa-gift'
+            },
+            'pro': {
+                id: 'pro',
+                name: 'Professional Plan',
+                description: 'Unlimited chatbots & advanced features',
+                price: 29,
+                icon: 'fas fa-crown'
+            },
+            'enterprise': {
+                id: 'enterprise',
+                name: 'Enterprise Plan',
+                description: 'Custom solutions for large teams',
+                price: 99,
+                icon: 'fas fa-building'
+            },
+            // Premade bots
+            'customer-support-bot': {
+                id: 'customer-support-bot',
+                name: 'Customer Support Bot',
+                description: 'Ready-to-use customer service chatbot',
+                price: 49,
+                icon: 'fas fa-headset'
+            },
+            'ecommerce-bot': {
+                id: 'ecommerce-bot',
+                name: 'E-commerce Assistant',
+                description: 'Shopping and product recommendation bot',
+                price: 59,
+                icon: 'fas fa-shopping-cart'
+            },
+            'lead-gen-bot': {
+                id: 'lead-gen-bot',
+                name: 'Lead Generation Bot',
+                description: 'Qualify leads and collect contacts',
+                price: 39,
+                icon: 'fas fa-magnet'
+            }
+        };
+
+        // Promo codes
+        const promoCodes = {
+            'LAUNCH50': { discount: 0.5, description: '50% off launch special' },
+            'SAVE20': { discount: 0.2, description: '20% off all plans' },
+            'NEWUSER': { discount: 0.3, description: '30% off for new users' }
+        };
+
+        // Initialize payment system
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeStripeElements();
+            loadCartFromURL();
+            setupEventListeners();
+            updateCartDisplay();
+        });
+
+        function initializeStripeElements() {
+            const style = {
+                base: {
+                    fontSize: '16px',
+                    color: '#374151',
+                    '::placeholder': {
+                        color: '#9CA3AF',
+                    },
+                },
+            };
+
+            // Create card elements
+            const cardNumber = elements.create('cardNumber', { style });
+            const cardExpiry = elements.create('cardExpiry', { style });
+            const cardCvc = elements.create('cardCvc', { style });
+
+            // Mount elements
+            cardNumber.mount('#card-number-element');
+            cardExpiry.mount('#card-expiry-element');
+            cardCvc.mount('#card-cvc-element');
+
+            // Handle real-time validation errors
+            [cardNumber, cardExpiry, cardCvc].forEach(element => {
+                element.on('change', (event) => {
+                    const displayError = document.getElementById('payment-errors');
+                    if (event.error) {
+                        displayError.textContent = event.error.message;
+                        displayError.classList.remove('hidden');
+                    } else {
+                        displayError.classList.add('hidden');
+                    }
+                });
+
+                element.on('focus', () => {
+                    element.getElement().classList.add('focused');
+                });
+
+                element.on('blur', () => {
+                    element.getElement().classList.remove('focused');
+                });
+            });
+
+            // Store elements globally
+            window.stripeElements = { cardNumber, cardExpiry, cardCvc };
+        }
+
+        function loadCartFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const plan = urlParams.get('plan');
+            const bot = urlParams.get('bot');
+            const quantity = parseInt(urlParams.get('quantity')) || 1;
+
+            // Add plan to cart
+            if (plan && plans[plan]) {
+                addToCart(plans[plan], quantity);
+            }
+
+            // Add bot to cart
+            if (bot && plans[bot]) {
+                addToCart(plans[bot], quantity);
+            }
+
+            // If no items, add default pro plan
+            if (cart.items.length === 0) {
+                addToCart(plans.pro, 1);
+            }
+        }
+
+        function addToCart(item, quantity = 1) {
+            const existingItem = cart.items.find(i => i.id === item.id);
+            
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.items.push({
+                    ...item,
+                    quantity: quantity
+                });
+            }
+
+            calculateTotals();
+        }
+
+        function removeFromCart(itemId) {
+            cart.items = cart.items.filter(item => item.id !== itemId);
+            calculateTotals();
+            updateCartDisplay();
+        }
+
+        function calculateTotals() {
+            cart.subtotal = cart.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            cart.tax = cart.subtotal * 0.08; // 8% tax rate
+            cart.total = cart.subtotal + cart.tax - cart.discount;
+        }
+
+        function updateCartDisplay() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            
+            cartItemsContainer.innerHTML = cart.items.map(item => `
+                <div class="cart-item">
+                    <div class="cart-item-icon">
+                        <i class="${item.icon}"></i>
+                    </div>
+                    <div class="cart-item-details">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-description">${item.description}</div>
+                        ${item.quantity > 1 ? `<div style="font-size: 0.875rem; color: #6b7280;">Quantity: ${item.quantity}</div>` : ''}
+                    </div>
+                    <div class="cart-item-price">
+                        $${(item.price * item.quantity).toFixed(2)}
+                    </div>
+                </div>
+            `).join('');
+
+            // Update totals
+            document.getElementById('subtotal').textContent = `$${cart.subtotal.toFixed(2)}`;
+            document.getElementById('tax').textContent = `$${cart.tax.toFixed(2)}`;
+            document.getElementById('discount').textContent = `-$${cart.discount.toFixed(2)}`;
+            document.getElementById('total').textContent = `$${cart.total.toFixed(2)}`;
+        }
+
+        function setupEventListeners() {
+            // Payment method selection
+            document.querySelectorAll('.payment-method').forEach(method => {
+                method.addEventListener('click', () => {
+                    // Update active method
+                    document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('active'));
+                    method.classList.add('active');
+                    
+                    // Show/hide payment sections
+                    const selectedMethod = method.dataset.method;
+                    document.querySelectorAll('[id$="-payment-section"]').forEach(section => {
+                        section.classList.add('hidden');
+                    });
+                    
+                    if (selectedMethod === 'card') {
+                        document.getElementById('card-payment-section').classList.remove('hidden');
+                    } else if (selectedMethod === 'paypal') {
+                        document.getElementById('paypal-payment-section').classList.remove('hidden');
+                    }
+                });
+            });
+
+            // Complete payment button
+            document.getElementById('complete-payment-btn').addEventListener('click', handlePayment);
+
+            // Promo code application
+            document.getElementById('apply-promo-btn').addEventListener('click', applyPromoCode);
+
+            // Enter key for promo code
+            document.getElementById('promo-code').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    applyPromoCode();
+                }
+            });
+        }
+
+        function applyPromoCode() {
+            const promoInput = document.getElementById('promo-code');
+            const promoCode = promoInput.value.trim().toUpperCase();
+            
+            if (promoCodes[promoCode]) {
+                const promo = promoCodes[promoCode];
+                cart.discount = cart.subtotal * promo.discount;
+                calculateTotals();
+                updateCartDisplay();
+                
+                showSuccess(`Promo code applied! ${promo.description}`);
+                promoInput.disabled = true;
+                document.getElementById('apply-promo-btn').textContent = 'Applied';
+                document.getElementById('apply-promo-btn').disabled = true;
+            } else {
+                showError('Invalid promo code. Please try again.');
+            }
+        }
+
+        async function handlePayment() {
+            const activeMethod = document.querySelector('.payment-method.active').dataset.method;
+            const paymentBtn = document.getElementById('complete-payment-btn');
+            
+            // Show loading state
+            paymentBtn.classList.add('loading');
+            paymentBtn.disabled = true;
+            paymentBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            
+            try {
+                if (activeMethod === 'card') {
+                    await processCardPayment();
+                } else if (activeMethod === 'paypal') {
+                    await processPayPalPayment();
+                } else {
+                    throw new Error(`${activeMethod} payment not yet implemented`);
+                }
+            } catch (error) {
+                console.error('Payment failed:', error);
+                showError(error.message || 'Payment failed. Please try again.');
+                
+                // Reset button
+                paymentBtn.classList.remove('loading');
+                paymentBtn.disabled = false;
+                paymentBtn.innerHTML = '<i class="fas fa-lock"></i> Complete Secure Payment';
+            }
+        }
+
+        async function processCardPayment() {
+            // Get form data
+            const customerData = {
+                firstName: document.getElementById('first-name').value,
+                lastName: document.getElementById('last-name').value,
+                email: document.getElementById('email').value,
+                company: document.getElementById('company').value,
+                cardName: document.getElementById('card-name').value,
+                address: {
+                    line1: document.getElementById('address').value,
+                    city: document.getElementById('city').value,
+                    state: document.getElementById('state').value,
+                    postal_code: document.getElementById('zip').value,
+                    country: document.getElementById('country').value
+                }
+            };
+
+            // Validate required fields
+            const requiredFields = ['firstName', 'lastName', 'email', 'cardName'];
+            const addressFields = ['line1', 'city', 'state', 'postal_code', 'country'];
+            
+            for (const field of requiredFields) {
+                if (!customerData[field]) {
+                    throw new Error(`Please fill in your ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}`);
+                }
+            }
+            
+            for (const field of addressFields) {
+                if (!customerData.address[field]) {
+                    throw new Error(`Please fill in your ${field.replace('_', ' ')}`);
+                }
+            }
+
+            // For demo purposes, simulate successful payment
+            await simulatePaymentProcessing();
+            
+            // Show success and redirect
+            showPaymentSuccess(customerData);
+        }
+
+        async function processPayPalPayment() {
+            // For demo purposes, simulate PayPal payment
+            await simulatePaymentProcessing();
+            showPaymentSuccess({ firstName: 'PayPal', lastName: 'User' });
+        }
+
+        async function simulatePaymentProcessing() {
+            // Simulate payment processing delay
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            // Randomly succeed (90% success rate for demo)
+            if (Math.random() < 0.1) {
+                throw new Error('Payment was declined. Please check your payment details and try again.');
+            }
+        }
+
+        function showPaymentSuccess(customerData) {
+            // Hide payment form
+            document.querySelector('.payment-main').style.display = 'none';
+            
+            // Show success message
+            const successHTML = `
+                <div style="text-align: center; padding: 4rem 2rem;">
+                    <div style="width: 80px; height: 80px; background: var(--payment-success); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem; color: white; font-size: 2rem;">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <h1 style="color: #1f2937; margin-bottom: 1rem;">Payment Successful!</h1>
+                    <p style="color: #6b7280; font-size: 1.125rem; margin-bottom: 2rem;">
+                        Thank you ${customerData.firstName}! Your order has been processed successfully.
+                    </p>
+                    <div style="background: #f8fafc; border-radius: 8px; padding: 2rem; margin-bottom: 2rem; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto;">
+                        <h3 style="margin: 0 0 1rem 0;">Order Details:</h3>
+                        <div style="font-size: 0.875rem; color: #6b7280;">
+                            <div>Order Total: <strong>$${cart.total.toFixed(2)}</strong></div>
+                            <div>Payment Method: Credit Card</div>
+                            <div>Order ID: #${Math.random().toString(36).substr(2, 9).toUpperCase()}</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                        <button onclick="redirectAfterPayment()" class="btn primary">
+                            <i class="fas fa-rocket"></i>
+                            Continue to Builder
+                        </button>
+                        <button onclick="window.location.href='/dashboard.html'" class="btn secondary">
+                            <i class="fas fa-home"></i>
+                            Go to Dashboard
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.querySelector('.payment-container').innerHTML = successHTML;
+            
+            // Auto-redirect after 5 seconds
+            setTimeout(() => {
+                redirectAfterPayment();
+            }, 5000);
+        }
+
+        function redirectAfterPayment() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const returnUrl = urlParams.get('return');
+            
+            if (returnUrl) {
+                window.location.href = decodeURIComponent(returnUrl);
+            } else {
+                window.location.href = '/bot-builder.html?source=payment&upgraded=true';
+            }
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('payment-errors');
+            errorDiv.textContent = message;
+            errorDiv.classList.remove('hidden');
+            
+            // Hide after 5 seconds
+            setTimeout(() => {
+                errorDiv.classList.add('hidden');
+            }, 5000);
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('payment-success');
+            successDiv.textContent = message;
+            successDiv.classList.remove('hidden');
+            
+            // Hide after 3 seconds
+            setTimeout(() => {
+                successDiv.classList.add('hidden');
+            }, 3000);
+        }
+
+        // Make functions globally available for debugging
+        window.paymentSystem = {
+            cart,
+            plans,
+            addToCart,
+            removeFromCart,
+            calculateTotals,
+            updateCartDisplay
+        };
+    </script>
+</body>
+</html>

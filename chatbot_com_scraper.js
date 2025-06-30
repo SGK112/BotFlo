@@ -4,15 +4,14 @@ const fs = require('fs');
 const path = require('path');
 const { URL } = require('url');
 
-class ChatBotComScraper {
+class WebsiteChatbotScraper {
     constructor() {
-        this.baseUrl = 'https://www.chatbot.com';
         this.scrapedData = {
             pages: {},
-            features: {},
-            uiPatterns: {},
-            technicalStack: {},
-            designPatterns: {}
+            content: [],
+            faqs: [],
+            features: [],
+            metadata: {}
         };
         this.headers = {
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -28,10 +27,516 @@ class ChatBotComScraper {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    async scrapePage(url, description = '') {
+    async scrapeWebsiteForChatbot(url, options = {}) {
         try {
-            console.log(`Scraping: ${url}`);
+            console.log(`🚀 Starting website analysis for: ${url}`);
             
+            const baseUrl = new URL(url).origin;
+            const result = {
+                url,
+                success: true,
+                chatbotData: {},
+                trainingData: [],
+                error: null,
+                timestamp: new Date().toISOString()
+            };
+
+            // Step 1: Scrape main page
+            console.log('📄 Analyzing main page content...');
+            const mainPageData = await this.scrapePage(url);
+            
+            // Step 2: Extract navigation and key pages
+            console.log('🔍 Finding important pages...');
+            const importantPages = this.findImportantPages(mainPageData, baseUrl);
+            
+            // Step 3: Scrape additional pages
+            console.log('📚 Analyzing additional pages...');
+            const additionalData = await this.scrapeMultiplePages(importantPages.slice(0, 5)); // Limit to 5 pages
+            
+            // Step 4: Process content for chatbot training
+            console.log('🧠 Processing content for AI training...');
+            const trainingData = this.processContentForTraining([mainPageData, ...additionalData]);
+            
+            // Step 5: Generate chatbot configuration
+            console.log('⚙️ Generating chatbot configuration...');
+            const chatbotConfig = this.generateChatbotConfig(trainingData, mainPageData);
+            
+            result.chatbotData = chatbotConfig;
+            result.trainingData = trainingData;
+            
+            console.log('✅ Website analysis complete!');
+            return result;
+            
+        } catch (error) {
+            console.error('❌ Website scraping failed:', error);
+            return {
+                url,
+                success: false,
+                error: error.message,
+                timestamp: new Date().toISOString()
+            };
+        }
+    }
+
+    async scrapePage(url) {
+        try {
+            console.log(`Analyzing: ${url}`);
+            
+            const response = await axios.get(url, { 
+                headers: this.headers,
+                timeout: 15000,
+                maxRedirects: 3
+            });
+            
+            const $ = cheerio.load(response.data);
+            
+            return {
+                url,
+                title: $('title').text().trim(),
+                metaDescription: $('meta[name="description"]').attr('content') || '',
+                headings: this.extractHeadings($),
+                content: this.extractTextContent($),
+                links: this.extractLinks($, url),
+                images: this.extractImages($, url),
+                forms: this.extractForms($),
+                faqs: this.extractFAQs($),
+                contactInfo: this.extractContactInfo($),
+                features: this.extractFeatures($),
+                navigation: this.extractNavigation($)
+            };
+            
+        } catch (error) {
+            console.warn(`Failed to scrape ${url}:`, error.message);
+            return null;
+        }
+    }
+
+    extractHeadings($) {
+        const headings = [];
+        $('h1, h2, h3, h4, h5, h6').each((i, el) => {
+            const text = $(el).text().trim();
+            if (text && text.length > 3) {
+                headings.push({
+                    level: el.tagName.toLowerCase(),
+                    text: text,
+                    id: $(el).attr('id') || ''
+                });
+            }
+        });
+        return headings;
+    }
+
+    extractTextContent($) {
+        const content = [];
+        
+        // Extract paragraphs
+        $('p').each((i, el) => {
+            const text = $(el).text().trim();
+            if (text && text.length > 20) {
+                content.push({
+                    type: 'paragraph',
+                    text: text,
+                    context: this.getElementContext($(el))
+                });
+            }
+        });
+        
+        // Extract lists
+        $('ul, ol').each((i, el) => {
+            const items = [];
+            $(el).find('li').each((j, li) => {
+                const text = $(li).text().trim();
+                if (text) items.push(text);
+            });
+            
+            if (items.length > 0) {
+                content.push({
+                    type: 'list',
+                    items: items,
+                    context: this.getElementContext($(el))
+                });
+            }
+        });
+        
+        return content;
+    }
+
+    extractFAQs($) {
+        const faqs = [];
+        
+        // Common FAQ patterns
+        const faqSelectors = [
+            '.faq', '.frequently-asked-questions', '.qa', '.question-answer',
+            '[class*="faq"]', '[class*="question"]', '[id*="faq"]'
+        ];
+        
+        faqSelectors.forEach(selector => {
+            $(selector).each((i, el) => {
+                const question = $(el).find('h3, h4, h5, .question, .q, [class*="question"]').first().text().trim();
+                const answer = $(el).find('p, .answer, .a, [class*="answer"]').first().text().trim();
+                
+                if (question && answer && question.length > 10 && answer.length > 20) {
+                    faqs.push({ question, answer });
+                }
+            });
+        });
+        
+        return faqs;
+    }
+
+    extractContactInfo($) {
+        const contact = {};
+        
+        // Extract email addresses
+        const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g;
+        const bodyText = $('body').text();
+        const emails = bodyText.match(emailRegex) || [];
+        if (emails.length > 0) contact.emails = [...new Set(emails)];
+        
+        // Extract phone numbers
+        const phoneRegex = /(\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/g;
+        const phones = bodyText.match(phoneRegex) || [];
+        if (phones.length > 0) contact.phones = [...new Set(phones)];
+        
+        // Extract address
+        const addressKeywords = ['address', 'location', 'office'];
+        addressKeywords.forEach(keyword => {
+            $(`[class*="${keyword}"], [id*="${keyword}"]`).each((i, el) => {
+                const text = $(el).text().trim();
+                if (text && text.length > 20 && !contact.address) {
+                    contact.address = text;
+                }
+            });
+        });
+        
+        return contact;
+    }
+
+    extractFeatures($) {
+        const features = [];
+        
+        // Look for feature sections
+        const featureSelectors = [
+            '.feature', '.service', '.benefit', '.capability',
+            '[class*="feature"]', '[class*="service"]', '[class*="benefit"]'
+        ];
+        
+        featureSelectors.forEach(selector => {
+            $(selector).each((i, el) => {
+                const title = $(el).find('h1, h2, h3, h4, h5, h6').first().text().trim();
+                const description = $(el).find('p').first().text().trim();
+                
+                if (title && description && title.length > 3 && description.length > 20) {
+                    features.push({ title, description });
+                }
+            });
+        });
+        
+        return features;
+    }
+
+    extractNavigation($) {
+        const navigation = [];
+        
+        $('nav a, .navigation a, .menu a, header a').each((i, el) => {
+            const text = $(el).text().trim();
+            const href = $(el).attr('href');
+            
+            if (text && href && text.length > 1) {
+                navigation.push({ text, href });
+            }
+        });
+        
+        return navigation;
+    }
+
+    extractLinks($, baseUrl) {
+        const links = [];
+        const base = new URL(baseUrl);
+        
+        $('a[href]').each((i, el) => {
+            const href = $(el).attr('href');
+            const text = $(el).text().trim();
+            
+            if (href && text) {
+                try {
+                    const url = new URL(href, baseUrl);
+                    if (url.hostname === base.hostname) {
+                        links.push({ text, url: url.href });
+                    }
+                } catch (e) {
+                    // Invalid URL, skip
+                }
+            }
+        });
+        
+        return links;
+    }
+
+    extractImages($, baseUrl) {
+        const images = [];
+        
+        $('img[src]').each((i, el) => {
+            const src = $(el).attr('src');
+            const alt = $(el).attr('alt') || '';
+            
+            if (src) {
+                try {
+                    const url = new URL(src, baseUrl);
+                    images.push({ src: url.href, alt });
+                } catch (e) {
+                    // Invalid URL, skip
+                }
+            }
+        });
+        
+        return images;
+    }
+
+    extractForms($) {
+        const forms = [];
+        
+        $('form').each((i, el) => {
+            const action = $(el).attr('action') || '';
+            const method = $(el).attr('method') || 'GET';
+            const inputs = [];
+            
+            $(el).find('input, select, textarea').each((j, input) => {
+                const type = $(input).attr('type') || $(input).prop('tagName').toLowerCase();
+                const name = $(input).attr('name') || '';
+                const placeholder = $(input).attr('placeholder') || '';
+                const label = $(input).closest('label').text().trim() || 
+                             $(input).siblings('label').text().trim() ||
+                             $(input).prev('label').text().trim();
+                
+                if (name) {
+                    inputs.push({ type, name, placeholder, label });
+                }
+            });
+            
+            if (inputs.length > 0) {
+                forms.push({ action, method, inputs });
+            }
+        });
+        
+        return forms;
+    }
+
+    getElementContext(element) {
+        const parent = element.parent();
+        const parentClass = parent.attr('class') || '';
+        const parentId = parent.attr('id') || '';
+        
+        return {
+            parentTag: parent.prop('tagName')?.toLowerCase() || '',
+            parentClass,
+            parentId,
+            section: this.findSectionContext(element)
+        };
+    }
+
+    findSectionContext(element) {
+        const sectionElement = element.closest('section, article, div[class*="section"], div[class*="content"]');
+        if (sectionElement.length > 0) {
+            const heading = sectionElement.find('h1, h2, h3, h4, h5, h6').first().text().trim();
+            if (heading) return heading;
+        }
+        return '';
+    }
+
+    findImportantPages(mainPageData, baseUrl) {
+        const importantPages = [];
+        const importantKeywords = [
+            'about', 'contact', 'services', 'products', 'features', 'pricing', 
+            'support', 'help', 'faq', 'documentation', 'docs', 'team'
+        ];
+        
+        if (mainPageData.navigation) {
+            mainPageData.navigation.forEach(nav => {
+                const text = nav.text.toLowerCase();
+                const href = nav.href;
+                
+                if (importantKeywords.some(keyword => text.includes(keyword))) {
+                    try {
+                        const url = new URL(href, baseUrl);
+                        if (url.hostname === new URL(baseUrl).hostname) {
+                            importantPages.push(url.href);
+                        }
+                    } catch (e) {
+                        // Invalid URL, skip
+                    }
+                }
+            });
+        }
+        
+        return [...new Set(importantPages)]; // Remove duplicates
+    }
+
+    async scrapeMultiplePages(urls) {
+        const results = [];
+        
+        for (const url of urls) {
+            try {
+                const pageData = await this.scrapePage(url);
+                if (pageData) {
+                    results.push(pageData);
+                }
+                await this.delay(1000); // Be respectful with delays
+            } catch (error) {
+                console.warn(`Failed to scrape ${url}:`, error.message);
+            }
+        }
+        
+        return results;
+    }
+
+    processContentForTraining(pagesData) {
+        const trainingData = [];
+        
+        pagesData.forEach(pageData => {
+            if (!pageData) return;
+            
+            // Process FAQs
+            if (pageData.faqs && pageData.faqs.length > 0) {
+                pageData.faqs.forEach(faq => {
+                    trainingData.push({
+                        type: 'faq',
+                        input: faq.question,
+                        output: faq.answer,
+                        source: pageData.url,
+                        confidence: 0.9
+                    });
+                });
+            }
+            
+            // Process features as capabilities
+            if (pageData.features && pageData.features.length > 0) {
+                pageData.features.forEach(feature => {
+                    trainingData.push({
+                        type: 'feature',
+                        input: `What is ${feature.title}?`,
+                        output: feature.description,
+                        source: pageData.url,
+                        confidence: 0.7
+                    });
+                    
+                    trainingData.push({
+                        type: 'feature',
+                        input: `Tell me about ${feature.title}`,
+                        output: feature.description,
+                        source: pageData.url,
+                        confidence: 0.7
+                    });
+                });
+            }
+            
+            // Process general content
+            if (pageData.content && pageData.content.length > 0) {
+                pageData.content.forEach(content => {
+                    if (content.type === 'paragraph' && content.text.length > 50) {
+                        // Create training data from paragraphs
+                        const sentences = content.text.split(/[.!?]+/).filter(s => s.trim().length > 20);
+                        if (sentences.length >= 2) {
+                            trainingData.push({
+                                type: 'content',
+                                input: `Tell me about ${content.context.section || pageData.title}`,
+                                output: content.text,
+                                source: pageData.url,
+                                confidence: 0.5
+                            });
+                        }
+                    }
+                });
+            }
+            
+            // Process contact information
+            if (pageData.contactInfo && Object.keys(pageData.contactInfo).length > 0) {
+                const contact = pageData.contactInfo;
+                
+                if (contact.emails && contact.emails.length > 0) {
+                    trainingData.push({
+                        type: 'contact',
+                        input: 'What is your email address?',
+                        output: `You can reach us at ${contact.emails[0]}`,
+                        source: pageData.url,
+                        confidence: 0.9
+                    });
+                }
+                
+                if (contact.phones && contact.phones.length > 0) {
+                    trainingData.push({
+                        type: 'contact',
+                        input: 'What is your phone number?',
+                        output: `You can call us at ${contact.phones[0]}`,
+                        source: pageData.url,
+                        confidence: 0.9
+                    });
+                }
+                
+                if (contact.address) {
+                    trainingData.push({
+                        type: 'contact',
+                        input: 'What is your address?',
+                        output: `Our address is: ${contact.address}`,
+                        source: pageData.url,
+                        confidence: 0.9
+                    });
+                }
+            }
+        });
+        
+        return trainingData;
+    }
+
+    generateChatbotConfig(trainingData, mainPageData) {
+        const config = {
+            name: mainPageData.title || 'Website Assistant',
+            description: mainPageData.metaDescription || 'I can help you with information about this website.',
+            personality: {
+                tone: 'friendly',
+                style: 'professional',
+                helpfulness: 'high'
+            },
+            capabilities: [],
+            responses: {
+                greeting: `Hello! I'm here to help you with any questions about ${mainPageData.title || 'our website'}. What can I assist you with?`,
+                fallback: "I'm sorry, I don't have information about that specific topic. Is there something else I can help you with?",
+                goodbye: "Thank you for visiting! If you have any other questions, feel free to ask."
+            },
+            knowledge: {
+                trainingDataCount: trainingData.length,
+                topics: [...new Set(trainingData.map(item => item.type))],
+                sources: [...new Set(trainingData.map(item => item.source))]
+            },
+            settings: {
+                maxResponseLength: 500,
+                confidenceThreshold: 0.5,
+                enableFallback: true,
+                enableGreeting: true
+            }
+        };
+        
+        // Determine capabilities based on training data
+        const topicCounts = {};
+        trainingData.forEach(item => {
+            topicCounts[item.type] = (topicCounts[item.type] || 0) + 1;
+        });
+        
+        Object.entries(topicCounts).forEach(([topic, count]) => {
+            if (count > 2) { // Only include topics with sufficient data
+                config.capabilities.push({
+                    name: topic.charAt(0).toUpperCase() + topic.slice(1),
+                    description: `Answer questions about ${topic}`,
+                    dataPoints: count
+                });
+            }
+        });
+        
+        return config;
+    }
+
+    async scrapePage(url) {
+        try {
             const response = await axios.get(url, { 
                 headers: this.headers,
                 timeout: 15000
@@ -39,14 +544,13 @@ class ChatBotComScraper {
             
             const $ = cheerio.load(response.data);
             
-            // Extract key elements
             const pageData = {
                 url,
-                description,
                 title: $('title').text().trim(),
-                metaDescription: $('meta[name="description"]').attr('content') || '',
+                description: $('meta[name="description"]').attr('content') || '',
+                content: this.extractContent($),
                 
-                // UI/UX Patterns
+                // Navigation & Structure
                 navigation: this.extractNavigation($),
                 ctaButtons: this.extractCTAButtons($),
                 forms: this.extractForms($),
@@ -79,6 +583,39 @@ class ChatBotComScraper {
             console.error(`Error scraping ${url}:`, error.message);
             return null;
         }
+    }
+
+    extractContent($) {
+        const content = [];
+        
+        // Extract main content areas
+        $('main, .main-content, .content, article, .post-content, .page-content').each((i, el) => {
+            const $el = $(el);
+            const text = $el.text().trim();
+            if (text.length > 50) {
+                content.push({
+                    text: text,
+                    selector: el.tagName.toLowerCase() + (el.className ? '.' + el.className.split(' ').join('.') : ''),
+                    length: text.length
+                });
+            }
+        });
+
+        // Extract paragraphs if no main content found
+        if (content.length === 0) {
+            $('p').each((i, el) => {
+                const text = $(el).text().trim();
+                if (text.length > 30) {
+                    content.push({
+                        text: text,
+                        selector: 'p',
+                        length: text.length
+                    });
+                }
+            });
+        }
+
+        return content;
     }
 
     extractNavigation($) {
@@ -525,10 +1062,10 @@ ${this.formatTechnicalStack(this.scrapedData.technicalStack)}
 }
 
 // Export for use in other modules
-module.exports = ChatBotComScraper;
+module.exports = WebsiteChatbotScraper;
 
 // Run if called directly
 if (require.main === module) {
-    const scraper = new ChatBotComScraper();
+    const scraper = new WebsiteChatbotScraper();
     scraper.scrapeFullSite().catch(console.error);
 }

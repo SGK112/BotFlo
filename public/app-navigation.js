@@ -71,7 +71,7 @@ class BotFloApp {
                             ">
                                 <i class="fas fa-store"></i> Store
                             </a>
-                            <a href="/builders.html" class="nav-link ${this.isActive('/builders') ? 'active' : ''}" style="
+                            <a href="/bot-builder.html" class="nav-link ${this.isActive('/builders') || this.isActive('/bot-builder') ? 'active' : ''}" style="
                                 text-decoration: none;
                                 color: var(--gray-600);
                                 font-weight: 500;
@@ -79,7 +79,7 @@ class BotFloApp {
                                 padding: var(--space-2) 0;
                                 border-bottom: 2px solid transparent;
                             ">
-                                <i class="fas fa-robot"></i> Builders
+                                <i class="fas fa-robot"></i> Build Bot
                             </a>
                             <a href="/dashboard.html" class="nav-link ${this.isActive('/dashboard') ? 'active' : ''}" style="
                                 text-decoration: none;

@@ -3,51 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Flow Builder - BotFlo.ai</title>
+    <title>Redirecting to BotFlo Builder...</title>
     
-    <!-- Favicon and Manifest -->
+    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="alternate icon" href="/favicon.ico">
     
-    <!-- Global App Styles -->
-    <link rel="stylesheet" href="app-global.css">
-    
-    <!-- External Dependencies -->
+    <!-- Styles -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <style>
-    :root {
-        --primary: #3b82f6;
-        --primary-dark: #2563eb;
-        --primary-light: #dbeafe;
-        --secondary: #6366f1;
-        --success: #10b981;
-        --warning: #f59e0b;
-        --error: #ef4444;
-        --gray-50: #f8fafc;
-        --gray-100: #f1f5f9;
-        --gray-200: #e2e8f0;
-        --gray-300: #cbd5e1;
-        --gray-400: #94a3b8;
-        --gray-500: #64748b;
-        --gray-600: #475569;
-        --gray-700: #334155;
-        --gray-800: #1e293b;
-        --gray-900: #0f172a;
-        --border-radius: 8px;
-        --border-radius-lg: 12px;
-        --border-radius-xl: 16px;
-        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-        --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        --space-1: 0.25rem;
-        --space-2: 0.5rem;
-        --space-3: 0.75rem;
-        --space-4: 1rem;
-        --space-5: 1.25rem;
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .redirect-container {
+            text-align: center;
+            padding: 3rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            font-size: 2.5rem;
+        }
+
+        h1 {
+            margin: 0 0 1rem 0;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        p {
+            margin: 0 0 2rem 0;
+            opacity: 0.9;
+            font-size: 1.125rem;
+            line-height: 1.6;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .feature i {
+            color: #10b981;
+        }
+
+        .fallback-link {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .fallback-link a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .fallback-link a:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="redirect-container">
+        <div class="logo">
+            <i class="fas fa-robot"></i>
+        </div>
+        
+        <h1>🚀 Welcome to the New BotFlo Builder!</h1>
+        
+        <p>We've upgraded your experience with a unified, powerful chatbot builder. You'll be redirected in a moment...</p>
+        
+        <div class="features">
+            <div class="feature">
+                <i class="fas fa-check"></i>
+                <span>Visual Flow Builder</span>
+            </div>
+            <div class="feature">
+                <i class="fas fa-check"></i>
+                <span>Website Import</span>
+            </div>
+            <div class="feature">
+                <i class="fas fa-check"></i>
+                <span>AI Training</span>
+            </div>
+            <div class="feature">
+                <i class="fas fa-check"></i>
+                <span>One-Click Deploy</span>
+            </div>
+        </div>
+        
+        <div class="loading-spinner"></div>
+        
+        <div class="fallback-link">
+            <a href="/bot-builder.html?mode=flow-builder&source=advanced-builder" id="fallback-link">
+                Continue to New Builder →
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Get URL parameters to preserve any existing params
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        // Build the redirect URL
+        const redirectUrl = new URL('/bot-builder.html', window.location.origin);
+        redirectUrl.searchParams.set('mode', 'flow-builder');
+        redirectUrl.searchParams.set('source', 'advanced-builder');
+        redirectUrl.searchParams.set('upgraded', 'true');
+        
+        // Preserve any existing parameters
+        urlParams.forEach((value, key) => {
+            if (key !== 'mode' && key !== 'source') {
+                redirectUrl.searchParams.set(key, value);
+            }
+        });
+        
+        // Show a brief message then redirect
+        setTimeout(() => {
+            window.location.href = redirectUrl.toString();
+        }, 2500);
+        
+        // Update fallback link
+        document.getElementById('fallback-link').href = redirectUrl.toString();
+        
+        // Handle immediate click if user doesn't want to wait
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('a')) {
+                return; // Let the link work normally
+            }
+            // Clicking anywhere else redirects immediately
+            window.location.href = redirectUrl.toString();
+        });
+    </script>
+</body>
+</html>
         --space-6: 1.5rem;
         --space-8: 2rem;
         --space-12: 3rem;
